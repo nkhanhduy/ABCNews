@@ -1,0 +1,95 @@
+/* ... (Giữ nguyên các phần trước: Body, Header, Logo...) */
+
+/* ===================== User Menu (Dropdown CSS Thuần) ===================== */
+.user-menu {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* Container của dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Nút hiển thị tên user */
+.dropbtn {
+    background-color: transparent;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.arrow-down {
+    font-size: 10px;
+}
+
+/* Nội dung menu xổ xuống (Mặc định ẩn) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    min-width: 180px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 100; /* Đảm bảo nổi lên trên */
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Link bên trong dropdown */
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    font-weight: normal;
+    transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #28a745;
+}
+
+/* HIỆU ỨNG HOVER: Khi di chuột vào .dropdown thì hiện .dropdown-content */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Đổi màu nền nút khi đang hover */
+.dropdown:hover .dropbtn {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+/* Style riêng cho nút Đăng xuất trong dropdown */
+.dropdown-content a.logout-item {
+    color: #dc3545;
+    border-top: 1px solid #eee;
+}
+.dropdown-content a.logout-item:hover {
+    background-color: #fff0f0;
+}
+
+/* Nút Đăng nhập (cho khách) */
+.login-btn {
+    background-color: #fff;
+    color: #28a745;
+    padding: 8px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+.login-btn:hover {
+    background-color: #e9ecef;
+}
