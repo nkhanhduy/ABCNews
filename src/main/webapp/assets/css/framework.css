@@ -1,0 +1,220 @@
+/**
+ * ABC News Framework CSS
+ * Framework chung cho toàn bộ ứng dụng - Dropdown, Buttons, Cards, etc.
+ */
+
+/* ========== Dropdown Menu Framework (Áp dụng cho TẤT CẢ dropdown) ========== */
+
+/* Dropdown Menu Container */
+.dropdown-menu {
+    border: 1px solid #dee2e6 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+    padding: 8px 0 !important;
+    border-radius: 8px !important;
+    margin-top: 8px !important;
+}
+
+/* Dropdown Item Base */
+.dropdown-menu .dropdown-item {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    font-weight: 500 !important;
+    padding: 12px 20px !important;
+    margin: 2px 8px !important;
+    border-radius: 6px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    color: #333 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+/* Đảm bảo text và icon nổi lên trên overlay */
+.dropdown-menu .dropdown-item,
+.dropdown-menu .dropdown-item i {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Hiệu ứng overlay shimmer khi hover */
+.dropdown-menu .dropdown-item::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+    transition: left 0.4s ease !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+}
+
+.dropdown-menu .dropdown-item:hover::before {
+    left: 100% !important;
+}
+
+/* Hover State - Mặc định màu xanh dương */
+.dropdown-menu .dropdown-item:hover {
+    background: linear-gradient(135deg, #007bff, #0056b3) !important;
+    color: #fff !important;
+    transform: translateX(8px) scale(1.02) !important;
+    padding-left: 24px !important;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4) !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+}
+
+.dropdown-menu .dropdown-item:hover i {
+    color: #fff !important;
+    transform: scale(1.15) translateX(2px) !important;
+}
+
+/* Link Dashboard và Quản lý Tin - màu xanh dương đậm */
+.dropdown-menu .dropdown-item[href*="/admin/dashboard"]:hover,
+.dropdown-menu .dropdown-item[href*="/admin/news"]:hover,
+.dropdown-menu .dropdown-item[href*="dashboard"]:hover {
+    background: linear-gradient(135deg, #007bff, #0056b3) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4) !important;
+}
+
+/* Link Admin only - màu cam đậm */
+.dropdown-menu .dropdown-item[href*="/admin/categories"]:hover,
+.dropdown-menu .dropdown-item[href*="/admin/users"]:hover,
+.dropdown-menu .dropdown-item[href*="/admin/newsletters"]:hover,
+.dropdown-menu .dropdown-item[href*="categories"]:hover,
+.dropdown-menu .dropdown-item[href*="users"]:hover,
+.dropdown-menu .dropdown-item[href*="newsletters"]:hover {
+    background: linear-gradient(135deg, #ff9800, #f57c00) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4) !important;
+}
+
+/* Link Đăng xuất - màu đỏ đậm */
+.dropdown-menu .dropdown-item.text-danger:hover,
+.dropdown-menu .dropdown-item[href*="logout"]:hover {
+    background: linear-gradient(135deg, #dc3545, #c82333) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4) !important;
+}
+
+/* Đảm bảo icon cũng đổi màu khi hover */
+.dropdown-menu .dropdown-item:hover i.fas,
+.dropdown-menu .dropdown-item:hover i.fa,
+.dropdown-menu .dropdown-item:hover i.bi {
+    color: #fff !important;
+}
+
+/* Dropdown Header */
+.dropdown-menu .dropdown-header {
+    font-weight: 700 !important;
+    color: #495057 !important;
+    padding: 10px 20px !important;
+    text-transform: uppercase !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.5px !important;
+    background-color: #f8f9fa !important;
+    margin: 0 !important;
+}
+
+/* Dropdown Divider */
+.dropdown-menu .dropdown-divider {
+    margin: 8px 0 !important;
+    border-color: #e9ecef !important;
+    opacity: 1 !important;
+}
+
+/* Active State */
+.dropdown-menu .dropdown-item.active,
+.dropdown-menu .dropdown-item:active {
+    background: linear-gradient(135deg, #007bff, #0056b3) !important;
+    color: #fff !important;
+}
+
+/* ========== Button Enhancements ========== */
+.btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.btn::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.3) !important;
+    transform: translate(-50%, -50%) !important;
+    transition: width 0.6s, height 0.6s !important;
+    pointer-events: none !important;
+}
+
+.btn:hover::after {
+    width: 300px !important;
+    height: 300px !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4) !important;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4) !important;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4) !important;
+}
+
+/* ========== Card Enhancements ========== */
+.card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: 1px solid #e9ecef !important;
+}
+
+.card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+    border-color: #28a745 !important;
+}
+
+/* ========== Link Enhancements ========== */
+a {
+    transition: color 0.2s ease !important;
+}
+
+a:hover {
+    text-decoration: none !important;
+}
+
+/* ========== Form Enhancements ========== */
+.form-control:focus,
+.form-select:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* ========== Table Enhancements ========== */
+.table tbody tr {
+    transition: all 0.2s ease !important;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05) !important;
+    transform: scale(1.01) !important;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+    .dropdown-menu .dropdown-item:hover {
+        transform: translateX(4px) scale(1.01) !important;
+    }
+}

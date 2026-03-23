@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  SỬA LỖI:
+  Nâng cấp về schema 5.0 để khớp với jakarta.servlet
+-->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+    id="WebApp_ID" version="5.0">
+    
+    <display-name>ABCNews</display-name>
+    
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- 
+      THÊM MỚI:
+      Đăng ký AuthFilter để bảo vệ khu vực /admin/*
+    -->
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>poly.com.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern> <!-- Áp dụng cho mọi link /admin/ -->
+    </filter-mapping>
+
+</web-app>
