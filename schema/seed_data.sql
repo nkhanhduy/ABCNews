@@ -35,7 +35,7 @@ GO
 -- BÀI 1: Công nghệ & AI (Tin tiêu điểm - Home)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS001', 
+('4594fcf6-c827-4ace-bc20-9bff52d424d8', 
 N'Kỷ Nguyên Agentic AI: Bước Chuyển Mình Vượt Bậc Của Trí Tuệ Nhân Tạo Năm 2025',
 N'Không dừng lại ở mô hình ngôn ngữ lớn (LLM) phản hồi thụ động, thế giới công nghệ năm 2025 chứng kiến làn sóng bùng nổ của Agentic AI - hệ thống tác tử thông minh có khả năng tự lập kế hoạch, phối hợp công cụ và giải quyết bài toán phức tạp độc lập.',
 N'<p class="lead">Năm 2025 đánh dấu cột mốc lịch sử khi trí tuệ nhân tạo chính thức chuyển mình từ các mô hình hội thoại thụ động (Chatbot) sang kỷ nguyên <strong>Agentic AI (Tác tử Trí tuệ Nhân tạo)</strong>. Thay vì chỉ đưa ra câu trả lời dựa trên gợi ý từ người dùng, các hệ thống AI tác tử ngày nay đã có thể tự động lập trình kế hoạch hành động, phân rã công việc phức tạp thành các chuỗi hành động con và tương tác trực tiếp với các API, cơ sở dữ liệu để đạt được mục tiêu kinh doanh.</p>
@@ -62,7 +62,7 @@ DATEADD(HOUR, -3, GETDATE()), 'admin001', 8420, 'TECH', 1);
 -- BÀI 2: Công nghệ & Tối ưu Database (Home)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS002', 
+('b3cc6eb9-74ff-49a3-8875-ba00e050a146', 
 N'Tối Ưu Hóa Hạ Tầng Dữ Liệu Doanh Nghiệp Với HikariCP & Clean Architecture',
 N'Việc áp dụng giải pháp Connection Pool hiện đại như HikariCP kết hợp chuẩn thiết kế 3 tầng (3-Tier Architecture) giúp các hệ thống báo điện tử và thương mại điện tử duy trì thời gian phản hồi dưới 50ms ngay cả trong các khung giờ cao điểm.',
 N'<p class="lead">Trong các hệ thống báo điện tử và dịch vụ trực tuyến quy mô lớn, việc nghẽn cổ chai tại tầng truy xuất dữ liệu (Data Access Layer) luôn là cơn ác mộng của các kỹ sư hạ tầng. Bài viết này phân tích sâu cách thức ABCNews triển khai kiến trúc hồ kết nối HikariCP cùng Hibernate JPA để đạt thông lượng hàng chục nghìn yêu cầu mỗi giây.</p>
@@ -90,7 +90,7 @@ DATEADD(HOUR, -8, GETDATE()), 'rep001', 5690, 'TECH', 1);
 -- BÀI 3: Công nghệ & An ninh mạng (Home)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS003', 
+('efcc2da5-e983-4aa0-9218-0248aa48bb08', 
 N'Chiến Lược Bảo Mật Zero-Trust: Phòng Thủ Toàn Diện Trước Các Cuộc Tấn Công Số 2025',
 N'Trước các hiểm họa mã độc tống tiền và tấn công mạng sử dụng AI ngày càng tinh vi, mô hình bảo mật Zero-Trust không còn là một lựa chọn xa xỉ mà đã trở thành tiêu chuẩn bắt buộc cho mọi nền tảng số.',
 N'<p class="lead">Triết lý căn bản của Zero-Trust rất ngắn gọn nhưng kỷ luật: <em>"Không bao giờ tin tưởng, luôn luôn xác minh" (Never Trust, Always Verify)</em>. Mọi thực thể, dù ở trong hay ngoài mạng nội bộ, đều phải trải qua quy trình xác thực định danh và phân quyền nghiêm ngặt trước khi truy cập tài nguyên dữ liệu.</p>
@@ -111,7 +111,7 @@ DATEADD(DAY, -1, GETDATE()), 'admin001', 4210, 'TECH', 1);
 -- BÀI 4: Kinh tế & Tài chính số (Home)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS004', 
+('b3cd69a0-1662-4ab4-98dc-f36eb0fbd99d', 
 N'Kinh Tế Số Việt Nam 2025: Động Lực Tăng Trưởng Đột Phá Đóng Góp Lớn Cho GDP Quốc Gia',
 N'Báo cáo kinh tế quý 1/2025 cho thấy lĩnh vực thương mại điện tử, thanh toán không dùng tiền mặt và công nghệ số tiếp tục duy trì mức tăng trưởng ấn tượng trên 22%/năm, khẳng định vị thế trung tâm đổi mới sáng tạo khu vực.',
 N'<p class="lead">Nền kinh tế số Việt Nam đang bước vào giai đoạn tăng tốc mạnh mẽ với quy mô dự kiến vượt mốc 50 tỷ USD trong năm nay. Sự hội tụ giữa cơ sở hạ tầng mạng 5G phủ sóng toàn quốc, tỷ lệ dân số sở hữu smartphone trên 85% và hệ sinh thái thanh toán số đa dạng đã tạo bệ phóng vững chắc cho hàng nghìn doanh nghiệp khởi nghiệp.</p>
@@ -131,7 +131,7 @@ DATEADD(HOUR, -5, GETDATE()), 'rep002', 6850, 'ECONOMY', 1);
 -- BÀI 5: Kinh tế & Đầu tư ESG (Home)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS005', 
+('b2016873-a0a1-4148-bb54-cfe3d489fd6a', 
 N'Thị Trường Vốn Toàn Cầu Dịch Chuyển Mạnh Sang Các Dự Án Năng Lượng Xanh & Net Zero',
 N'Các quỹ đầu tư mạo hiểm và ngân hàng thương mại quốc tế đang ưu tiên rót vốn vào các doanh nghiệp tuân thủ nghiêm ngặt tiêu chuẩn ESG, mở ra làn sóng phát hành trái phiếu xanh kỷ lục.',
 N'<p class="lead">Tính bền vững và trách nhiệm môi trường đã trở thành thước đo hàng đầu trong việc định giá doanh nghiệp. Trong năm 2025, lượng phát hành trái phiếu xanh (Green Bonds) trên toàn cầu đã tăng trưởng 35%, thu hút sự quan tâm đặc biệt từ các nhà đầu tư tổ chức.</p>
@@ -147,7 +147,7 @@ DATEADD(DAY, -2, GETDATE()), 'rep001', 3120, 'ECONOMY', 1);
 -- BÀI 6: Thể thao Quốc tế (Home)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS006', 
+('de4aaf76-a857-4b7b-a31f-81d7cd1fa18b', 
 N'Đêm Chung Kết UEFA Champions League 2025: Đại Chiến Đỉnh Cao Và Cơn Mưa Bàn Thắng',
 N'Trận chung kết Cúp C1 châu Âu đã cống hiến cho hàng trăm triệu khán giả toàn cầu 90 phút thi đấu kịch tính với chất lượng chuyên môn đỉnh cao, khẳng định sức hấp dẫn số một của bóng đá đương đại.',
 N'<p class="lead">Sân vận động chật kín hơn 75.000 khán giả đã được chứng kiến một trong những trận cầu kinh điển nhất lịch sử bóng đá hiện đại. Cả hai đội bóng hàng đầu châu Âu đã cống hiến lối chơi tấn công rực lửa với tốc độ luân chuyển bóng chóng mặt.</p>
@@ -163,7 +163,7 @@ DATEADD(HOUR, -12, GETDATE()), 'rep001', 7890, 'SPORT', 1);
 -- BÀI 7: Thể thao & Khoa học Dữ liệu (Trang Thể thao)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS007', 
+('865ac7a4-483e-43ea-a6df-7fef4a7b6a60', 
 N'Ứng Dụng Phân Tích Dữ Liệu Lớn & AI Trong Huấn Luyện Thể Thao Đỉnh Cao',
 N'Từ thiết bị đeo theo dõi tải trọng cơ bắp đến camera nhận diện chiến thuật thời gian thực, khoa học dữ liệu đang trở thành vũ khí bí mật giúp các vận động viên phá vỡ mọi kỷ lục thế giới.',
 N'<p class="lead">Thể thao hiện đại ngày nay không chỉ dựa vào thể lực và ý chí thi đấu của vận động viên mà còn là cuộc đua công nghệ phân tích dữ liệu giữa các trung tâm huấn luyện thể thao hàng đầu.</p>
@@ -179,7 +179,7 @@ DATEADD(DAY, -3, GETDATE()), 'rep002', 2450, 'SPORT', 0);
 -- BÀI 8: Đời sống & Sức khỏe (Home)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS008', 
+('c354b4da-8d60-4072-90c9-279978ee36ae', 
 N'Cân Bằng Công Việc & Cuộc Sống: Cẩm Nang Chăm Sóc Sức Khỏe Cho Kỹ Sư Công Nghệ',
 N'Đối mặt với áp lực deadline và nhịp sống số hối hả, hội chứng kiệt sức (burnout) đang trở thành thử thách lớn của giới trẻ. Các chuyên gia y tế chia sẻ giải pháp thiết lập ranh giới làm việc lành mạnh.',
 N'<p class="lead">Làm việc linh hoạt (Remote / Hybrid Work) mang lại nhiều tiện ích nhưng cũng dễ xóa nhòa ranh giới giữa giờ làm việc và thời gian nghỉ ngơi cá nhân. Việc ngồi liên tục trước màn hình máy tính từ 10 đến 12 tiếng mỗi ngày gây ảnh hưởng tiêu cực đến cột sống, thị lực và giấc ngủ.</p>
@@ -195,7 +195,7 @@ DATEADD(DAY, -1, GETDATE()), 'rep002', 5230, 'LIFE', 1);
 -- BÀI 9: Đời sống & Không gian Vũ trụ (Trang Đời sống)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS009', 
+('f9ac2d87-1803-464a-b9bf-ddbac175ad91', 
 N'Kính Viễn Vọng Không Gian Thế Hệ Mới Khám Phá Thêm Dấu Vết Nước Trên Hành Tinh Mới',
 N'Cơ quan Hàng không Vũ trụ Quốc tế vừa công bố những hình ảnh quang phổ sắc nét chưa từng có về bầu khí quyển của ngoại hành tinh cách Trái Đất 120 năm ánh sáng.',
 N'<p class="lead">Sử dụng công nghệ cảm biến hồng ngoại tối tân, các nhà thiên văn học đã phát hiện thấy dấu hiệu rõ ràng của hơi nước, khí methane và carbon dioxide trong khí quyển của hành tinh K2-18b, một thiên thể nằm trong vùng có thể duy trì sự sống của ngôi sao chủ.</p>
@@ -208,7 +208,7 @@ DATEADD(DAY, -4, GETDATE()), 'admin001', 1980, 'LIFE', 0);
 -- BÀI 10: Giáo dục & Đào tạo (Home)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS010', 
+('65bcca03-cf7b-4cd6-8945-c7f88faa6395', 
 N'Chuyển Đổi Số Giáo Dục Đại Học: Mô Hình Học Tập Thực Chiến Liên Kết Doanh Nghiệp',
 N'Các trường đại học công nghệ hàng đầu đang tái cấu trúc chương trình đào tạo theo hướng thực chiến, tích hợp dự án thực tế giúp sinh viên vững vàng kỹ năng chuyên môn trước khi tốt nghiệp.',
 N'<p class="lead">Phương pháp học vẹt lý thuyết hàn lâm đang nhường chỗ cho mô hình đào tạo theo dự án thực tế (Project-Based Learning). Sinh viên được trực tiếp tham gia xây dựng các hệ thống phần mềm hoàn chỉnh, làm quen với quy trình Git workflow, CI/CD và kiến trúc container ngay từ năm thứ hai.</p>
@@ -224,7 +224,7 @@ DATEADD(DAY, -2, GETDATE()), 'rep001', 3870, 'EDUCATION', 1);
 -- BÀI 11: Giáo dục & Kỹ năng (Trang Giáo dục)
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
-('NEWS011', 
+('f98c028a-b6ea-454a-a7a5-df120ca29ed2', 
 N'Kỹ Năng Thế Kỷ 21: Năng Lực Học Hỏi Trọn Đời (Lifelong Learning) Trong Kỷ Nguyên AI',
 N'Khi công nghệ liên tục thay đổi với tốc độ cấp số nhân, khả năng quan trọng nhất của mỗi cá nhân không phải là những gì đã biết, mà là tốc độ tiếp thu kiến thức mới và từ bỏ những thói quen cũ.',
 N'<p class="lead">Trí tuệ nhân tạo có thể viết code, vẽ tranh và phân tích dữ liệu, nhưng năng lực đặt câu hỏi đúng, đồng cảm với người dùng và tư duy liên ngành vẫn là đặc quyền riêng có của con người. Để không bị tụt lại phía sau, mỗi người lao động cần chủ động xây dựng lộ trình học tập trọn đời.</p>
@@ -248,8 +248,8 @@ GO
 INSERT INTO [dbo].[ActivityLogs] ([user_id], [username], [action_type], [entity_type], [entity_id], [description], [created_at])
 VALUES 
 ('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'LOGIN', 'Auth', 'admin001', N'Đăng nhập hệ thống quản trị thành công', DATEADD(MINUTE, -120, GETDATE())),
-('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'CREATE', 'News', 'NEWS001', N'Xuất bản bài viết tiêu điểm: Kỷ Nguyên Agentic AI 2025', DATEADD(MINUTE, -115, GETDATE())),
-('rep001', N'Nhà Báo - Trần Khánh Duy', 'CREATE', 'News', 'NEWS002', N'Tạo mới bài viết: Tối Ưu Hóa Hạ Tầng Dữ Liệu HikariCP', DATEADD(MINUTE, -90, GETDATE())),
-('rep002', N'Biên Tập Viên - Lê Minh Tú', 'CREATE', 'News', 'NEWS004', N'Xuất bản bài viết: Kinh Tế Số Việt Nam 2025', DATEADD(MINUTE, -60, GETDATE())),
+('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'CREATE', 'News', '4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Xuất bản bài viết tiêu điểm: Kỷ Nguyên Agentic AI 2025', DATEADD(MINUTE, -115, GETDATE())),
+('rep001', N'Nhà Báo - Trần Khánh Duy', 'CREATE', 'News', 'b3cc6eb9-74ff-49a3-8875-ba00e050a146', N'Tạo mới bài viết: Tối Ưu Hóa Hạ Tầng Dữ Liệu HikariCP', DATEADD(MINUTE, -90, GETDATE())),
+('rep002', N'Biên Tập Viên - Lê Minh Tú', 'CREATE', 'News', 'b3cd69a0-1662-4ab4-98dc-f36eb0fbd99d', N'Xuất bản bài viết: Kinh Tế Số Việt Nam 2025', DATEADD(MINUTE, -60, GETDATE())),
 ('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'UPDATE', 'Category', 'TECH', N'Cập nhật tên danh mục thành Công nghệ & AI', DATEADD(MINUTE, -30, GETDATE()));
 GO

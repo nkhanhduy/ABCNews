@@ -99,6 +99,7 @@ In der Datenbank sind vorbereitete Testkonten vorhanden:
 - **Mehrschichtige Sicherheit:**
   - Einweg-Passwort-Hashing mit **BCrypt** verhindert Rainbow-Table- und Brute-Force-Angriffe.
   - **AuthFilter** setzt rollenbasierte Zugriffskontrolle (RBAC) für alle `/admin/*`-Routen durch.
+  - **UUID-v4-Standardisierung (RFC 4122):** Implementierung kryptographisch sicherer 128-Bit-UUID-v4-Bezeichner (36 Zeichen) für alle Nachrichtenartikel in der Datenbank und auf öffentlichen URLs (`/detail?id=...`). Dies eliminiert vorhersehbare fortlaufende IDs und schützt das System wirksam vor ID-Enumeration und Insecure Direct Object References (IDOR).
   - Das Modul **SafeImageStorage** validiert MIME-Typen, begrenzt Dateigrößen, schützt vor Path-Traversal-Angriffen (`../`) und bereinigt veraltete Avatar-Dateien bei Updates.
   - Sichere Passwortwiederherstellung über zeitlich begrenzte 6-stellige **OTP-Token** per Gmail SMTP TLS (5 Minuten Gültigkeit).
 - **Benutzererlebnis & Barrierefreiheit (UX/UI):**

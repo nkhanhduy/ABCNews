@@ -98,6 +98,7 @@ Dữ liệu mẫu nạp sẵn các tài khoản để đăng nhập thử nghi�
 - **Bảo mật Đa tầng:**
   - Mật khẩu người dùng được băm một chiều an toàn bằng thuật toán **BCrypt** chống tấn công Rainbow Table.
   - Bộ lọc **AuthFilter** kiểm soát phân quyền chặt chẽ (RBAC) cho các endpoint `/admin/*`, ngăn chặn triệt để nguy cơ leo thang đặc quyền.
+  - **Chuẩn Hóa Định Danh UUID v4 (RFC 4122):** Sử dụng chuỗi định danh ngẫu nhiên mã hóa 128-bit chuẩn quốc tế UUID v4 (36 ký tự) cho toàn bộ bài viết tin tức thay vì mã số tuần tự. Cơ chế này bảo vệ tuyệt đối các liên kết URL công khai (`/detail?id=...`), triệt tiêu hoàn toàn rủi ro tấn công thu thập hoặc đoán trước dữ liệu (ID Enumeration / Insecure Direct Object References - IDOR).
   - Cơ chế **SafeImageStorage** xử lý upload ảnh an toàn: xác thực định dạng MIME, giới hạn dung lượng, chống tấn công Path Traversal (`../`) và tự động dọn dẹp ảnh cũ khi thay đổi ảnh đại diện.
   - Khôi phục mật khẩu bảo mật qua mã xác thực **OTP 6 số** gửi qua Gmail SMTP với thời hạn 5 phút.
 - **Trải nghiệm Người dùng (UX/UI):**

@@ -3,6 +3,7 @@ package poly.com.controller;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -252,23 +253,11 @@ public class NewsAdminController extends BaseController {
         
         BeanUtils.populate(entity, request.getParameterMap());
         
-        // Kiểm tra và tự động tạo mã bản tin nếu chưa có hoặc bị trùng
+        // Kiểm tra và tự động tạo mã bản tin bằng UUID v4 nếu chưa có hoặc bị trùng
         String newsId = entity.getId();
-        String categoryId = entity.getCategoryId();
-        
-        // Nếu chưa có mã hoặc mã bị trùng, tự động generate lại
-        if (newsId == null || newsId.trim().isEmpty() || newsDAO.existsById(newsId)) {
-            if (categoryId != null && !categoryId.trim().isEmpty()) {
-                // Tự động tạo mã mới dựa trên categoryId
-                newsId = newsDAO.getNextNewsId(categoryId);
-                entity.setId(newsId);
-            } else {
-                // Nếu không có categoryId, báo lỗi
-                request.setAttribute("error", "Vui lòng chọn loại tin để tạo mã bản tin.");
-                request.setAttribute("newsItem", entity);
-                showNewsList(request, response);
-                return false;
-            }
+        if (newsId == null || newsId.trim().isEmpty() || newsDAO.existsById(newsId.trim())) {
+            newsId = UUID.randomUUID().toString();
+            entity.setId(newsId);
         }
         
         String imageUrl = FileUploadHelper.saveImage(request);
@@ -398,26 +387,16 @@ public class NewsAdminController extends BaseController {
     }
     
     /**
-     * Tạo mã bản tin tự động dựa trên categoryId (dùng cho AJAX)
+     * Tạo mã bản tin tự động theo chuẩn UUID v4 (RFC 4122)
      */
     private void generateNewsId(HttpServletRequest request, HttpServletResponse response) 
             throws IOException {
-        String categoryId = request.getParameter("categoryId");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        if (categoryId == null || categoryId.trim().isEmpty()) {
-            response.getWriter().write("{\"success\": false, \"message\": \"Vui lòng chọn loại tin\"}");
-            return;
-        }
-        
         try {
-            String nextId = newsDAO.getNextNewsId(categoryId.trim());
-            if (nextId != null) {
-                response.getWriter().write("{\"success\": true, \"id\": \"" + nextId + "\"}");
-            } else {
-                response.getWriter().write("{\"success\": false, \"message\": \"Không thể tạo mã bản tin\"}");
-            }
+            String nextId = UUID.randomUUID().toString();
+            response.getWriter().write("{\"success\": true, \"id\": \"" + nextId + "\"}");
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().write("{\"success\": false, \"message\": \"Lỗi tạo mã bản tin: " + e.getMessage() + "\"}");

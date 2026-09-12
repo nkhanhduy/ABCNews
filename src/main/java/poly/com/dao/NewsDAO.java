@@ -124,83 +124,13 @@ public class NewsDAO {
     }
     
     /**
-     * Lấy mã bản tin tiếp theo theo categoryId
-     * Format: {categoryId}{số thứ tự 3 chữ số}
-     * Ví dụ: ct001, ct002, kt001, ...
-     * Logic: Tái sử dụng mã đã xóa nếu có, nếu không thì tăng từ số lớn nhất
-     * @param categoryId Mã loại tin (ví dụ: "ct", "kt")
-     * @return Mã bản tin tiếp theo (ví dụ: "ct001", "ct002")
+     * Tự động tạo mã bản tin theo chuẩn UUID v4 (RFC 4122)
+     * Đảm bảo tính duy nhất toàn cầu và ngăn chặn rà quét ID thực trên URL công khai
+     * @param categoryId Mã loại tin (tùy chọn)
+     * @return Chuỗi UUID v4 chuẩn (ví dụ: "c4b3a1d2-7e8f-4a5b-9c0d-1e2f3a4b5c6d")
      */
     public String getNextNewsId(String categoryId) {
-        if (categoryId == null || categoryId.trim().isEmpty()) {
-            return null;
-        }
-        
-        String prefix = categoryId.trim().toLowerCase();
-        String pattern = prefix + "%";
-        
-        // Lấy tất cả các mã hiện có của category này
-        String sql = "SELECT Id FROM News WHERE CategoryId = ? AND Id LIKE ? ORDER BY Id";
-        
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            pstmt = JDBCHelper.getPreparedStatement(sql, categoryId, pattern);
-            conn = pstmt.getConnection();
-            rs = pstmt.executeQuery();
-            
-            // Tập hợp các số đã được sử dụng
-            Set<Integer> usedNumbers = new HashSet<>();
-            int maxNumber = 0;
-            
-            while (rs.next()) {
-                String id = rs.getString("Id");
-                if (id != null && id.length() > prefix.length()) {
-                    try {
-                        String numberPart = id.substring(prefix.length());
-                        int number = Integer.parseInt(numberPart);
-                        usedNumbers.add(number);
-                        if (number > maxNumber) {
-                            maxNumber = number;
-                        }
-                    } catch (NumberFormatException e) {
-                        // Bỏ qua nếu không parse được
-                    }
-                }
-            }
-            
-            // Tìm số nhỏ nhất chưa được sử dụng (từ 1 đến maxNumber)
-            int nextNumber = 1;
-            
-            // Nếu không có mã nào, bắt đầu từ 1
-            if (maxNumber == 0) {
-                nextNumber = 1;
-            } else {
-                // Tìm số nhỏ nhất chưa được sử dụng
-                boolean found = false;
-                for (int i = 1; i <= maxNumber; i++) {
-                    if (!usedNumbers.contains(i)) {
-                        nextNumber = i;
-                        found = true;
-                        break;
-                    }
-                }
-                // Nếu tất cả số từ 1 đến maxNumber đều đã dùng, tăng lên maxNumber + 1
-                if (!found) {
-                    nextNumber = maxNumber + 1;
-                }
-            }
-            
-            // Format: {prefix}{số 3 chữ số với leading zeros}
-            return String.format("%s%03d", prefix, nextNumber);
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Lỗi tạo mã bản tin", e);
-        } finally {
-            JDBCHelper.close(rs, pstmt, conn);
-        }
+        return java.util.UUID.randomUUID().toString();
     }
     
     /**
