@@ -19,7 +19,7 @@ public class User {
     /** Mã định danh duy nhất của người dùng (Username/ID) */
     private String id;
     
-    /** Mật khẩu đăng nhập (⚠️ LƯU Ý: Hiện tại lưu plain text, nên hash trong production) */
+    /** Mật khẩu đăng nhập (Đã được mã hóa bảo mật bằng chuẩn BCrypt hash) */
     private String password;
     
     /** Họ và tên đầy đủ của người dùng */
@@ -126,9 +126,8 @@ public class User {
     }
 
     /**
-     * Lấy mật khẩu của người dùng
-     * ⚠️ LƯU Ý: Mật khẩu hiện tại lưu plain text, không nên trả về trực tiếp trong production
-     * @return Mật khẩu (plain text)
+     * Lấy mật khẩu của người dùng (dạng BCrypt hash)
+     * @return Mật khẩu đã được băm
      */
     public String getPassword() {
         return password;
@@ -136,8 +135,7 @@ public class User {
 
     /**
      * Thiết lập mật khẩu cho người dùng
-     * ⚠️ LƯU Ý: Nên hash mật khẩu trước khi lưu vào database
-     * @param password Mật khẩu (nên là hash, không phải plain text)
+     * @param password Mật khẩu (chuỗi trần hoặc đã hash, DAO sẽ tự đảm bảo băm BCrypt)
      */
     public void setPassword(String password) {
         this.password = password;

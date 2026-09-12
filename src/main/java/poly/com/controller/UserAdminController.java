@@ -23,6 +23,7 @@ import poly.com.entity.User;
 import poly.com.service.ActivityLogService;
 import poly.com.util.FileUploadHelper;
 import poly.com.util.ImagePathHelper;
+import poly.com.util.PasswordUtil;
 import poly.com.util.ValidationHelper;
 
 /**
@@ -527,9 +528,20 @@ public class UserAdminController extends BaseController {
             return true;
         }
         
+        String oldPassword = user.getPassword();
         String oldEmail = user.getEmail(); // Lưu email cũ để so sánh
         
         BeanUtils.populate(user, request.getParameterMap());
+        
+        // Bảo vệ mật khẩu khi cập nhật: Nếu để trống thì giữ nguyên mật khẩu cũ
+        String inputPassword = request.getParameter("password");
+        if (inputPassword == null || inputPassword.trim().isEmpty()) {
+            user.setPassword(oldPassword);
+        } else if (!inputPassword.equals(oldPassword)) {
+            user.setPassword(PasswordUtil.ensureHashed(inputPassword));
+        } else {
+            user.setPassword(oldPassword);
+        }
         
         user.setGender(request.getParameter("gender") != null && request.getParameter("gender").equals("true"));
         

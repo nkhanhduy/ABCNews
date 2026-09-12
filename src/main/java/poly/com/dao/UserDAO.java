@@ -11,6 +11,7 @@ import java.util.Set;
 
 import poly.com.entity.User;
 import poly.com.util.JDBCHelper;
+import poly.com.util.PasswordUtil;
 
 /**
  * Lớp DAO (Data Access Object) để thao tác với bảng Users trong database
@@ -44,10 +45,11 @@ public class UserDAO {
      * @throws RuntimeException nếu có lỗi SQL (ví dụ: duplicate key)
      */
     public void insert(User entity) {
+        String hashedPassword = PasswordUtil.ensureHashed(entity.getPassword());
         String sql = "INSERT INTO Users (Id, Password, Fullname, Birthday, Gender, Mobile, Email, Role, ImagePath, GoogleId, AuthProvider, Enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         JDBCHelper.executeUpdate(sql, 
                 entity.getId(), 
-                entity.getPassword(),
+                hashedPassword,
                 entity.getFullname(), 
                 entity.getBirthday(), 
                 entity.isGender(), 
@@ -65,18 +67,17 @@ public class UserDAO {
      * 
      * Phương thức này thực hiện UPDATE tất cả các trường của User (trừ ID).
      * ID được dùng làm điều kiện WHERE để xác định user cần cập nhật.
-     * 
-     * Lưu ý: Phương thức này cập nhật TẤT CẢ các trường, kể cả những trường không thay đổi.
-     * Nếu muốn chỉ cập nhật một số trường, cần tạo method riêng.
+     * Mật khẩu sẽ được tự động kiểm tra và băm BCrypt nếu chưa được băm.
      * 
      * @param entity Đối tượng User chứa thông tin cần cập nhật
      *               Phải có ID hợp lệ và tồn tại trong database
      * @throws RuntimeException nếu có lỗi SQL hoặc user không tồn tại
      */
     public void update(User entity) {
+        String hashedPassword = PasswordUtil.ensureHashed(entity.getPassword());
         String sql = "UPDATE Users SET Password = ?, Fullname = ?, Birthday = ?, Gender = ?, Mobile = ?, Email = ?, Role = ?, ImagePath = ?, GoogleId = ?, AuthProvider = ?, Enabled = ? WHERE Id = ?";
         JDBCHelper.executeUpdate(sql, 
-                entity.getPassword(), 
+                hashedPassword, 
                 entity.getFullname(), 
                 entity.getBirthday(), 
                 entity.isGender(), 
@@ -318,9 +319,48 @@ public class UserDAO {
      *         hoặc null nếu không tìm thấy hoặc sai mật khẩu
      */
     public User findByEmailAndPassword(String email, String password) {
-        String sql = "SELECT * FROM Users WHERE Email = ? AND Password = ?";
-        List<User> list = selectBySql(sql, email, password);
-        return list.isEmpty() ? null : list.get(0);
+        if (email == null || password == null || email.trim().isEmpty() || password.trim().isEmpty()) {
+            return null;
+        }
+
+        User user = findByEmail(email.trim());
+        if (user == null) {
+            return null;
+        }
+
+        String dbPassword = user.getPassword();
+        if (dbPassword == null || dbPassword.trim().isEmpty()) {
+            return null;
+        }
+
+        boolean isMatch = false;
+        boolean needsRehash = false;
+
+        // 1. Kiểm tra nếu mật khẩu trong DB đã là chuẩn BCrypt hash
+        if (PasswordUtil.isBCryptHash(dbPassword)) {
+            isMatch = PasswordUtil.verifyPassword(password, dbPassword);
+        } 
+        // 2. Cơ chế Graceful Auto-Migration: Hỗ trợ dữ liệu mật khẩu cũ (plain text)
+        else if (dbPassword.equals(password)) {
+            isMatch = true;
+            needsRehash = true; // Đánh dấu để tự động nâng cấp sang BCrypt
+        }
+
+        if (isMatch) {
+            // Tự động nâng cấp mật khẩu cũ sang BCrypt hash ngay trong lần đăng nhập đầu tiên
+            if (needsRehash) {
+                try {
+                    String newHashedPassword = PasswordUtil.hashPassword(password);
+                    updatePassword(user.getId(), newHashedPassword);
+                    user.setPassword(newHashedPassword);
+                } catch (Exception e) {
+                    System.err.println("[CẢNH BÁO] Không thể tự động rehash mật khẩu cho user " + user.getId() + ": " + e.getMessage());
+                }
+            }
+            return user;
+        }
+
+        return null;
     }
     
     /**
