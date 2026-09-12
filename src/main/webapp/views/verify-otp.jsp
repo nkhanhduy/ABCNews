@@ -80,7 +80,7 @@
             outline: none;
         }
         .btn-auth-submit {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
+            background: linear-gradient(135deg, #16a34a, #15803d);
             color: #ffffff !important;
             border: none;
             font-weight: 700;
@@ -91,11 +91,12 @@
             cursor: pointer;
             transition: all 0.2s ease;
             margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
         }
         .btn-auth-submit:hover {
-            background: linear-gradient(135deg, #1e293b, #334155);
+            background: linear-gradient(135deg, #15803d, #14532d);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+            box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35);
         }
         @media (max-width: 576px) {
             .otp-box {

@@ -17,15 +17,15 @@
     <%-- Font Awesome Icons --%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- CSS Hệ thống Biến màu ABCNews & Theme Xanh Lá -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css?v=2026.3">
     <!-- Framework CSS chung - Dropdown, Buttons, Cards -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/framework.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/framework.css?v=2026.3">
     <!-- Tải CSS của Admin -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin_style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin_style.css?v=2026.3">
     <!-- UI Animations -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/animations.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/animations.css?v=2026.3">
     <!-- Dark Mode CSS -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/dark-mode.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/dark-mode.css?v=2026.3">
     <!-- Theme Toggle JS -->
     <script src="${pageContext.request.contextPath}/assets/js/theme-toggle.js"></script>
 </head>
@@ -55,7 +55,7 @@
                 <!-- Footer -->
                 <footer class="admin-footer">
                     <p class="mb-0">
-                        &copy; 2026 ABC News CMS | Đồ án Web Java — Tác giả: <strong>Nguyễn Khánh Duy</strong> (FPT Polytechnic TP. Hồ Chí Minh).
+                        &copy; 2025 ABC News CMS | Đồ án Web Java — Tác giả: <strong>Nguyễn Khánh Duy</strong> (FPT Polytechnic TP. Hồ Chí Minh).
                     </p>
                 </footer>
             </main>

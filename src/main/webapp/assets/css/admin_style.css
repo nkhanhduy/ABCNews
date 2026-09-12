@@ -151,18 +151,26 @@ ul { list-style: none; padding: 0; margin: 0; }
     text-transform: uppercase !important;
     transition: all 0.2s !important;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
-    display: flex;
+    display: inline-flex !important;
     align-items: center;
     cursor: pointer;
     gap: 8px;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
 }
 
-.user-profile-link .header-user-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--primary-color);
+.user-profile-link .header-user-avatar,
+.header-user-avatar {
+    width: 28px !important;
+    height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    border: 2px solid var(--primary-color) !important;
+    flex-shrink: 0 !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
 }
 
 /* Tên người dùng trong link in đậm và in hoa */
@@ -180,18 +188,24 @@ ul { list-style: none; padding: 0; margin: 0; }
 }
 
 .admin-user-info a:not(.user-profile-link) {
-    color: #fff;
-    background-color: var(--danger-color);
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
+    color: #fff !important;
+    background-color: var(--danger-color) !important;
+    padding: 6px 16px !important;
+    border-radius: 20px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
     transition: background-color 0.2s;
     box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
 }
 
 .admin-user-info a:not(.user-profile-link):hover {
-    background-color: #c82333;
+    background-color: #c82333 !important;
 }
 
 /* Làm chữ "Admin" trong badge sáng hơn và nổi bật */
@@ -1099,4 +1113,59 @@ table td .dropdown {
         flex: 1;
         justify-content: center;
     }
+}
+
+/* ==========================================================================
+   BẢO VỆ KÍCH THƯỚC HÌNH ẢNH & PROFILE AVATAR CHỐNG VỠ LAYOUT
+   ========================================================================== */
+.admin-main img,
+.admin-content img,
+.profile-content img {
+    max-width: 100%;
+}
+
+.profile-avatar-container {
+    position: relative !important;
+    width: 160px !important;
+    height: 160px !important;
+    margin: 0 auto !important;
+}
+
+.profile-avatar {
+    position: relative !important;
+    width: 160px !important;
+    height: 160px !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    margin: 0 auto !important;
+    border: 4px solid var(--primary-color) !important;
+    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.2) !important;
+    background-color: #f1f5f9;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.avatar-img {
+    width: 160px !important;
+    height: 160px !important;
+    max-width: 160px !important;
+    max-height: 160px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    display: block !important;
+    margin: 0 auto !important;
+}
+
+.avatar-placeholder {
+    width: 160px !important;
+    height: 160px !important;
+    border-radius: 50% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-placeholder.d-none {
+    display: none !important;
 }

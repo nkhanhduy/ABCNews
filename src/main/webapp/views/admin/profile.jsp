@@ -38,35 +38,38 @@
         <!-- Ảnh đại diện thông minh ở giữa phía trên -->
         <div class="profile-avatar-section">
             <div class="profile-avatar-wrapper">
-                <div class="profile-avatar">
-                    <c:choose>
-                        <c:when test="${not empty profileUser.imagePath}">
-                            <c:set var="userImageUrl" value="${profileUser.imagePath}" />
-                            <c:if test="${!fn:startsWith(userImageUrl, pageContext.request.contextPath) && fn:startsWith(userImageUrl, '/')}">
-                                <c:set var="userImageUrl" value="${pageContext.request.contextPath}${profileUser.imagePath}" />
-                            </c:if>
-                            <img id="avatarPreviewImg"
-                                 src="${userImageUrl}" 
-                                 data-original-src="${userImageUrl}"
-                                 alt="${profileUser.fullname}" 
-                                 class="avatar-img"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div class="avatar-placeholder" style="display: none;">
-                                <i class="fas fa-user fa-5x"></i>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <img id="avatarPreviewImg"
-                                 src="" 
-                                 data-original-src=""
-                                 alt="${profileUser.fullname}" 
-                                 class="avatar-img"
-                                 style="display: none;">
-                            <div class="avatar-placeholder">
-                                <i class="fas fa-user fa-5x"></i>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
+                <div class="profile-avatar-container" style="position: relative; width: 160px; height: 160px; margin: 0 auto;">
+                    <div class="profile-avatar" style="width: 160px; height: 160px; border-radius: 50%; overflow: hidden; border: 4px solid #16a34a; box-shadow: 0 8px 24px rgba(22, 163, 74, 0.2); background-color: #f1f5f9; display: flex; align-items: center; justify-content: center;">
+                        <c:choose>
+                            <c:when test="${not empty profileUser.imagePath}">
+                                <c:set var="userImageUrl" value="${profileUser.imagePath}" />
+                                <c:if test="${!fn:startsWith(userImageUrl, pageContext.request.contextPath) && fn:startsWith(userImageUrl, '/')}">
+                                    <c:set var="userImageUrl" value="${pageContext.request.contextPath}${profileUser.imagePath}" />
+                                </c:if>
+                                <img id="avatarPreviewImg"
+                                     src="${userImageUrl}" 
+                                     data-original-src="${userImageUrl}"
+                                     alt="${profileUser.fullname}" 
+                                     class="avatar-img"
+                                     style="width: 160px !important; height: 160px !important; max-width: 160px !important; max-height: 160px !important; border-radius: 50% !important; object-fit: cover !important; display: block !important; margin: 0 auto !important;"
+                                     onerror="this.style.display='none'; var ph = document.getElementById('avatarPlaceholder'); if(ph) ph.classList.remove('d-none');">
+                                <div id="avatarPlaceholder" class="avatar-placeholder d-none" style="width: 160px; height: 160px; border-radius: 50%; align-items: center; justify-content: center; background: linear-gradient(135deg, #15803d 0%, #16a34a 100%); color: #ffffff;">
+                                    <i class="fas fa-user fa-5x"></i>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <img id="avatarPreviewImg"
+                                     src="" 
+                                     data-original-src=""
+                                     alt="${profileUser.fullname}" 
+                                     class="avatar-img"
+                                     style="display: none !important; width: 160px !important; height: 160px !important; max-width: 160px !important; max-height: 160px !important; border-radius: 50% !important; object-fit: cover !important;">
+                                <div id="avatarPlaceholder" class="avatar-placeholder" style="width: 160px; height: 160px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #15803d 0%, #16a34a 100%); color: #ffffff;">
+                                    <i class="fas fa-user fa-5x"></i>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
 
                     <%-- Nút overlay đổi ảnh đại diện (nếu có quyền sửa) --%>
                     <c:if test="${canEdit}">
@@ -325,21 +328,37 @@
     gap: 14px;
 }
 
+.profile-avatar-container {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto;
+}
+
 .profile-avatar {
     position: relative;
     width: 160px;
     height: 160px;
     border-radius: 50%;
+    overflow: hidden;
     margin: 0 auto;
+    border: 4px solid var(--brand-accent, #16a34a);
+    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.2);
+    background-color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .avatar-img {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid var(--brand-accent, #16a34a);
-    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.2);
+    width: 160px !important;
+    height: 160px !important;
+    max-width: 160px !important;
+    max-height: 160px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    display: block !important;
+    margin: 0 auto !important;
     transition: transform 0.25s ease, filter 0.25s ease;
 }
 
@@ -356,13 +375,17 @@
     box-shadow: 0 8px 24px rgba(22, 163, 74, 0.2);
 }
 
+.avatar-placeholder.d-none {
+    display: none !important;
+}
+
 /* Nút trigger upload ảnh */
 .avatar-upload-trigger {
     position: absolute;
-    bottom: 6px;
-    right: 6px;
-    width: 44px;
-    height: 44px;
+    bottom: 4px;
+    right: 4px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     background: var(--brand-accent, #16a34a);
     color: #ffffff;
@@ -373,6 +396,7 @@
     font-size: 1.15rem;
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    z-index: 10;
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
@@ -675,10 +699,10 @@ document.addEventListener('DOMContentLoaded', function() {
         reader.onload = function(event) {
             if (previewImg) {
                 previewImg.src = event.target.result;
-                previewImg.style.display = 'block';
-                var placeholder = previewImg.nextElementSibling;
-                if (placeholder && placeholder.classList.contains('avatar-placeholder')) {
-                    placeholder.style.display = 'none';
+                previewImg.style.setProperty('display', 'block', 'important');
+                var placeholder = document.getElementById('avatarPlaceholder');
+                if (placeholder) {
+                    placeholder.classList.add('d-none');
                 }
             }
         };
@@ -694,15 +718,14 @@ document.addEventListener('DOMContentLoaded', function() {
             fileInput.value = '';
             if (actionBox) actionBox.style.display = 'none';
             if (previewImg) {
+                var placeholder = document.getElementById('avatarPlaceholder');
                 if (originalSrc && originalSrc.trim() !== '') {
                     previewImg.src = originalSrc;
-                    previewImg.style.display = 'block';
+                    previewImg.style.setProperty('display', 'block', 'important');
+                    if (placeholder) placeholder.classList.add('d-none');
                 } else {
-                    previewImg.style.display = 'none';
-                    var placeholder = previewImg.nextElementSibling;
-                    if (placeholder && placeholder.classList.contains('avatar-placeholder')) {
-                        placeholder.style.display = 'flex';
-                    }
+                    previewImg.style.setProperty('display', 'none', 'important');
+                    if (placeholder) placeholder.classList.remove('d-none');
                 }
             }
         });
