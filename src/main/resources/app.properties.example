@@ -1,0 +1,30 @@
+# ===================================================================
+# ABCNews - Cấu hình ứng dụng mẫu (Mẫu tham khảo)
+# ===================================================================
+# HƯỚNG DẪN:
+# Sao chép (copy) file này và đổi tên thành "app.properties" trong cùng thư mục:
+# src/main/resources/app.properties
+# Sau đó cập nhật các thông số tài khoản, mật khẩu tương ứng với máy của bạn.
+# File "app.properties" đã được cấu hình trong .gitignore để không bị đẩy lên Git.
+# ===================================================================
+
+# -------------------------------------------------------------------
+# 1. Cấu hình Cơ sở dữ liệu (Microsoft SQL Server)
+# -------------------------------------------------------------------
+db.host=localhost
+db.port=1433
+db.name=ABCNews
+db.user=sa
+db.password=your_database_password_here
+
+# -------------------------------------------------------------------
+# 2. Cấu hình Email SMTP (Google Gmail)
+# -------------------------------------------------------------------
+# Dùng cho các chức năng: Quên mật khẩu gửi OTP và Gửi bản tin Newsletter
+mail.smtp.host=smtp.gmail.com
+mail.smtp.port=587
+mail.smtp.auth=true
+mail.smtp.starttls.enable=true
+mail.smtp.user=your_email@gmail.com
+# Mật khẩu ứng dụng 16 ký tự tạo từ Google Account (App Password):
+mail.smtp.password=your_gmail_app_password_here

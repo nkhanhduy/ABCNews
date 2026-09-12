@@ -18,13 +18,11 @@ import poly.com.entity.News;
  * Lưu ý: Cần cấu hình SMTP_USER và SMTP_PASSWORD với Gmail App Password
  */
 public class EmailService {
-    // Cấu hình SMTP (có thể đọc từ web.xml hoặc hardcode cho đơn giản)
-    private static final String SMTP_HOST = "smtp.gmail.com";
-    private static final int SMTP_PORT = 587;
-    // Email Gmail đã được cấu hình
-    private static final String SMTP_USER = "checkcap001@gmail.com";
-    // App Password từ Gmail (16 ký tự)
-    private static final String SMTP_PASSWORD = "jojxqmseklitalsu";
+    // Cấu hình SMTP nạp an toàn từ ConfigHelper (hỗ trợ biến môi trường hoặc file app.properties)
+    private static final String SMTP_HOST = ConfigHelper.get("mail.smtp.host", "smtp.gmail.com");
+    private static final int SMTP_PORT = ConfigHelper.getInt("mail.smtp.port", 587);
+    private static final String SMTP_USER = ConfigHelper.get("mail.smtp.user", "");
+    private static final String SMTP_PASSWORD = ConfigHelper.get("mail.smtp.password", "");
     
     /**
      * Gửi email newsletter cho một subscriber

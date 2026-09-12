@@ -22,19 +22,19 @@ import java.sql.SQLException;
 public class JDBCHelper {
     
     /** Tên database */
-    private static final String DB_NAME = "ABCNews";
+    private static final String DB_NAME = ConfigHelper.get("db.name", "ABCNews");
     
     /** Username để đăng nhập vào SQL Server */
-    private static final String DB_USER = "sa";
+    private static final String DB_USER = ConfigHelper.get("db.user", "sa");
     
     /** Password để đăng nhập vào SQL Server */
-    private static final String DB_PASS = "123456";
+    private static final String DB_PASS = ConfigHelper.get("db.password", "123456");
     
     /** Địa chỉ host của SQL Server */
-    private static final String DB_HOST = "localhost";
+    private static final String DB_HOST = ConfigHelper.get("db.host", "localhost");
     
     /** Cổng kết nối của SQL Server (mặc định: 1433) */
-    private static final String DB_PORT = "1433";
+    private static final String DB_PORT = ConfigHelper.get("db.port", "1433");
 
     /** Connection URL đầy đủ để kết nối đến database */
     private static String connectionUrl;
@@ -47,7 +47,7 @@ public class JDBCHelper {
      * 
      * Khối này sẽ chạy một lần duy nhất khi class được JVM load vào memory.
      * Nó thực hiện:
-     * 1. Tạo connection URL từ các thông tin database
+     * 1. Tạo connection URL từ các thông tin database được nạp an toàn từ ConfigHelper
      * 2. Nạp JDBC driver class để đăng ký với DriverManager
      * 
      * Nếu không tìm thấy driver, sẽ throw RuntimeException để dừng ứng dụng.
