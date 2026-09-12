@@ -75,5 +75,37 @@ public class PasswordUtil {
         
         return true;
     }
+
+    /**
+     * Kiểm tra xem một chuỗi đã là BCrypt hash hợp lệ hay chưa
+     * Định dạng chuẩn BCrypt: bắt đầu bằng $2a$, $2b$, hoặc $2y$, độ dài chuẩn 60 ký tự
+     * 
+     * @param password Chuỗi mật khẩu cần kiểm tra
+     * @return true nếu đã là BCrypt hash, false nếu là plain text
+     */
+    public static boolean isBCryptHash(String password) {
+        if (password == null || password.length() != 60) {
+            return false;
+        }
+        return password.startsWith("$2a$") || password.startsWith("$2b$") || password.startsWith("$2y$");
+    }
+
+    /**
+     * Đảm bảo mật khẩu luôn được băm BCrypt:
+     * - Nếu chuỗi đã là BCrypt hash thì giữ nguyên để tránh double-hash
+     * - Nếu chuỗi là plain text thì tự động băm bằng BCrypt
+     * 
+     * @param plainOrHashedPassword Chuỗi mật khẩu đầu vào
+     * @return Mật khẩu chuẩn BCrypt hash (60 ký tự)
+     */
+    public static String ensureHashed(String plainOrHashedPassword) {
+        if (plainOrHashedPassword == null || plainOrHashedPassword.trim().isEmpty()) {
+            return plainOrHashedPassword;
+        }
+        if (isBCryptHash(plainOrHashedPassword)) {
+            return plainOrHashedPassword;
+        }
+        return hashPassword(plainOrHashedPassword);
+    }
 }
 
