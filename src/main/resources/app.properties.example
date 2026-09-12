@@ -33,3 +33,11 @@ mail.smtp.password=your_gmail_app_password_here
 # 3. Cấu hình Google OAuth (Google Sign-In)
 # -------------------------------------------------------------------
 google.client.id=your_google_client_id_here
+
+# -------------------------------------------------------------------
+# 4. Cấu hình Base URL ứng dụng (Dùng cho Canonical URL, Open Graph, SEO)
+# -------------------------------------------------------------------
+# Môi trường Local: http://localhost:8088
+# Môi trường Production: Cấu hình domain thực tế (ví dụ: https://abcnews.vn)
+app.base.url=http://localhost:8088
+

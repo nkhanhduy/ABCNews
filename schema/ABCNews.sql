@@ -156,11 +156,14 @@ GO
 CREATE TABLE [dbo].[Categories](
 	[Id] [varchar](50) NOT NULL,
 	[Name] [nvarchar](200) NOT NULL,
+	[Slug] [varchar](200) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UX_Categories_Slug] ON [dbo].[Categories]([Slug] ASC);
 GO
 /****** Object:  Table [dbo].[News]    Script Date: 23/03/26 7:37:51 CH ******/
 SET ANSI_NULLS ON
@@ -411,15 +414,15 @@ BEGIN
 END;
 
 IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'TECH')
-    INSERT INTO Categories (Id, Name) VALUES ('TECH', N'Công nghệ & AI');
+    INSERT INTO Categories (Id, Name, Slug) VALUES ('TECH', N'Công nghệ & AI', 'cong-nghe-ai');
 IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'ECONOMY')
-    INSERT INTO Categories (Id, Name) VALUES ('ECONOMY', N'Kinh tế & Tài chính');
+    INSERT INTO Categories (Id, Name, Slug) VALUES ('ECONOMY', N'Kinh tế & Tài chính', 'kinh-te-tai-chinh');
 IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'SPORT')
-    INSERT INTO Categories (Id, Name) VALUES ('SPORT', N'Thể thao Quốc tế');
+    INSERT INTO Categories (Id, Name, Slug) VALUES ('SPORT', N'Thể thao Quốc tế', 'the-thao-quoc-te');
 IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'LIFE')
-    INSERT INTO Categories (Id, Name) VALUES ('LIFE', N'Đời sống & Khoa học');
+    INSERT INTO Categories (Id, Name, Slug) VALUES ('LIFE', N'Đời sống & Khoa học', 'doi-song-khoa-hoc');
 IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'EDUCATION')
-    INSERT INTO Categories (Id, Name) VALUES ('EDUCATION', N'Giáo dục & Kỹ năng');
+    INSERT INTO Categories (Id, Name, Slug) VALUES ('EDUCATION', N'Giáo dục & Kỹ năng', 'giao-duc-ky-nang');
 
 IF NOT EXISTS (SELECT * FROM News WHERE Id = '4594fcf6-c827-4ace-bc20-9bff52d424d8')
 BEGIN

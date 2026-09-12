@@ -97,12 +97,14 @@ public class DetailController extends BaseController {
             ImagePathHelper.normalizeImagePaths(listRelatedNews, contextPath);
 
             List<Comment> approvedComments = commentDAO.findByNewsIdApproved(newsId);
+            Category newsCategory = categoryService.findById(newsDetail.getCategoryId());
 
             request.setAttribute("categories", listCategories);
             request.setAttribute("top5HotNews", listTop5HotNews);
             request.setAttribute("top5NewestNews", listTop5NewestNews);
             request.setAttribute("viewedNews", listViewedNews);
             request.setAttribute("news", newsDetail);
+            request.setAttribute("newsCategory", newsCategory);
             request.setAttribute("relatedNews", listRelatedNews);
             request.setAttribute("comments", approvedComments);
             request.setAttribute("commentCount", approvedComments.size());

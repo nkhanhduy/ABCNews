@@ -16,7 +16,10 @@ import poly.com.dao.CategoryDAO;
 import poly.com.dao.NewsDAO;
 import poly.com.entity.Category;
 import poly.com.entity.User;
+import poly.com.exception.DuplicateSlugException;
 import poly.com.service.ActivityLogService;
+import poly.com.service.CategoryService;
+import poly.com.service.impl.CategoryServiceImpl;
 import poly.com.util.ValidationHelper;
 
 /**
@@ -28,15 +31,17 @@ public class CategoryAdminController extends BaseController {
     private static final long serialVersionUID = 1L;
        
     private CategoryDAO categoryDAO;
+    private CategoryService categoryService;
     private NewsDAO newsDAO;
     private ActivityLogService activityLogService;
 
     /**
-     * Khởi tạo CategoryDAO và NewsDAO khi servlet được load
+     * Khởi tạo CategoryDAO, CategoryService và NewsDAO khi servlet được load
      */
     @Override
     public void init() throws ServletException {
         categoryDAO = new CategoryDAO();
+        categoryService = new CategoryServiceImpl(categoryDAO);
         newsDAO = new NewsDAO();
         activityLogService = new ActivityLogService();
     }
@@ -95,8 +100,25 @@ public class CategoryAdminController extends BaseController {
             if (shouldRedirect) {
                 response.sendRedirect(getContextPath(request) + "/admin/categories");
             }
+        } catch (DuplicateSlugException e) {
+            request.setAttribute("error", "Đường dẫn thân thiện (slug) \"" + e.getSlug() + "\" đã tồn tại. Vui lòng chọn tên loại tin khác.");
+            try {
+                showCategoryList(request, response);
+                return;
+            } catch (Exception ex) {
+                handleException(request, response, ex);
+            }
         } catch (Exception e) {
-            // Xử lý lỗi SQL (như duplicate key) một cách thân thiện hơn
+            // Xử lý lỗi SQL (như duplicate key hoặc duplicate slug) một cách thân thiện hơn
+            if (ValidationHelper.isDuplicateSlugException(e)) {
+                request.setAttribute("error", "Đường dẫn thân thiện (slug) đã tồn tại. Vui lòng chọn tên loại tin khác.");
+                try {
+                    showCategoryList(request, response);
+                    return;
+                } catch (Exception ex) {
+                    handleException(request, response, ex);
+                }
+            }
             if (ValidationHelper.isDuplicateKeyException(e)) {
                 request.setAttribute("error", "Mã loại tin đã tồn tại. Vui lòng chọn mã khác.");
                 try {
@@ -114,7 +136,7 @@ public class CategoryAdminController extends BaseController {
      * Hiển thị danh sách tất cả loại tin
      */
     private void showCategoryList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Category> categoriesList = categoryDAO.findAll();
+        List<Category> categoriesList = categoryService.getAllCategories();
         
         // Tạo Map để lưu số lượng tin tức cho mỗi category
         Map<String, Integer> newsCountMap = new HashMap<>();
@@ -133,7 +155,7 @@ public class CategoryAdminController extends BaseController {
      */
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = request.getParameter("id");
-        Category categoryItem = categoryDAO.findById(id);
+        Category categoryItem = categoryService.findById(id);
         request.setAttribute("categoryItem", categoryItem);
         showCategoryList(request, response);
     }
@@ -146,7 +168,7 @@ public class CategoryAdminController extends BaseController {
         String id = request.getParameter("id");
         if (!isNullOrEmpty(id)) {
             // Lấy thông tin category trước khi xóa (để log)
-            Category category = categoryDAO.findById(id);
+            Category category = categoryService.findById(id);
             
             // Kiểm tra xem có tin tức nào đang sử dụng category này không
             int newsCount = newsDAO.countByCategoryId(id);
@@ -162,7 +184,7 @@ public class CategoryAdminController extends BaseController {
                 }
             }
             // Nếu không có tin tức nào, mới cho phép xóa
-            categoryDAO.delete(id);
+            categoryService.deleteCategory(id);
             
             // Log xóa category
             if (category != null) {
@@ -192,8 +214,19 @@ public class CategoryAdminController extends BaseController {
             showCategoryList(request, response);
             return false;
         }
+
+        String name = entity.getName();
+        if (ValidationHelper.isNullOrEmpty(name)) {
+            request.setAttribute("error", "Vui lòng nhập tên loại tin.");
+            request.setAttribute("categoryItem", entity);
+            showCategoryList(request, response);
+            return false;
+        }
         
         categoryId = categoryId.trim();
+        entity.setId(categoryId);
+        entity.setName(name.trim());
+
         // Kiểm tra trong database với synchronized để tránh race condition
         synchronized (this) {
             if (categoryDAO.existsById(categoryId)) {
@@ -203,9 +236,9 @@ public class CategoryAdminController extends BaseController {
                 return false;
             }
             
-            // Nếu mã chưa tồn tại, thực hiện insert
+            // Nếu mã chưa tồn tại, thực hiện tạo loại tin (tự sinh slug duy nhất trong Service)
             try {
-                categoryDAO.insert(entity);
+                categoryService.createCategory(entity);
                 
                 // Log tạo category
                 User currentUser = (User) request.getSession().getAttribute("user");
@@ -214,10 +247,26 @@ public class CategoryAdminController extends BaseController {
                 }
                 
                 return true;
+            } catch (DuplicateSlugException e) {
+                request.setAttribute("error", "Đường dẫn thân thiện (slug) \"" + e.getSlug() + "\" đã tồn tại. Vui lòng chọn tên loại tin khác.");
+                request.setAttribute("categoryItem", entity);
+                showCategoryList(request, response);
+                return false;
+            } catch (IllegalArgumentException e) {
+                request.setAttribute("error", e.getMessage());
+                request.setAttribute("categoryItem", entity);
+                showCategoryList(request, response);
+                return false;
             } catch (Exception e) {
-                // Xử lý lỗi duplicate key từ database (race condition)
+                // Xử lý lỗi duplicate slug hoặc duplicate key từ database (race condition)
+                if (ValidationHelper.isDuplicateSlugException(e)) {
+                    request.setAttribute("error", "Đường dẫn thân thiện (slug) của loại tin đã tồn tại. Vui lòng chọn tên khác.");
+                    request.setAttribute("categoryItem", entity);
+                    showCategoryList(request, response);
+                    return false;
+                }
                 if (ValidationHelper.isDuplicateKeyException(e)) {
-                    request.setAttribute("error", "Mã loại tin \"" + categoryId + "\" đã tồn tại. Có thể người khác vừa tạo mã này.");
+                    request.setAttribute("error", "Mã loại tin \"" + categoryId + "\" đã tồn tại. Vui lòng chọn mã khác.");
                     request.setAttribute("categoryItem", entity);
                     showCategoryList(request, response);
                     return false;
@@ -236,15 +285,37 @@ public class CategoryAdminController extends BaseController {
             return;
         }
         
-        Category entity = categoryDAO.findById(id);
+        Category entity = categoryService.findById(id);
         if (entity != null) {
-            BeanUtils.populate(entity, request.getParameterMap());
-            categoryDAO.update(entity);
-            
-            // Log cập nhật category
-            User currentUser = (User) request.getSession().getAttribute("user");
-            if (currentUser != null) {
-                activityLogService.logCategoryUpdate(currentUser, entity.getId(), entity.getName(), request);
+            String newName = request.getParameter("name");
+            if (ValidationHelper.isNullOrEmpty(newName)) {
+                request.setAttribute("error", "Tên loại tin không được để trống.");
+                showEditForm(request, response);
+                return;
+            }
+
+            entity.setName(newName.trim());
+            try {
+                categoryService.updateCategory(entity);
+                
+                // Log cập nhật category
+                User currentUser = (User) request.getSession().getAttribute("user");
+                if (currentUser != null) {
+                    activityLogService.logCategoryUpdate(currentUser, entity.getId(), entity.getName(), request);
+                }
+            } catch (DuplicateSlugException e) {
+                request.setAttribute("error", "Đường dẫn thân thiện (slug) \"" + e.getSlug() + "\" đã tồn tại. Vui lòng đặt tên loại tin khác.");
+                showEditForm(request, response);
+            } catch (IllegalArgumentException e) {
+                request.setAttribute("error", e.getMessage());
+                showEditForm(request, response);
+            } catch (Exception e) {
+                if (ValidationHelper.isDuplicateSlugException(e)) {
+                    request.setAttribute("error", "Đường dẫn thân thiện (slug) của loại tin đã tồn tại. Vui lòng đặt tên loại tin khác.");
+                    showEditForm(request, response);
+                    return;
+                }
+                throw e;
             }
         }
     }

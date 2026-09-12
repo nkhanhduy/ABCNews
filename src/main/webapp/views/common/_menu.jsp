@@ -15,13 +15,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-0">
                 <li class="nav-item">
-                    <a class="nav-link ${empty param.id ? 'active' : ''}" aria-current="page" href="${pageContext.request.contextPath}/home">
+                    <a class="nav-link ${empty currentCategory and empty param.id ? 'active' : ''}" aria-current="page" href="${pageContext.request.contextPath}/home">
                         Trang chủ
                     </a>
                 </li>
                 <c:forEach var="cat" items="${categories}">
                     <li class="nav-item">
-                        <a class="nav-link ${param.id eq cat.id ? 'active' : ''}" href="${pageContext.request.contextPath}/category?id=${cat.id}">
+                        <a class="nav-link ${(not empty currentCategory and currentCategory.id eq cat.id) or (param.id eq cat.id) ? 'active' : ''}" 
+                           href="${pageContext.request.contextPath}/category/${cat.slug}">
                             ${cat.name}
                         </a>
                     </li>

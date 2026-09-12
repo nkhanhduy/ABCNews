@@ -50,6 +50,16 @@
                 <label for="name">Tên loại tin</label>
                 <input type="text" name="name" value="${categoryItem.name}" required>
             </div>
+
+            <c:if test="${isEdit}">
+                <div class="form-group">
+                    <label for="slug">Đường dẫn thân thiện (Slug)</label>
+                    <input type="text" id="slug" name="slug" value="${categoryItem.slug}" readonly style="background-color: #f1f3f5; color: #495057; cursor: not-allowed;">
+                    <small class="text-muted" style="font-size: 0.85rem; display: block; margin-top: 4px;">
+                        <i class="fas fa-info-circle me-1"></i>Tự động đồng bộ theo tên loại tin
+                    </small>
+                </div>
+            </c:if>
             
             <div class="button-group">
                 <button type="submit" class="btn ${isEdit ? 'btn-update' : 'btn-create'}">
@@ -84,7 +94,8 @@
                     <tr>
                         <th>Mã loại</th>
                         <th>Tên loại tin</th>
-                            <th>Số lượng tin</th>
+                        <th>Đường dẫn (Slug)</th>
+                        <th>Số lượng tin</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -96,12 +107,17 @@
                             </c:if>
                         <tr>
                             <td>${cat.id}</td>
-                            <td>${cat.name}</td>
-                                <td>
-                                    <span class="badge bg-primary">
-                                        ${newsCount}
-                                    </span>
-                                </td>
+                            <td><strong>${cat.name}</strong></td>
+                            <td>
+                                <a href="${pageContext.request.contextPath}/category/${cat.slug}" target="_blank" class="badge bg-light text-dark border text-decoration-none" title="Xem trước chuyên mục public">
+                                    <code>${cat.slug}</code> <i class="fas fa-external-link-alt ms-1" style="font-size: 0.7rem;"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">
+                                    ${newsCount}
+                                </span>
+                            </td>
                             <td>
                                 <a href="${pageContext.request.contextPath}/admin/categories?action=edit&id=${cat.id}" 
                                    class="btn btn-sm btn-update">Sửa</a>

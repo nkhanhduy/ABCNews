@@ -19,8 +19,10 @@ import poly.com.util.NewsHelper;
 
 /**
  * Controller xử lý trang danh sách tin theo loại tin (category)
+ * Hỗ trợ định tuyến SEO friendly: /category/{slug}
+ * Tương thích ngược với link cũ: /category?id={id} (HTTP 302 redirect sang slug tương ứng)
  */
-@WebServlet("/category")
+@WebServlet(urlPatterns = {"/category", "/category/*"})
 public class CategoryController extends BaseController {
     private static final long serialVersionUID = 1L;
        
@@ -37,21 +39,58 @@ public class CategoryController extends BaseController {
     }
 
     /**
-     * Hiển thị danh sách tin tức theo loại tin được chọn
+     * Hiển thị danh sách tin tức theo loại tin được chọn qua slug URL
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
         try {
-            String categoryId = request.getParameter("id");
+            String pathInfo = request.getPathInfo();
             String contextPath = getContextPath(request);
-            
-            if (isNullOrEmpty(categoryId)) {
+
+            // 1. Tương thích ngược: Nếu truy cập dạng cũ /category?id=...
+            String legacyId = request.getParameter("id");
+            if ((pathInfo == null || "/".equals(pathInfo)) && !isNullOrEmpty(legacyId)) {
+                Category cat = categoryService.findById(legacyId.trim());
+                if (cat != null && !isNullOrEmpty(cat.getSlug())) {
+                    // Chuyển hướng 302 sang URL chuẩn SEO dạng /category/{slug}
+                    response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+                    response.setHeader("Location", contextPath + "/category/" + cat.getSlug());
+                    return;
+                } else {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy danh mục yêu cầu");
+                    return;
+                }
+            }
+
+            // 2. Nếu truy cập /category mà không có slug hoặc id, chuyển hướng về trang chủ
+            if (pathInfo == null || "/".equals(pathInfo)) {
                 response.sendRedirect(contextPath + "/home");
                 return;
             }
 
+            // 3. Tách slug từ pathInfo: ví dụ "/cong-nghe" -> "cong-nghe"
+            String slug = pathInfo.startsWith("/") ? pathInfo.substring(1) : pathInfo;
+            if (slug.endsWith("/")) {
+                slug = slug.substring(0, slug.length() - 1);
+            }
+
+            // 4. Bảo mật: Validate cấu trúc slug qua regex chuẩn, ngăn chặn path traversal hoặc ký tự lạ
+            if (!poly.com.util.SlugUtil.isValidSlug(slug)) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Đường dẫn chuyên mục không hợp lệ");
+                return;
+            }
+
+            // 5. Truy vấn chuyên mục theo slug
+            Category category = categoryService.findBySlug(slug);
+            if (category == null) {
+                // Yêu cầu: Nếu slug không tồn tại, trả về HTTP 404, KHÔNG redirect trang chủ im lặng
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Chuyên mục tin tức không tồn tại");
+                return;
+            }
+
+            // 6. Tải dữ liệu hiển thị (tin tức theo categoryId, tin nóng, tin mới, v.v.)
             List<Category> listCategories = categoryService.getAllCategories();
             List<News> listTop5HotNews = newsService.getTop5HotNews();
             List<News> listTop5NewestNews = newsService.getTop5Newest();
@@ -62,20 +101,20 @@ public class CategoryController extends BaseController {
             
             List<News> listViewedNews = NewsHelper.getViewedNews(request.getSession(), newsService, contextPath);
             
-            Category category = categoryService.findById(categoryId);
-            List<News> listNewsByCategory = newsService.findByCategoryId(categoryId);
-            
-            // Chuẩn hóa đường dẫn ảnh cho danh sách tin theo category
+            // Truy vấn danh sách bài viết thuộc chuyên mục qua CategoryId
+            List<News> listNewsByCategory = newsService.findByCategoryId(category.getId());
             ImagePathHelper.normalizeImagePaths(listNewsByCategory, contextPath);
             
             request.setAttribute("categories", listCategories);
+            request.setAttribute("currentCategory", category);
+            request.setAttribute("category", category);
+            request.setAttribute("categoryName", category.getName());
+            request.setAttribute("categoryNews", listNewsByCategory);
             request.setAttribute("top5HotNews", listTop5HotNews);
             request.setAttribute("top5NewestNews", listTop5NewestNews);
             request.setAttribute("viewedNews", listViewedNews);
-            request.setAttribute("categoryNews", listNewsByCategory);
-            request.setAttribute("categoryName", (category != null) ? category.getName() : "Không tìm thấy");
             
-            String pageTitle = (category != null) ? category.getName() : "Danh sách tin";
+            String pageTitle = category.getName();
             forwardToPublicView(request, response, pageTitle, "/views/public/category-content.jsp");
 
         } catch (Exception e) {

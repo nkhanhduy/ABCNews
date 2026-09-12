@@ -26,10 +26,29 @@
         </c:choose>
     </title>
     
-    <%-- Xác định Base URL đầy đủ cho SEO & Open Graph Tags --%>
-    <c:set var="reqPort" value="${pageContext.request.serverPort}" />
-    <c:set var="portPart" value="${(pageContext.request.scheme eq 'http' and reqPort eq 80) or (pageContext.request.scheme eq 'https' and reqPort eq 443) ? '' : ':'.concat(reqPort)}" />
-    <c:set var="siteBaseUrl" value="${pageContext.request.scheme}://${pageContext.request.serverName}${portPart}${pageContext.request.contextPath}" />
+    <%-- Xác định Base URL đầy đủ cho SEO, Canonical & Open Graph Tags --%>
+    <%-- Ưu tiên 1: Cấu hình appBaseUrl từ backend / ConfigHelper (hỗ trợ APP_BASE_URL) --%>
+    <%-- Ưu tiên 2: Fallback tự động theo HttpServletRequest --%>
+    <c:set var="rawBaseUrl" value="${not empty appBaseUrl ? appBaseUrl : (not empty applicationScope.appBaseUrl ? applicationScope.appBaseUrl : '')}" />
+    <c:if test="${empty rawBaseUrl}">
+        <c:set var="reqPort" value="${pageContext.request.serverPort}" />
+        <c:set var="portPart" value="${(pageContext.request.scheme eq 'http' and reqPort eq 80) or (pageContext.request.scheme eq 'https' and reqPort eq 443) ? '' : ':'.concat(reqPort)}" />
+        <c:set var="rawBaseUrl" value="${pageContext.request.scheme}://${pageContext.request.serverName}${portPart}" />
+    </c:if>
+    <%-- Chuẩn hóa loại bỏ dấu gạch chéo cuối nếu có --%>
+    <c:if test="${fn:endsWith(rawBaseUrl, '/')}">
+        <c:set var="rawBaseUrl" value="${fn:substring(rawBaseUrl, 0, fn:length(rawBaseUrl) - 1)}" />
+    </c:if>
+    <%-- Ghép contextPath nếu rawBaseUrl chưa chứa contextPath --%>
+    <c:set var="ctxPath" value="${pageContext.request.contextPath}" />
+    <c:choose>
+        <c:when test="${not empty ctxPath and not fn:endsWith(rawBaseUrl, ctxPath)}">
+            <c:set var="siteBaseUrl" value="${rawBaseUrl}${ctxPath}" />
+        </c:when>
+        <c:otherwise>
+            <c:set var="siteBaseUrl" value="${rawBaseUrl}" />
+        </c:otherwise>
+    </c:choose>
     
     <c:choose>
         <c:when test="${not empty news}">
@@ -40,7 +59,7 @@
                     <c:set var="metaImage" value="${news.image}" />
                 </c:when>
                 <c:when test="${fn:startsWith(news.image, '/')}">
-                    <c:set var="metaImage" value="${pageContext.request.scheme}://${pageContext.request.serverName}${portPart}${news.image}" />
+                    <c:set var="metaImage" value="${rawBaseUrl}${news.image}" />
                 </c:when>
                 <c:when test="${not empty news.image}">
                     <c:set var="metaImage" value="${siteBaseUrl}/${news.image}" />
@@ -49,6 +68,11 @@
                     <c:set var="metaImage" value="${siteBaseUrl}/assets/images/default-thumbnail.jpg" />
                 </c:otherwise>
             </c:choose>
+        </c:when>
+        <c:when test="${not empty currentCategory}">
+            <c:set var="pageCanonicalUrl" value="${siteBaseUrl}/category/${currentCategory.slug}" />
+            <c:set var="metaDescription" value="Cập nhật tin tức mới nhất về chuyên mục ${currentCategory.name} trên ABC News." />
+            <c:set var="metaImage" value="${siteBaseUrl}/assets/images/logo.png" />
         </c:when>
         <c:otherwise>
             <c:set var="pageCanonicalUrl" value="${siteBaseUrl}${pageContext.request.servletPath}" />
@@ -87,6 +111,7 @@
     <meta name="twitter:site" content="@ABCNews">
     <meta name="twitter:title" content="<c:out value='${not empty news ? news.title : (not empty pageTitle ? pageTitle : \"ABC News\")}' />">
     <meta name="twitter:description" content="<c:out value='${metaDescription}' />">
+    <meta name="twitter:url" content="${pageCanonicalUrl}">
     <c:if test="${not empty metaImage}">
         <meta name="twitter:image" content="${metaImage}">
     </c:if>

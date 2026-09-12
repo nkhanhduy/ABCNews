@@ -60,17 +60,27 @@ public class ConfigHelper {
         }
 
         // 1. Kiểm tra biến môi trường hệ thống (System Environment)
-        // Format: db.host -> DB_HOST, mail.smtp.user -> MAIL_SMTP_USER
+        // Format: db.host -> DB_HOST, mail.smtp.user -> MAIL_SMTP_USER, app.base.url -> APP_BASE_URL
         String envKey = key.replace('.', '_').replace('-', '_').toUpperCase();
         String envValue = System.getenv(envKey);
         if (envValue != null && !envValue.trim().isEmpty()) {
             return envValue.trim();
         }
+        if (!key.equals(envKey)) {
+            String directEnv = System.getenv(key);
+            if (directEnv != null && !directEnv.trim().isEmpty()) {
+                return directEnv.trim();
+            }
+        }
 
-        // 2. Kiểm tra System Properties (-Ddb.host=...)
+        // 2. Kiểm tra System Properties (-Dapp.base.url=... hoặc -DAPP_BASE_URL=...)
         String sysPropValue = System.getProperty(key);
         if (sysPropValue != null && !sysPropValue.trim().isEmpty()) {
             return sysPropValue.trim();
+        }
+        String sysPropEnvValue = System.getProperty(envKey);
+        if (sysPropEnvValue != null && !sysPropEnvValue.trim().isEmpty()) {
+            return sysPropEnvValue.trim();
         }
 
         // 3. Kiểm tra file app.properties
@@ -78,8 +88,37 @@ public class ConfigHelper {
         if (propValue != null && !propValue.trim().isEmpty()) {
             return propValue.trim();
         }
+        String propEnvValue = properties.getProperty(envKey);
+        if (propEnvValue != null && !propEnvValue.trim().isEmpty()) {
+            return propEnvValue.trim();
+        }
 
         return defaultValue;
+    }
+
+    /**
+     * Lấy App Base URL cho ứng dụng (dùng cho Canonical URL, OpenGraph, Twitter Card, SEO).
+     * 
+     * Thứ tự ưu tiên:
+     * 1. Biến môi trường hệ điều hành: APP_BASE_URL
+     * 2. System Property: app.base.url hoặc APP_BASE_URL
+     * 3. File cấu hình app.properties: app.base.url
+     * 4. Giá trị mặc định an toàn cho môi trường phát triển: http://localhost:8088
+     * 
+     * Tự động loại bỏ dấu gạch chéo cuối (trailing slash) nếu có để chuẩn hóa việc nối đường dẫn.
+     * 
+     * @return Chuỗi Base URL đã chuẩn hóa (ví dụ: "http://localhost:8088" hoặc "https://abcnews.vn")
+     */
+    public static String getAppBaseUrl() {
+        String baseUrl = get("app.base.url", null);
+        if (baseUrl == null || baseUrl.trim().isEmpty()) {
+            baseUrl = get("APP_BASE_URL", "http://localhost:8088");
+        }
+        baseUrl = baseUrl.trim();
+        while (baseUrl.endsWith("/")) {
+            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+        }
+        return baseUrl;
     }
 
     /**

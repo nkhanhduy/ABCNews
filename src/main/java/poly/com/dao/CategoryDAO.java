@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import poly.com.entity.Category;
+import poly.com.exception.DuplicateSlugException;
 import poly.com.util.JDBCHelper;
+import poly.com.util.ValidationHelper;
 
 /**
  * DAO quản lý thao tác database cho entity Category (Loại tin)
@@ -21,8 +23,15 @@ public class CategoryDAO {
      * @param entity Đối tượng Category chứa thông tin loại tin
      */
     public void insert(Category entity) {
-        String sql = "INSERT INTO Categories (Id, Name) VALUES (?, ?)";
-        JDBCHelper.executeUpdate(sql, entity.getId(), entity.getName());
+        String sql = "INSERT INTO Categories (Id, Name, Slug) VALUES (?, ?, ?)";
+        try {
+            JDBCHelper.executeUpdate(sql, entity.getId(), entity.getName(), entity.getSlug());
+        } catch (RuntimeException e) {
+            if (ValidationHelper.isDuplicateSlugException(e)) {
+                throw new DuplicateSlugException("Đường dẫn thân thiện (slug) \"" + entity.getSlug() + "\" đã tồn tại trong hệ thống.", e, entity.getSlug());
+            }
+            throw e;
+        }
     }
 
     /**
@@ -30,8 +39,15 @@ public class CategoryDAO {
      * @param entity Đối tượng Category chứa thông tin cần cập nhật
      */
     public void update(Category entity) {
-        String sql = "UPDATE Categories SET Name = ? WHERE Id = ?";
-        JDBCHelper.executeUpdate(sql, entity.getName(), entity.getId());
+        String sql = "UPDATE Categories SET Name = ?, Slug = ? WHERE Id = ?";
+        try {
+            JDBCHelper.executeUpdate(sql, entity.getName(), entity.getSlug(), entity.getId());
+        } catch (RuntimeException e) {
+            if (ValidationHelper.isDuplicateSlugException(e)) {
+                throw new DuplicateSlugException("Đường dẫn thân thiện (slug) \"" + entity.getSlug() + "\" đã tồn tại trong hệ thống.", e, entity.getSlug());
+            }
+            throw e;
+        }
     }
 
     /**
@@ -115,6 +131,68 @@ public class CategoryDAO {
     }
 
     /**
+     * Tìm một loại tin theo slug
+     * @param slug Chuỗi slug cần tìm
+     * @return Đối tượng Category tìm thấy, hoặc null nếu không tìm thấy
+     */
+    public Category findBySlug(String slug) {
+        if (slug == null || slug.trim().isEmpty()) {
+            return null;
+        }
+        String sql = "SELECT * FROM Categories WHERE Slug = ?";
+        List<Category> list = selectBySql(sql, slug.trim());
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    /**
+     * Kiểm tra xem slug loại tin đã tồn tại chưa
+     * @param slug Chuỗi slug cần kiểm tra
+     * @return true nếu slug đã tồn tại, false nếu chưa
+     */
+    public boolean existsBySlug(String slug) {
+        return existsBySlugExcludingId(slug, null);
+    }
+
+    /**
+     * Kiểm tra xem slug loại tin đã tồn tại chưa (loại trừ một ID cụ thể, dùng khi cập nhật)
+     * @param slug Chuỗi slug cần kiểm tra
+     * @param excludeId ID danh mục cần loại trừ khỏi việc kiểm tra (có thể null)
+     * @return true nếu slug đã bị danh mục khác chiếm dụng, false nếu chưa
+     */
+    public boolean existsBySlugExcludingId(String slug, String excludeId) {
+        if (slug == null || slug.trim().isEmpty()) {
+            return false;
+        }
+        String sql;
+        Object[] params;
+        if (excludeId == null || excludeId.trim().isEmpty()) {
+            sql = "SELECT COUNT(*) FROM Categories WHERE Slug = ?";
+            params = new Object[]{slug.trim()};
+        } else {
+            sql = "SELECT COUNT(*) FROM Categories WHERE Slug = ? AND Id <> ?";
+            params = new Object[]{slug.trim(), excludeId.trim()};
+        }
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            pstmt = JDBCHelper.getPreparedStatement(sql, params);
+            conn = pstmt.getConnection();
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi kiểm tra trùng lặp slug loại tin", e);
+        } finally {
+            JDBCHelper.close(rs, pstmt, conn);
+        }
+        return false;
+    }
+
+    /**
      * Phương thức nội bộ để thực thi câu lệnh SELECT
      * @param sql Câu lệnh SQL
      * @param args Các tham số cho câu lệnh (nếu có)
@@ -138,6 +216,11 @@ public class CategoryDAO {
                 Category entity = new Category();
                 entity.setId(rs.getString("Id"));
                 entity.setName(rs.getString("Name"));
+                try {
+                    entity.setSlug(rs.getString("Slug"));
+                } catch (SQLException ignored) {
+                    // Fallback nếu câu query chưa có cột Slug
+                }
                 list.add(entity);
             }
         } catch (SQLException e) {

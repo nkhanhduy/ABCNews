@@ -25,6 +25,12 @@
                 <span>Tác giả: <strong>${not empty news.author ? news.author : 'Ban Biên Tập'}</strong></span>
                 <span class="mx-1">•</span>
                 <span>${news.viewCount} lượt xem</span>
+                <c:if test="${not empty newsCategory}">
+                    <span class="mx-1">•</span>
+                    <a href="${pageContext.request.contextPath}/category/${newsCategory.slug}" class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 text-decoration-none" title="Xem chuyên mục ${newsCategory.name}">
+                        <i class="fas fa-tag me-1"></i>${newsCategory.name}
+                    </a>
+                </c:if>
                 <span class="mx-1">•</span>
                 <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" id="readingTimeBadge" title="Thời gian đọc ước tính">
                     <span id="readingTimeText">1 phút đọc</span>

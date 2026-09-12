@@ -53,6 +53,7 @@ services:
       - DB_USER=sa
       - DB_PASSWORD=ABCNews@2026!
       - DB_URL=jdbc:sqlserver://sqlserver:1433;databaseName=ABCNews;encrypt=false;trustServerCertificate=true;sendStringParametersAsUnicode=true;characterEncoding=UTF-8;
+      - APP_BASE_URL=http://localhost:8088
     depends_on:
       sqlserver:
         condition: service_healthy

@@ -14,6 +14,12 @@ public interface CategoryService {
 
     Category findById(String id);
 
+    Category findBySlug(String slug);
+
+    boolean existsBySlug(String slug);
+
+    String generateUniqueSlug(String name, String currentCategoryId);
+
     boolean createCategory(Category category);
 
     boolean updateCategory(Category category);
