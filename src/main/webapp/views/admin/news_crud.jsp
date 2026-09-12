@@ -134,7 +134,7 @@
                                 <img src="${imageUrl}" alt="Ảnh hiện tại" 
                                      style="max-width: 150px; max-height: 150px; border: 2px solid #ddd; padding: 5px; border-radius: 8px; object-fit: cover;"
                                      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                <small style="display:none; color:red;">⚠️ Không thể tải ảnh. Vui lòng chọn ảnh mới.</small>
+                                <small style="display:none; color:red;"><i class="fas fa-exclamation-triangle me-1"></i> Không thể tải ảnh. Vui lòng chọn ảnh mới.</small>
                                 <br>
                                 <small style="display: block; margin-top: 5px; color: #666;">Ảnh hiện tại</small>
                     </div>

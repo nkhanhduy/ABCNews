@@ -221,7 +221,7 @@ public class EmailTemplate {
                 "                    <!-- Header -->" +
                 "                    <tr>" +
                 "                        <td style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;\">" +
-                "                            <h1 style=\"margin: 0; color: #ffffff; font-size: 28px;\">🔐 Đặt Lại Mật Khẩu</h1>" +
+                "                            <h1 style=\"margin: 0; color: #ffffff; font-size: 28px;\">Đặt Lại Mật Khẩu</h1>" +
                 "                        </td>" +
                 "                    </tr>" +
                 "                    " +
@@ -247,7 +247,7 @@ public class EmailTemplate {
                 "                            <!-- Warning Box -->" +
                 "                            <div style=\"background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px;\">" +
                 "                                <p style=\"color: #856404; font-size: 14px; margin: 0; line-height: 1.5;\">" +
-                "                                    <strong>⚠️ Lưu ý quan trọng:</strong><br>" +
+                "                                    <strong>Lưu ý quan trọng:</strong><br>" +
                 "                                    • Mã OTP này có hiệu lực trong <strong>5 phút</strong><br>" +
                 "                                    • Chỉ sử dụng được <strong>1 lần</strong><br>" +
                 "                                    • Không chia sẻ mã này với bất kỳ ai" +

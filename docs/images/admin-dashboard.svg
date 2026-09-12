@@ -25,7 +25,7 @@
   <text x="500" y="29" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" text-anchor="middle">localhost:8080/ABCNews/admin/dashboard</text>
 
   <!-- Title & Stats Row -->
-  <text x="40" y="90" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700">📊 Quản Trị Tòa Soạn - ABCNews Admin Dashboard</text>
+  <text x="40" y="90" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700">Quản Trị Tòa Soạn - ABCNews Admin Dashboard</text>
   <text x="40" y="112" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12">Tổng quan chỉ số hoạt động và phân tích tương tác thời gian thực</text>
 
   <!-- 4 Mini Stats Cards -->
@@ -33,7 +33,9 @@
   <g filter="url(#cardShadow)">
     <rect x="40" y="130" width="210" height="80" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" />
     <circle cx="75" cy="170" r="22" fill="#2563eb" fill-opacity="0.2" />
-    <text x="75" y="176" fill="#3b82f6" font-family="sans-serif" font-size="16" text-anchor="middle">📰</text>
+    <g transform="translate(65, 160)">
+      <path d="M2 3h16a1 1 0 0 1 1 1v14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4a1 1 0 0 1 1-1zm1 2v13a1 1 0 0 0 1 1h13V5H3zm3 2h8v2H6V7zm0 3h8v2H6v-2zm0 3h5v2H6v-2z" fill="#3b82f6"/>
+    </g>
     <text x="110" y="158" fill="#94a3b8" font-family="sans-serif" font-size="11">Tổng số tin tức</text>
     <text x="110" y="184" fill="#f8fafc" font-family="sans-serif" font-size="20" font-weight="700">1,248</text>
   </g>
@@ -42,7 +44,9 @@
   <g filter="url(#cardShadow)">
     <rect x="275" y="130" width="210" height="80" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" />
     <circle cx="310" cy="170" r="22" fill="#10b981" fill-opacity="0.2" />
-    <text x="310" y="176" fill="#10b981" font-family="sans-serif" font-size="16" text-anchor="middle">👥</text>
+    <g transform="translate(300, 160)">
+      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-8 7a8 8 0 0 1 16 0H4z" fill="#10b981"/>
+    </g>
     <text x="345" y="158" fill="#94a3b8" font-family="sans-serif" font-size="11">Người dùng &amp; Phóng viên</text>
     <text x="345" y="184" fill="#f8fafc" font-family="sans-serif" font-size="20" font-weight="700">324</text>
   </g>
@@ -51,7 +55,9 @@
   <g filter="url(#cardShadow)">
     <rect x="510" y="130" width="210" height="80" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" />
     <circle cx="545" cy="170" r="22" fill="#f59e0b" fill-opacity="0.2" />
-    <text x="545" y="176" fill="#f59e0b" font-family="sans-serif" font-size="16" text-anchor="middle">🏷️</text>
+    <g transform="translate(535, 160)">
+      <path d="M19.4 10.4l-7.8-7.8A2 2 0 0 0 10.2 2H4a2 2 0 0 0-2 2v6.2c0 .5.2 1 .6 1.4l7.8 7.8a2 2 0 0 0 2.8 0l6.2-6.2a2 2 0 0 0 0-2.8zM6.5 8a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" fill="#f59e0b"/>
+    </g>
     <text x="580" y="158" fill="#94a3b8" font-family="sans-serif" font-size="11">Chuyên mục tin</text>
     <text x="580" y="184" fill="#f8fafc" font-family="sans-serif" font-size="20" font-weight="700">8</text>
   </g>
@@ -60,7 +66,9 @@
   <g filter="url(#cardShadow)">
     <rect x="745" y="130" width="215" height="80" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" />
     <circle cx="780" cy="170" r="22" fill="#ec4899" fill-opacity="0.2" />
-    <text x="780" y="176" fill="#ec4899" font-family="sans-serif" font-size="16" text-anchor="middle">✉️</text>
+    <g transform="translate(770, 160)">
+      <path d="M3 4h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v.5l9 6 9-6V6H3zm18 3.5l-8.4 5.6a1 1 0 0 1-1.2 0L3 9.5V18h18V9.5z" fill="#ec4899"/>
+    </g>
     <text x="815" y="158" fill="#94a3b8" font-family="sans-serif" font-size="11">Email Subscribers</text>
     <text x="815" y="184" fill="#f8fafc" font-family="sans-serif" font-size="20" font-weight="700">4,890</text>
   </g>
@@ -69,7 +77,7 @@
   <g filter="url(#cardShadow)">
     <rect x="40" y="230" width="530" height="295" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1" />
     <!-- Header -->
-    <text x="65" y="262" fill="#f8fafc" font-family="sans-serif" font-size="14" font-weight="700">📈 Xu hướng Lượt xem Tin tức (Chart.js Line)</text>
+    <text x="65" y="262" fill="#f8fafc" font-family="sans-serif" font-size="14" font-weight="700">Xu Hướng Lượt Xem Tin Tức (Chart.js Line)</text>
     <rect x="440" y="248" width="105" height="20" rx="10" fill="#2563eb" fill-opacity="0.2" />
     <text x="492" y="262" fill="#60a5fa" font-family="sans-serif" font-size="10" text-anchor="middle" font-weight="600">Top 5 Hot News</text>
 
@@ -113,7 +121,7 @@
   <!-- Chart Card 2: Doughnut Chart (Right) -->
   <g filter="url(#cardShadow)">
     <rect x="590" y="230" width="370" height="295" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1" />
-    <text x="615" y="262" fill="#f8fafc" font-family="sans-serif" font-size="14" font-weight="700">🍩 Cơ Cấu Danh Mục (Doughnut)</text>
+    <text x="615" y="262" fill="#f8fafc" font-family="sans-serif" font-size="14" font-weight="700">Cơ Cấu Chuyên Mục Tin Tức (Chart.js Doughnut)</text>
 
     <!-- Doughnut Segments Center at (710, 375) -->
     <!-- Segment 1: Technology (Blue 38%) -->
@@ -146,6 +154,6 @@
 
     <!-- Footer note -->
     <rect x="615" y="475" width="320" height="28" rx="6" fill="#0f172a" />
-    <text x="775" y="493" fill="#64748b" font-family="sans-serif" font-size="11" text-anchor="middle">✨ Tự động cập nhật qua RESTful API</text>
+    <text x="775" y="493" fill="#64748b" font-family="sans-serif" font-size="11" text-anchor="middle">Đồng bộ dữ liệu thời gian thực qua RESTful API</text>
   </g>
 </svg>
