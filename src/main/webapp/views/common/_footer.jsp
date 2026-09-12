@@ -9,7 +9,7 @@
         <div class="d-flex align-items-center flex-wrap gap-2 text-white small">
             <span class="fw-bold fs-6">ABC<span class="badge bg-white text-success ms-1 px-1.5 py-0.5 rounded-1" style="font-size: 0.72rem;">NEWS</span></span>
             <span class="text-white-50">|</span>
-            <span>&copy; 2025 ABC News — Phát triển bởi <strong>Nguyễn Khánh Duy</strong> (Chuyên ngành Phát triển Phần mềm — FPT Polytechnic TP. HCM)</span>
+            <span>&copy; 2025 ABC News — Phát triển bởi <strong>Nguyễn Khánh Duy</strong> — FPT Polytechnic TP. Hồ Chí Minh</span>
         </div>
         <div class="d-flex align-items-center gap-3">
             <a href="https://github.com/nkhanhduy/ABCNews" target="_blank" class="text-white small text-decoration-none" title="GitHub">

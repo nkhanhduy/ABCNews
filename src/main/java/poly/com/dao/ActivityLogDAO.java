@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import poly.com.entity.ActivityLog;
 import poly.com.util.JDBCHelper;
@@ -17,6 +19,8 @@ import poly.com.util.JDBCHelper;
  * @author ABCNews Development Team
  */
 public class ActivityLogDAO {
+    
+    private static final Logger LOGGER = Logger.getLogger(ActivityLogDAO.class.getName());
     
     /**
      * Tạo một log mới
@@ -43,7 +47,7 @@ public class ActivityLogDAO {
             );
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi ghi nhận ActivityLog: {0}", e.getMessage());
             return false;
         }
     }
@@ -138,7 +142,7 @@ public class ActivityLogDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm tổng số lượng ActivityLogs: {0}", e.getMessage());
         }
         
         return 0;
@@ -191,7 +195,7 @@ public class ActivityLogDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm ActivityLogs với bộ lọc: {0}", e.getMessage());
         }
         
         return 0;
@@ -240,7 +244,7 @@ public class ActivityLogDAO {
         try {
             return JDBCHelper.executeUpdate(sql, daysToKeep);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi xóa ActivityLogs cũ: {0}", e.getMessage());
             return 0;
         }
     }
@@ -286,7 +290,7 @@ public class ActivityLogDAO {
                 list.add(log);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi khi query ActivityLogs: {0}", e.getMessage());
             throw new RuntimeException("Lỗi khi query ActivityLogs", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);

@@ -3,6 +3,8 @@ package poly.com.util.export;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -28,6 +30,8 @@ import poly.com.util.FontHelper;
  * PHIÊN BẢN UTF-8 CHUẨN với Helvetica + Identity-H encoding
  */
 public class PDFExporter {
+    
+    private static final Logger LOGGER = Logger.getLogger(PDFExporter.class.getName());
     
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     private static final SimpleDateFormat DATE_ONLY_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
@@ -87,8 +91,8 @@ public class PDFExporter {
             document.close();
             
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IOException("Lỗi khi tạo file PDF: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Lỗi khi tạo file PDF bản tin: {0}", e.getMessage());
+            throw new IOException("Không thể tạo file PDF do lỗi hệ thống.", e);
         }
     }
     
@@ -143,8 +147,8 @@ public class PDFExporter {
             document.close();
             
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IOException("Lỗi khi tạo file PDF: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Lỗi khi tạo file PDF người dùng: {0}", e.getMessage());
+            throw new IOException("Không thể tạo file PDF do lỗi hệ thống.", e);
         }
     }
     
@@ -191,8 +195,8 @@ public class PDFExporter {
             document.close();
             
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IOException("Lỗi khi tạo file PDF: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Lỗi khi tạo file PDF danh mục: {0}", e.getMessage());
+            throw new IOException("Không thể tạo file PDF do lỗi hệ thống.", e);
         }
     }
     
@@ -240,8 +244,8 @@ public class PDFExporter {
             document.close();
             
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IOException("Lỗi khi tạo file PDF: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Lỗi khi tạo file PDF newsletter: {0}", e.getMessage());
+            throw new IOException("Không thể tạo file PDF do lỗi hệ thống.", e);
         }
     }
     
@@ -297,8 +301,8 @@ public class PDFExporter {
             document.close();
             
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IOException("Lỗi khi tạo file PDF: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Lỗi khi tạo file PDF tổng hợp: {0}", e.getMessage());
+            throw new IOException("Không thể tạo file PDF do lỗi hệ thống.", e);
         }
     }
     

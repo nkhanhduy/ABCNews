@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import poly.com.entity.User;
 import poly.com.util.JDBCHelper;
@@ -29,6 +31,8 @@ import poly.com.util.PasswordUtil;
  * @version 1.0
  */
 public class UserDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
 
     /**
      * Thêm một người dùng mới vào cơ sở dữ liệu
@@ -107,7 +111,7 @@ public class UserDAO {
             int rowsAffected = JDBCHelper.executeUpdate(sql, hashedPassword, userId);
             return rowsAffected > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi cập nhật mật khẩu cho user " + userId, e);
             return false;
         }
     }
@@ -181,7 +185,7 @@ public class UserDAO {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi kiểm tra mã người dùng: {0}", e.getMessage());
             throw new RuntimeException("Lỗi kiểm tra mã người dùng", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -299,7 +303,7 @@ public class UserDAO {
             return String.format("%s%03d", prefix, nextNumber);
             
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi tạo mã người dùng: {0}", e.getMessage());
             throw new RuntimeException("Lỗi tạo mã người dùng", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -403,7 +407,7 @@ public class UserDAO {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi kiểm tra email: {0}", e.getMessage());
             throw new RuntimeException("Lỗi kiểm tra email", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -448,7 +452,7 @@ public class UserDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm tổng số lượng người dùng: {0}", e.getMessage());
             throw new RuntimeException("Lỗi đếm tổng số lượng người dùng", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -482,7 +486,7 @@ public class UserDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm số lượng người dùng theo vai trò: {0}", e.getMessage());
             throw new RuntimeException("Lỗi đếm số lượng người dùng theo vai trò", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -514,7 +518,7 @@ public class UserDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm số lượng người dùng theo vai trò và trạng thái: {0}", e.getMessage());
             throw new RuntimeException("Lỗi đếm số lượng người dùng theo vai trò và trạng thái", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -658,7 +662,7 @@ public class UserDAO {
                 list.add(entity);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi truy vấn dữ liệu User: {0}", e.getMessage());
             throw new RuntimeException("Lỗi truy vấn dữ liệu", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);

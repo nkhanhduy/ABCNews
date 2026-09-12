@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,6 +28,7 @@ import poly.com.entity.User;
 @WebServlet("/admin/activity-logs")
 public class ActivityLogsController extends BaseController {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(ActivityLogsController.class.getName());
     
     private ActivityLogDAO activityLogDAO = new ActivityLogDAO();
     private UserDAO userDAO = new UserDAO();
@@ -83,7 +86,7 @@ public class ActivityLogsController extends BaseController {
                 toDate = new Date(toDate.getTime() + 24 * 60 * 60 * 1000 - 1);
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Không thể phân tích định dạng ngày lọc ActivityLog: {0}", e.getMessage());
         }
         
         // Query logs with filters

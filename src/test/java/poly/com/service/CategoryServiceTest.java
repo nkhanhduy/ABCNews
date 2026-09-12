@@ -167,4 +167,109 @@ class CategoryServiceTest {
         assertFalse(categoryService.deleteCategory(null));
         assertFalse(categoryService.deleteCategory("   "));
     }
+
+    @Test
+    @DisplayName("Kiểm tra tồn tại theo ID thông qua existsById")
+    void testExistsById() {
+        when(categoryDAO.existsById("TECH")).thenReturn(true);
+        when(categoryDAO.existsById("UNKNOWN")).thenReturn(false);
+
+        assertTrue(categoryService.existsById("TECH"));
+        assertFalse(categoryService.existsById("UNKNOWN"));
+        assertFalse(categoryService.existsById(null));
+        assertFalse(categoryService.existsById("   "));
+    }
+
+    @Test
+    @DisplayName("Từ chối tạo Category khi Id vượt quá 50 ký tự")
+    void testCreateCategory_IdTooLong_Rejected() {
+        String longId = "C".repeat(51);
+        Category cat = new Category(longId, "Chuyên mục hợp lệ");
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, 
+                () -> categoryService.createCategory(cat));
+        assertTrue(ex.getMessage().contains("50"));
+        verify(categoryDAO, never()).insert(any());
+    }
+
+    @Test
+    @DisplayName("Từ chối tạo Category khi Name vượt quá 200 ký tự")
+    void testCreateCategory_NameTooLong_Rejected() {
+        String longName = "Tên chuyên mục quá dài ".repeat(10); // > 200 ký tự
+        assertTrue(longName.length() > 200);
+        Category cat = new Category("VALID_ID", longName);
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, 
+                () -> categoryService.createCategory(cat));
+        assertTrue(ex.getMessage().contains("200"));
+        verify(categoryDAO, never()).insert(any());
+    }
+
+    @Test
+    @DisplayName("Từ chối cập nhật Category khi Id vượt quá 50 ký tự hoặc Name vượt quá 200 ký tự")
+    void testUpdateCategory_LengthValidation_Rejected() {
+        Category catLongId = new Category("C".repeat(51), "Tên hợp lệ");
+        assertThrows(IllegalArgumentException.class, () -> categoryService.updateCategory(catLongId));
+
+        Category catLongName = new Category("VALID_ID", "N".repeat(201));
+        assertThrows(IllegalArgumentException.class, () -> categoryService.updateCategory(catLongName));
+    }
+
+    @Test
+    @DisplayName("Sinh slug cho tên dài gần 200 ký tự đảm bảo độ dài luôn <= 200 và hợp lệ")
+    void testGenerateUniqueSlug_Near200Chars() {
+        // Tạo chuỗi tên gồm các từ cách nhau bởi khoảng trắng có độ dài 200 ký tự
+        String longName = "bai-viet-khoa-hoc-cong-nghe-thong-tin-va-tri-tue-nhan-tao-viet-nam-phat-trien-manh-me-trong-ky-nguyen-so-hoa-toan-cau-hien-dai-nam-2025-va-tuong-lai-sap-toi-cua-nhan-loai-the-gioi-abc-xyz-1234567890-chuyen-muc-tin-tuc";
+        when(categoryDAO.existsBySlugExcludingId(any(), any())).thenReturn(false);
+
+        String slug = categoryService.generateUniqueSlug(longName, null);
+
+        assertNotNull(slug);
+        assertTrue(slug.length() <= 200, "Slug length must be <= 200 but was " + slug.length());
+        assertTrue(poly.com.util.SlugUtil.isValidSlug(slug));
+        assertFalse(slug.endsWith("-"), "Slug must not end with '-'");
+    }
+
+    @Test
+    @DisplayName("Trùng lặp slug dài 200 ký tự: Thêm hậu tố -2 vẫn đảm bảo tổng độ dài <= 200")
+    void testGenerateUniqueSlug_DuplicateLongSlug_Suffix2Under200() {
+        // Tên tạo ra baseSlug dài đúng 200 ký tự
+        StringBuilder sb = new StringBuilder();
+        while (sb.length() < 200) {
+            sb.append("tin-tuc-");
+        }
+        String longName = sb.substring(0, 200).replaceAll("-+$", "");
+
+        // Mock: baseSlug đã tồn tại
+        when(categoryDAO.existsBySlugExcludingId(eq(longName), any())).thenReturn(true);
+        // Candidate với suffix -2 chưa tồn tại
+        when(categoryDAO.existsBySlugExcludingId(org.mockito.AdditionalMatchers.not(eq(longName)), any())).thenReturn(false);
+
+        String slug = categoryService.generateUniqueSlug(longName, null);
+
+        assertNotNull(slug);
+        assertTrue(slug.length() <= 200, "Slug length with -2 must be <= 200, actual: " + slug.length());
+        assertTrue(slug.endsWith("-2"));
+        assertTrue(poly.com.util.SlugUtil.isValidSlug(slug));
+        assertFalse(slug.contains("--"), "Slug must not contain double hyphens");
+    }
+
+    @Test
+    @DisplayName("Trùng lặp slug dài đến hậu tố -999 vẫn đảm bảo tổng độ dài <= 200")
+    void testGenerateUniqueSlug_DuplicateLongSlug_Suffix999Under200() {
+        String longName = "a".repeat(200);
+
+        // Giả lập tất cả slug từ base đến counter 998 đã tồn tại, counter 999 khả dụng
+        when(categoryDAO.existsBySlugExcludingId(any(), any())).thenAnswer(invocation -> {
+            String candidate = invocation.getArgument(0);
+            return !candidate.endsWith("-999");
+        });
+
+        String slug = categoryService.generateUniqueSlug(longName, null);
+
+        assertNotNull(slug);
+        assertTrue(slug.length() <= 200, "Slug length with -999 must be <= 200, actual: " + slug.length());
+        assertTrue(slug.endsWith("-999"));
+        assertTrue(poly.com.util.SlugUtil.isValidSlug(slug));
+    }
 }

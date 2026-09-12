@@ -61,5 +61,9 @@ class SlugUtilTest {
         assertFalse(SlugUtil.isValidSlug("Công-nghệ"));
         assertFalse(SlugUtil.isValidSlug("../category"));
         assertFalse(SlugUtil.isValidSlug("cong-nghe/ai"));
+
+        // Kiểm tra boundary độ dài slug tối đa 200 ký tự
+        assertTrue(SlugUtil.isValidSlug("a".repeat(200)));
+        assertFalse(SlugUtil.isValidSlug("a".repeat(201)));
     }
 }

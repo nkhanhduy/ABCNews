@@ -17,7 +17,8 @@ GO
 -- Mật khẩu mặc định: 123456 (Hệ thống tự động nâng cấp mã hóa BCrypt khi đăng nhập)
 INSERT INTO [dbo].[Users] ([Id], [Password], [Fullname], [Birthday], [Gender], [Mobile], [Email], [Role], [AuthProvider], [Enabled], [ImagePath])
 VALUES 
-('admin001', '123456', N'Tổng Biên Tập - Nguyễn Khánh Duy', '2004-05-15', 1, '0912345678', 'admin@abcnews.com', 1, 'local', 1, '/uploads/avatars/a0abfecd-d31a-41bd-b209-258fee975d1c.png'),
+('superadmin001', '123456', N'Quản Trị Tối Cao - Nguyễn Duy Khánh', '2004-05-15', 1, '0912345678', 'superadmin@abcnews.com', 1, 'local', 1, '/uploads/avatars/a0abfecd-d31a-41bd-b209-258fee975d1c.png'),
+('admin001', '123456', N'Quản Trị Viên - Nguyễn Khánh Duy', '2000-01-10', 1, '0911223344', 'admin@abcnews.com', 1, 'local', 1, NULL),
 ('rep001', '123456', N'Nhà Báo - Trần Khánh Duy', '1998-08-20', 1, '0987654321', 'reporter1@abcnews.com', 0, 'local', 1, NULL),
 ('rep002', '123456', N'Biên Tập Viên - Lê Minh Tú', '1999-11-05', 0, '0908123456', 'reporter2@abcnews.com', 0, 'local', 1, NULL);
 GO

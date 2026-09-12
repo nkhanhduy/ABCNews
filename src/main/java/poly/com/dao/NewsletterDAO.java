@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import poly.com.entity.Newsletter;
 import poly.com.util.JDBCHelper;
@@ -15,6 +17,8 @@ import poly.com.util.JDBCHelper;
  * Cung cấp các phương thức: insert, update, delete, find, findAll, searchAndFilter, count
  */
 public class NewsletterDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(NewsletterDAO.class.getName());
 
     /**
      * Thêm một email đăng ký nhận tin
@@ -98,7 +102,7 @@ public class NewsletterDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm tổng số lượng email đăng ký: {0}", e.getMessage());
             throw new RuntimeException("Lỗi đếm tổng số lượng email đăng ký", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -129,7 +133,7 @@ public class NewsletterDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm số lượng email theo trạng thái: {0}", e.getMessage());
             throw new RuntimeException("Lỗi đếm số lượng email theo trạng thái", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -205,7 +209,7 @@ public class NewsletterDAO {
                 list.add(entity);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi truy vấn dữ liệu Newsletter: {0}", e.getMessage());
             throw new RuntimeException("Lỗi truy vấn dữ liệu", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
