@@ -37,12 +37,12 @@ Eine moderne, unternehmensreife Plattform für digitalen Journalismus und Redakt
 
 | 01 — Administratives Analyse-Dashboard (Chart.js) | 02 — Leseerlebnis & Dunkelmodus (Dark Mode) |
 |:---:|:---:|
-| ![Admin Dashboard Chart.js](docs/images/admin-dashboard.svg) | ![Public Reader Dark Mode](docs/images/public-darkmode-detail.svg) |
+| ![Admin Dashboard Chart.js](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80) | ![Public Reader Dark Mode](https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80) |
 | *Visuelles Kontrollzentrum mit Liniendiagrammen für Aufrufe und Donut-Diagrammen für Kategorieanteile.* | *Optimierte Leseansicht mit typografischer Klarheit, Dunkelmodus, Lesezeitschätzung und Social-Sharing.* |
 
 | 03 — WYSIWYG-Redaktionssuite (CKEditor 5) | 04 — Rollenbasiertes Auth-Gateway & Schnelltest |
 |:---:|:---:|
-| ![CKEditor 5 Publishing](docs/images/ckeditor5-editor.svg) | ![Auth Card Security](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80) |
+| ![CKEditor 5 Publishing](https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80) | ![Auth Card Security](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80) |
 | *Professioneller Arbeitsbereich zur Nachrichtenerstellung mit Rich-Text, Zitaten und Bildeinbettung.* | *Zentralisierte Auth-Karte mit Google OAuth2 und 1-Klick-Zugangsdaten für schnelle Evaluierungen.* |
 
 ---
@@ -249,8 +249,6 @@ ABCNews/
 ├── schema/
 │   ├── ABCNews.sql              # Datenbankschema DDL und Fremdschlüssel-Definitionen
 │   └── seed_data.sql            # Beispieldaten mit 11 Artikeln und Administratorkonten
-├── docs/
-│   └── images/                  # Architekturdiagramme und Benutzeroberflächen-Vektorgrafiken
 ├── src/
 │   ├── main/
 │   │   ├── java/poly/com/

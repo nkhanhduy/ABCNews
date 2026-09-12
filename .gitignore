@@ -92,3 +92,7 @@ local.env
 *.xlsx
 *.pptx
 *.pdf
+
+# Documentation & unused artifacts
+docs/
+

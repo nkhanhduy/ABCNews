@@ -37,12 +37,12 @@ Nền tảng báo chí điện tử hiện đại kết hợp cổng quản tr�
 
 | 01 — Dashboard Phân Tích Dữ Liệu (Chart.js) | 02 — Trải Nghiệm Độc Giả Sáng / Tối (Dark Mode) |
 |:---:|:---:|
-| ![Admin Dashboard Chart.js](docs/images/admin-dashboard.svg) | ![Public Reader Dark Mode](docs/images/public-darkmode-detail.svg) |
+| ![Admin Dashboard Chart.js](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80) | ![Public Reader Dark Mode](https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80) |
 | *Bảng điều khiển quản trị trực quan với biểu đồ lượt xem Line Chart và cơ cấu chuyên mục Doughnut Chart.* | *Trang đọc báo tối ưu typography, hỗ trợ Dark Mode bảo vệ mắt, ước tính thời gian đọc và thanh chia sẻ MXH.* |
 
 | 03 — Bộ Soạn Thảo Tin Tức WYSIWYG (CKEditor 5) | 04 — Cổng Đăng Nhập Phân Quyền & Test 1 Chạm |
 |:---:|:---:|
-| ![CKEditor 5 Publishing](docs/images/ckeditor5-editor.svg) | ![Auth Card Security](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80) |
+| ![CKEditor 5 Publishing](https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80) | ![Auth Card Security](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80) |
 | *Giao diện soạn thảo tin bài chuyên nghiệp hỗ trợ định dạng trực quan, khối dẫn chứng Sapo và chèn đa phương tiện.* | *Form xác thực Auth Card trung tâm tinh gọn, bảo mật Google OAuth2 và box tự điền tài khoản mẫu tiện lợi.* |
 
 ---
@@ -250,8 +250,6 @@ ABCNews/
 ├── schema/
 │   ├── ABCNews.sql              # Kịch bản khởi tạo cấu trúc bảng và khóa ngoại
 │   └── seed_data.sql            # Bộ dữ liệu mẫu 11 bài báo và tài khoản quản trị
-├── docs/
-│   └── images/                  # Hình ảnh giao diện và biểu đồ minh họa hệ thống
 ├── src/
 │   ├── main/
 │   │   ├── java/poly/com/
