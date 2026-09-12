@@ -1,86 +1,9 @@
-﻿USE [master]
+USE [master]
 GO
-/****** Object:  Database [ABCNews]    Script Date: 23/03/26 7:37:50 CH ******/
-CREATE DATABASE [ABCNews]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'ABCNews', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\ABCNews.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'ABCNews_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\ABCNews_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
- WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
-GO
-ALTER DATABASE [ABCNews] SET COMPATIBILITY_LEVEL = 160
-GO
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [ABCNews].[dbo].[sp_fulltext_database] @action = 'enable'
-end
-GO
-ALTER DATABASE [ABCNews] SET ANSI_NULL_DEFAULT OFF 
-GO
-ALTER DATABASE [ABCNews] SET ANSI_NULLS OFF 
-GO
-ALTER DATABASE [ABCNews] SET ANSI_PADDING OFF 
-GO
-ALTER DATABASE [ABCNews] SET ANSI_WARNINGS OFF 
-GO
-ALTER DATABASE [ABCNews] SET ARITHABORT OFF 
-GO
-ALTER DATABASE [ABCNews] SET AUTO_CLOSE OFF 
-GO
-ALTER DATABASE [ABCNews] SET AUTO_SHRINK OFF 
-GO
-ALTER DATABASE [ABCNews] SET AUTO_UPDATE_STATISTICS ON 
-GO
-ALTER DATABASE [ABCNews] SET CURSOR_CLOSE_ON_COMMIT OFF 
-GO
-ALTER DATABASE [ABCNews] SET CURSOR_DEFAULT  GLOBAL 
-GO
-ALTER DATABASE [ABCNews] SET CONCAT_NULL_YIELDS_NULL OFF 
-GO
-ALTER DATABASE [ABCNews] SET NUMERIC_ROUNDABORT OFF 
-GO
-ALTER DATABASE [ABCNews] SET QUOTED_IDENTIFIER OFF 
-GO
-ALTER DATABASE [ABCNews] SET RECURSIVE_TRIGGERS OFF 
-GO
-ALTER DATABASE [ABCNews] SET  ENABLE_BROKER 
-GO
-ALTER DATABASE [ABCNews] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
-GO
-ALTER DATABASE [ABCNews] SET DATE_CORRELATION_OPTIMIZATION OFF 
-GO
-ALTER DATABASE [ABCNews] SET TRUSTWORTHY OFF 
-GO
-ALTER DATABASE [ABCNews] SET ALLOW_SNAPSHOT_ISOLATION OFF 
-GO
-ALTER DATABASE [ABCNews] SET PARAMETERIZATION SIMPLE 
-GO
-ALTER DATABASE [ABCNews] SET READ_COMMITTED_SNAPSHOT OFF 
-GO
-ALTER DATABASE [ABCNews] SET HONOR_BROKER_PRIORITY OFF 
-GO
-ALTER DATABASE [ABCNews] SET RECOVERY FULL 
-GO
-ALTER DATABASE [ABCNews] SET  MULTI_USER 
-GO
-ALTER DATABASE [ABCNews] SET PAGE_VERIFY CHECKSUM  
-GO
-ALTER DATABASE [ABCNews] SET DB_CHAINING OFF 
-GO
-ALTER DATABASE [ABCNews] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
-GO
-ALTER DATABASE [ABCNews] SET TARGET_RECOVERY_TIME = 60 SECONDS 
-GO
-ALTER DATABASE [ABCNews] SET DELAYED_DURABILITY = DISABLED 
-GO
-ALTER DATABASE [ABCNews] SET ACCELERATED_DATABASE_RECOVERY = OFF  
-GO
-EXEC sys.sp_db_vardecimal_storage_format N'ABCNews', N'ON'
-GO
-ALTER DATABASE [ABCNews] SET QUERY_STORE = ON
-GO
-ALTER DATABASE [ABCNews] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'ABCNews')
+BEGIN
+    CREATE DATABASE [ABCNews]
+END
 GO
 USE [ABCNews]
 GO
@@ -410,7 +333,62 @@ BEGIN
         AND (@ToDate IS NULL OR al.created_at <= @ToDate);
 END;
 GO
+USE [ABCNews]
+GO
+
+-- Nạp dữ liệu mẫu ban đầu (Sample Data)
+IF NOT EXISTS (SELECT * FROM Users WHERE Id = 'admin001')
+BEGIN
+    INSERT INTO Users (Id, Password, Fullname, Birthday, Gender, Mobile, Email, Role)
+    VALUES ('admin001', '123456', N'Tổng Biên Tập Admin', '1995-01-01', 1, '0912345678', 'admin@abcnews.com', 1);
+END;
+
+IF NOT EXISTS (SELECT * FROM Users WHERE Id = 'rep001')
+BEGIN
+    INSERT INTO Users (Id, Password, Fullname, Birthday, Gender, Mobile, Email, Role)
+    VALUES ('rep001', '123456', N'Phóng Viên Khánh Duy', '2000-05-15', 1, '0987654321', 'reporter1@abcnews.com', 0);
+END;
+
+IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'TECH')
+    INSERT INTO Categories (Id, Name) VALUES ('TECH', N'Công nghệ');
+IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'ECONOMY')
+    INSERT INTO Categories (Id, Name) VALUES ('ECONOMY', N'Kinh tế');
+IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'SPORT')
+    INSERT INTO Categories (Id, Name) VALUES ('SPORT', N'Thể thao');
+IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'LIFE')
+    INSERT INTO Categories (Id, Name) VALUES ('LIFE', N'Đời sống');
+
+IF NOT EXISTS (SELECT * FROM News WHERE Id = 'NEWS001')
+BEGIN
+    INSERT INTO News (Id, Title, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
+    VALUES ('NEWS001', 
+            N'Trí tuệ Nhân tạo & Xu hướng Chuyển đổi Số Tòa soạn 2026', 
+            N'<p>Hệ thống báo chí số ngày nay đòi hỏi tốc độ xử lý thông tin tính bằng giây và khả năng chịu tải cực lớn trong các khung giờ cao điểm. Việc ứng dụng kiến trúc 3-Tier kết hợp cơ chế Connection Pool tối ưu bằng HikariCP đã đem lại khả năng phản hồi vượt trội cho ABCNews.</p><p>Công nghệ không thay thế nhà báo, mà nâng cánh cho sự sáng tạo và tính chính xác của thông tin.</p>', 
+            'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800', 
+            GETDATE(), 'admin001', 3420, 'TECH', 1);
+END;
+
+IF NOT EXISTS (SELECT * FROM News WHERE Id = 'NEWS002')
+BEGIN
+    INSERT INTO News (Id, Title, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
+    VALUES ('NEWS002', 
+            N'Tối ưu hóa Database Doanh Nghiệp Với HikariCP Connection Pool', 
+            N'<p>HikariCP là một trong những thư viện Connection Pool nhẹ và nhanh nhất hiện nay trong hệ sinh thái Java. Khi triển khai trên Tomcat 10 kết hợp Microsoft SQL Server 2022, độ trễ kết nối giảm thiểu xuống mức tiệm cận 0ms.</p>', 
+            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800', 
+            GETDATE(), 'rep001', 1820, 'TECH', 1);
+END;
+
+IF NOT EXISTS (SELECT * FROM News WHERE Id = 'NEWS003')
+BEGIN
+    INSERT INTO News (Id, Title, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
+    VALUES ('NEWS003', 
+            N'Kinh tế Số Việt Nam 2026: Động lực Bứt phá từ Công nghệ', 
+            N'<p>Kinh tế số đang đóng góp tỷ trọng ngày càng lớn trong GDP quốc gia. Các doanh nghiệp công nghệ tài chính và thương mại điện tử đang chứng kiến sự tăng trưởng ấn tượng trong quý đầu năm.</p>', 
+            'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800', 
+            GETDATE(), 'rep001', 950, 'ECONOMY', 1);
+END;
+GO
 USE [master]
 GO
-ALTER DATABASE [ABCNews] SET  READ_WRITE 
+ALTER DATABASE [ABCNews] SET READ_WRITE 
 GO
