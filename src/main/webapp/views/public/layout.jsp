@@ -26,6 +26,71 @@
         </c:choose>
     </title>
     
+    <%-- Xác định Base URL đầy đủ cho SEO & Open Graph Tags --%>
+    <c:set var="reqPort" value="${pageContext.request.serverPort}" />
+    <c:set var="portPart" value="${(pageContext.request.scheme eq 'http' and reqPort eq 80) or (pageContext.request.scheme eq 'https' and reqPort eq 443) ? '' : ':'.concat(reqPort)}" />
+    <c:set var="siteBaseUrl" value="${pageContext.request.scheme}://${pageContext.request.serverName}${portPart}${pageContext.request.contextPath}" />
+    
+    <c:choose>
+        <c:when test="${not empty news}">
+            <c:set var="pageCanonicalUrl" value="${siteBaseUrl}/detail?id=${news.id}" />
+            <c:set var="metaDescription" value="${news.summary}" />
+            <c:choose>
+                <c:when test="${fn:startsWith(news.image, 'http://') or fn:startsWith(news.image, 'https://')}">
+                    <c:set var="metaImage" value="${news.image}" />
+                </c:when>
+                <c:when test="${fn:startsWith(news.image, '/')}">
+                    <c:set var="metaImage" value="${pageContext.request.scheme}://${pageContext.request.serverName}${portPart}${news.image}" />
+                </c:when>
+                <c:when test="${not empty news.image}">
+                    <c:set var="metaImage" value="${siteBaseUrl}/${news.image}" />
+                </c:when>
+                <c:otherwise>
+                    <c:set var="metaImage" value="${siteBaseUrl}/assets/images/default-thumbnail.jpg" />
+                </c:otherwise>
+            </c:choose>
+        </c:when>
+        <c:otherwise>
+            <c:set var="pageCanonicalUrl" value="${siteBaseUrl}${pageContext.request.servletPath}" />
+            <c:set var="metaDescription" value="ABC News - Kênh thông tin điện tử hàng đầu, liên tục cập nhật tin tức thời sự, kinh tế, công nghệ AI, thể thao và đời sống 24/7." />
+            <c:set var="metaImage" value="${siteBaseUrl}/assets/images/logo.png" />
+        </c:otherwise>
+    </c:choose>
+
+    <!-- SEO Canonical URL -->
+    <link rel="canonical" href="${pageCanonicalUrl}">
+
+    <!-- Standard Meta Description & Robots -->
+    <meta name="description" content="<c:out value='${metaDescription}' />">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph (Facebook, Zalo, LinkedIn) -->
+    <meta property="og:locale" content="vi_VN">
+    <meta property="og:type" content="${not empty news ? 'article' : 'website'}">
+    <meta property="og:site_name" content="ABC News">
+    <meta property="og:title" content="<c:out value='${not empty news ? news.title : (not empty pageTitle ? pageTitle : \"ABC News - Tin tức nóng hổi\")}' />">
+    <meta property="og:description" content="<c:out value='${metaDescription}' />">
+    <meta property="og:url" content="${pageCanonicalUrl}">
+    <c:if test="${not empty metaImage}">
+        <meta property="og:image" content="${metaImage}">
+        <meta property="og:image:alt" content="<c:out value='${not empty news ? news.title : \"ABC News\"}' />">
+    </c:if>
+    <c:if test="${not empty news}">
+        <meta property="article:published_time" content="<fmt:formatDate value='${news.postedDate}' pattern='yyyy-MM-dd\'T\'HH:mm:ssXXX' />">
+        <c:if test="${not empty news.author}">
+            <meta property="article:author" content="${news.author}">
+        </c:if>
+    </c:if>
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@ABCNews">
+    <meta name="twitter:title" content="<c:out value='${not empty news ? news.title : (not empty pageTitle ? pageTitle : \"ABC News\")}' />">
+    <meta name="twitter:description" content="<c:out value='${metaDescription}' />">
+    <c:if test="${not empty metaImage}">
+        <meta name="twitter:image" content="${metaImage}">
+    </c:if>
+    
     <%-- Bootstrap 5 CSS --%>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <%-- Font Awesome Icons --%>
