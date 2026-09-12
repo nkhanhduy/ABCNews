@@ -1,6 +1,8 @@
 package poly.com.util;
 
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.kernel.font.PdfFont;
@@ -22,6 +24,8 @@ public class FontHelper {
     private static final String FONT_REGULAR = "/fonts/DejaVuSans.ttf";
     private static final String FONT_BOLD = "/fonts/DejaVuSans-Bold.ttf";
     
+    private static final Logger LOGGER = Logger.getLogger(FontHelper.class.getName());
+    
     // Cache font DATA (byte array), KHÔNG cache PdfFont object
     private static byte[] regularFontData = null;
     private static byte[] boldFontData = null;
@@ -30,7 +34,7 @@ public class FontHelper {
      * Lấy font Regular (DejaVu Sans)
      * TẠO MỚI mỗi lần để tránh lỗi "belongs to other PDF document"
      * 
-     * @return PdfFont hỗ trợ tiếng Việt
+     * @return PdfFont Regular hỗ trợ tiếng Việt
      * @throws RuntimeException nếu không tìm thấy font file
      */
     public static PdfFont getRegularFont() {
@@ -53,7 +57,7 @@ public class FontHelper {
                 PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
             
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Không thể tải DejaVuSans font, chuyển sang Helvetica: {0}", e.getMessage());
             // Fallback về Helvetica
             try {
                 return PdfFontFactory.createFont("Helvetica", PdfEncodings.IDENTITY_H);
@@ -90,7 +94,7 @@ public class FontHelper {
                 PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
             
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "Không thể tải DejaVuSans-Bold font, chuyển sang Helvetica-Bold: {0}", e.getMessage());
             // Fallback về Helvetica-Bold
             try {
                 return PdfFontFactory.createFont("Helvetica-Bold", PdfEncodings.IDENTITY_H);

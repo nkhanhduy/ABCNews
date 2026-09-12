@@ -18,6 +18,8 @@ public interface CategoryService {
 
     boolean existsBySlug(String slug);
 
+    boolean existsById(String id);
+
     String generateUniqueSlug(String name, String currentCategoryId);
 
     boolean createCategory(Category category);

@@ -15,10 +15,10 @@ BEGIN
 END
 GO
 
--- 2. Migration 1 lần: Gán quyền SuperAdmin cho tài khoản khởi tạo chính (admin001) hoặc các tài khoản admin khởi nguồn
+-- 2. Migration 1 lần: Gán quyền SuperAdmin cho tài khoản quản trị khởi tạo cụ thể đã biết (superadmin001 / superadmin@abcnews.com)
 UPDATE [dbo].[Users] 
 SET [IsSuperAdmin] = 1 
-WHERE [Id] = 'admin001' OR [Email] = 'admin@abcnews.com' OR LOWER([Id]) LIKE 'super%';
+WHERE [Id] = 'superadmin001' OR [Email] = 'superadmin@abcnews.com';
 GO
 
 -- 3. Tạo bảng RememberTokens lưu SHA-256 hash của token thay vì plaintext / Base64(userId)

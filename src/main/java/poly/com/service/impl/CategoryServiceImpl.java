@@ -52,6 +52,16 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDAO.existsBySlug(slug.trim());
     }
 
+    private static final int MAX_SLUG_LENGTH = 200;
+
+    @Override
+    public boolean existsById(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            return false;
+        }
+        return categoryDAO.existsById(id.trim());
+    }
+
     @Override
     public String generateUniqueSlug(String name, String currentCategoryId) {
         if (name == null || name.trim().isEmpty()) {
@@ -59,7 +69,16 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         String baseSlug = poly.com.util.SlugUtil.toSlug(name);
-        if (baseSlug.isEmpty() || !poly.com.util.SlugUtil.isValidSlug(baseSlug)) {
+        if (baseSlug.isEmpty()) {
+            throw new IllegalArgumentException("Tên loại tin không hợp lệ để tạo đường dẫn thân thiện (slug)");
+        }
+
+        // Đảm bảo baseSlug không vượt quá MAX_SLUG_LENGTH và không kết thúc bằng '-'
+        if (baseSlug.length() > MAX_SLUG_LENGTH) {
+            baseSlug = baseSlug.substring(0, MAX_SLUG_LENGTH).replaceAll("-+$", "");
+        }
+
+        if (!poly.com.util.SlugUtil.isValidSlug(baseSlug)) {
             throw new IllegalArgumentException("Tên loại tin không hợp lệ để tạo đường dẫn thân thiện (slug)");
         }
 
@@ -71,17 +90,24 @@ public class CategoryServiceImpl implements CategoryService {
             return baseSlug;
         }
 
-        // Nếu đã tồn tại, nối hậu tố -2, -3, ...
+        // Nếu đã tồn tại, nối hậu tố -2, -3, ... đảm bảo tổng độ dài luôn <= MAX_SLUG_LENGTH (200)
         int counter = 2;
-        String candidate = baseSlug + "-" + counter;
-        while (categoryDAO.existsBySlugExcludingId(candidate, excludeId)) {
+        while (true) {
+            String suffix = "-" + counter;
+            int maxBaseLength = MAX_SLUG_LENGTH - suffix.length();
+            String prefix = baseSlug;
+            if (prefix.length() > maxBaseLength) {
+                prefix = prefix.substring(0, maxBaseLength).replaceAll("-+$", "");
+            }
+            String candidate = prefix + suffix;
+            if (!categoryDAO.existsBySlugExcludingId(candidate, excludeId)) {
+                return candidate;
+            }
             counter++;
-            candidate = baseSlug + "-" + counter;
             if (counter > 1000) {
                 throw new IllegalStateException("Không thể tạo slug duy nhất cho loại tin");
             }
         }
-        return candidate;
     }
 
     @Override
@@ -93,8 +119,18 @@ public class CategoryServiceImpl implements CategoryService {
             throw new IllegalArgumentException("Tên loại tin không được để trống");
         }
 
-        category.setId(category.getId().trim());
-        category.setName(category.getName().trim());
+        String id = category.getId().trim();
+        String name = category.getName().trim();
+
+        if (id.length() > 50) {
+            throw new IllegalArgumentException("Mã loại tin không được vượt quá 50 ký tự");
+        }
+        if (name.length() > 200) {
+            throw new IllegalArgumentException("Tên loại tin không được vượt quá 200 ký tự");
+        }
+
+        category.setId(id);
+        category.setName(name);
 
         // Tự động sinh slug duy nhất từ Name
         String uniqueSlug = generateUniqueSlug(category.getName(), null);
@@ -114,12 +150,20 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         String id = category.getId().trim();
+        String newName = category.getName().trim();
+
+        if (id.length() > 50) {
+            throw new IllegalArgumentException("Mã loại tin không được vượt quá 50 ký tự");
+        }
+        if (newName.length() > 200) {
+            throw new IllegalArgumentException("Tên loại tin không được vượt quá 200 ký tự");
+        }
+
         Category existing = categoryDAO.findById(id);
         if (existing == null) {
             return false;
         }
 
-        String newName = category.getName().trim();
         category.setId(id);
         category.setName(newName);
 

@@ -30,18 +30,16 @@ import poly.com.util.ValidationHelper;
 public class CategoryAdminController extends BaseController {
     private static final long serialVersionUID = 1L;
        
-    private CategoryDAO categoryDAO;
     private CategoryService categoryService;
     private NewsDAO newsDAO;
     private ActivityLogService activityLogService;
 
     /**
-     * Khởi tạo CategoryDAO, CategoryService và NewsDAO khi servlet được load
+     * Khởi tạo CategoryService và NewsDAO khi servlet được load
      */
     @Override
     public void init() throws ServletException {
-        categoryDAO = new CategoryDAO();
-        categoryService = new CategoryServiceImpl(categoryDAO);
+        categoryService = new CategoryServiceImpl();
         newsDAO = new NewsDAO();
         activityLogService = new ActivityLogService();
     }
@@ -224,12 +222,28 @@ public class CategoryAdminController extends BaseController {
         }
         
         categoryId = categoryId.trim();
+        name = name.trim();
+
+        if (categoryId.length() > 50) {
+            request.setAttribute("error", "Mã loại tin không được vượt quá 50 ký tự.");
+            request.setAttribute("categoryItem", entity);
+            showCategoryList(request, response);
+            return false;
+        }
+
+        if (name.length() > 200) {
+            request.setAttribute("error", "Tên loại tin không được vượt quá 200 ký tự.");
+            request.setAttribute("categoryItem", entity);
+            showCategoryList(request, response);
+            return false;
+        }
+
         entity.setId(categoryId);
-        entity.setName(name.trim());
+        entity.setName(name);
 
         // Kiểm tra trong database với synchronized để tránh race condition
         synchronized (this) {
-            if (categoryDAO.existsById(categoryId)) {
+            if (categoryService.existsById(categoryId)) {
                 request.setAttribute("error", "Mã loại tin \"" + categoryId + "\" đã tồn tại. Vui lòng chọn mã khác.");
                 request.setAttribute("categoryItem", entity);
                 showCategoryList(request, response);
@@ -294,7 +308,14 @@ public class CategoryAdminController extends BaseController {
                 return;
             }
 
-            entity.setName(newName.trim());
+            newName = newName.trim();
+            if (newName.length() > 200) {
+                request.setAttribute("error", "Tên loại tin không được vượt quá 200 ký tự.");
+                showEditForm(request, response);
+                return;
+            }
+
+            entity.setName(newName);
             try {
                 categoryService.updateCategory(entity);
                 

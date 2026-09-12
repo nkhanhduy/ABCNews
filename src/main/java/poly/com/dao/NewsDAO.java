@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import poly.com.entity.News;
 import poly.com.util.JDBCHelper;
@@ -17,6 +19,8 @@ import poly.com.util.JDBCHelper;
  * Cung cấp các phương thức: insert, update, delete, find, search, count, filter theo category/author
  */
 public class NewsDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(NewsDAO.class.getName());
 
     /**
      * Thêm bản tin mới
@@ -80,7 +84,7 @@ public class NewsDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm số bài viết của tác giả: {0}", e.getMessage());
             throw new RuntimeException("Lỗi đếm số bài viết của tác giả", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -151,7 +155,7 @@ public class NewsDAO {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi kiểm tra mã bản tin: {0}", e.getMessage());
             throw new RuntimeException("Lỗi kiểm tra mã bản tin", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -227,7 +231,7 @@ public class NewsDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm số lượng tin tức theo loại tin: {0}", e.getMessage());
             throw new RuntimeException("Lỗi đếm số lượng tin tức", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -252,7 +256,7 @@ public class NewsDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm tổng số lượng tin tức: {0}", e.getMessage());
             throw new RuntimeException("Lỗi đếm tổng số lượng tin tức", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -358,7 +362,7 @@ public class NewsDAO {
                 list.add(entity);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi truy vấn dữ liệu News: {0}", e.getMessage());
             throw new RuntimeException("Lỗi truy vấn dữ liệu", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);

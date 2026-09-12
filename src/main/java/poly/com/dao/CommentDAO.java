@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import poly.com.entity.Comment;
 import poly.com.util.JDBCHelper;
@@ -18,6 +20,8 @@ import poly.com.util.JDBCHelper;
  * @author ABCNews Development Team
  */
 public class CommentDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(CommentDAO.class.getName());
 
     /**
      * Thêm bình luận mới (mặc định trạng thái chờ duyệt - status = 0)
@@ -36,7 +40,7 @@ public class CommentDAO {
             );
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi thêm bình luận: {0}", e.getMessage());
             return false;
         }
     }
@@ -163,7 +167,7 @@ public class CommentDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm số lượng bình luận theo trạng thái: {0}", e.getMessage());
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
         }
@@ -179,7 +183,7 @@ public class CommentDAO {
             JDBCHelper.executeUpdate(sql, status, id);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi cập nhật trạng thái bình luận ID " + id, e);
             return false;
         }
     }
@@ -193,7 +197,7 @@ public class CommentDAO {
             JDBCHelper.executeUpdate(sql, id);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi xóa bình luận ID " + id, e);
             return false;
         }
     }
@@ -234,7 +238,7 @@ public class CommentDAO {
                 list.add(comment);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi truy vấn Comments: {0}", e.getMessage());
             throw new RuntimeException("Lỗi truy vấn Comments", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);

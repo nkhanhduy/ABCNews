@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import poly.com.entity.Category;
 import poly.com.exception.DuplicateSlugException;
@@ -17,6 +19,8 @@ import poly.com.util.ValidationHelper;
  * Cung cấp các phương thức: insert, update, delete, find, findAll, existsById
  */
 public class CategoryDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(CategoryDAO.class.getName());
 
     /**
      * Thêm một loại tin mới vào CSDL
@@ -97,7 +101,7 @@ public class CategoryDAO {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi kiểm tra mã loại tin: {0}", e.getMessage());
             throw new RuntimeException("Lỗi kiểm tra mã loại tin", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -122,7 +126,7 @@ public class CategoryDAO {
                 return rs.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đếm tổng số lượng loại tin: {0}", e.getMessage());
             throw new RuntimeException("Lỗi đếm tổng số lượng loại tin", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -184,7 +188,7 @@ public class CategoryDAO {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi kiểm tra trùng lặp slug loại tin: {0}", e.getMessage());
             throw new RuntimeException("Lỗi kiểm tra trùng lặp slug loại tin", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -224,7 +228,7 @@ public class CategoryDAO {
                 list.add(entity);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi truy vấn dữ liệu Category: {0}", e.getMessage());
             throw new RuntimeException("Lỗi truy vấn dữ liệu", e);
         } finally {
             // Đóng tất cả tài nguyên

@@ -2,6 +2,8 @@ package poly.com.controller;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // BẮT BUỘC dùng jakarta
 import jakarta.servlet.ServletException;
@@ -20,6 +22,7 @@ import poly.com.service.impl.NewsletterServiceImpl;
 @WebServlet("/newsletter")
 public class NewsletterController extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(NewsletterController.class.getName());
        
     private NewsletterService newsletterService;
 
@@ -58,7 +61,7 @@ public class NewsletterController extends HttpServlet {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi đăng ký nhận bản tin: {0}", e.getMessage());
             // Nếu có lỗi, chuyển sang trang lỗi
             response.sendRedirect(request.getContextPath() + "/error.jsp");
         }

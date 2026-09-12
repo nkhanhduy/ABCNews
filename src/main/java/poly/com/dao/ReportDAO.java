@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import poly.com.util.JDBCHelper;
 
@@ -14,6 +16,8 @@ import poly.com.util.JDBCHelper;
  * Cung cấp các phương thức để export báo cáo thống kê tổng quan
  */
 public class ReportDAO {
+    
+    private static final Logger LOGGER = Logger.getLogger(ReportDAO.class.getName());
     
     /**
      * Lấy thống kê tổng quan của hệ thống
@@ -47,7 +51,7 @@ public class ReportDAO {
             stats.put("activeNewsletters", getCount(conn, "SELECT COUNT(*) FROM Newsletters WHERE Enabled = 1"));
             
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi lấy thống kê tổng quan dashboard: {0}", e.getMessage());
         } finally {
             JDBCHelper.close(null, conn);
         }
@@ -77,7 +81,7 @@ public class ReportDAO {
             }
             
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi lấy top 10 bài viết xem nhiều: {0}", e.getMessage());
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
         }
@@ -111,7 +115,7 @@ public class ReportDAO {
             }
             
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi lấy thống kê tin theo chuyên mục: {0}", e.getMessage());
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
         }
@@ -146,7 +150,7 @@ public class ReportDAO {
             }
             
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Lỗi lấy thống kê tin theo tác giả: {0}", e.getMessage());
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
         }
