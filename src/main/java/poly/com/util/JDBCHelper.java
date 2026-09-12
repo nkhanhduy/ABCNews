@@ -6,18 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 /**
- * Lớp tiện ích (Helper Class) để quản lý kết nối và thao tác với cơ sở dữ liệu SQL Server
+ * Lớp tiện ích quản lý kết nối và thao tác với cơ sở dữ liệu SQL Server
  * 
- * Lớp này cung cấp các phương thức static để:
- * - Tạo và quản lý kết nối đến database
- * - Thực thi các câu lệnh SQL (SELECT, INSERT, UPDATE, DELETE) với PreparedStatement
- * - Đóng các tài nguyên database (Connection, PreparedStatement, ResultSet)
- * 
- * Sử dụng PreparedStatement để tránh SQL Injection và tăng hiệu suất.
+ * Nâng cấp kiến trúc hiệu năng cao:
+ * - Sử dụng HikariCP Connection Pool (Connection pool nhanh và nhẹ nhất cho Java)
+ * - Tái sử dụng các kết nối đã mở thay vì tạo mới liên tục, giảm thiểu độ trễ kết nối
+ * - Cơ chế Fallback an toàn sang DriverManager nếu HikariCP gặp sự cố cấu hình
  * 
  * @author ABCNews Development Team
- * @version 1.0
+ * @version 2.0 (HikariCP Integrated)
  */
 public class JDBCHelper {
     
@@ -40,42 +41,59 @@ public class JDBCHelper {
     private static String connectionUrl;
     
     /** Tên class của JDBC Driver cho SQL Server */
-    private static String driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+    private static final String DRIVER_CLASS = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
-    /**
-     * Khối static: Khởi tạo connection URL và nạp JDBC driver khi class được load lần đầu
-     * 
-     * Khối này sẽ chạy một lần duy nhất khi class được JVM load vào memory.
-     * Nó thực hiện:
-     * 1. Tạo connection URL từ các thông tin database được nạp an toàn từ ConfigHelper
-     * 2. Nạp JDBC driver class để đăng ký với DriverManager
-     * 
-     * Nếu không tìm thấy driver, sẽ throw RuntimeException để dừng ứng dụng.
-     */
+    /** HikariCP DataSource singleton */
+    private static HikariDataSource dataSource;
+
     static {
         // Tạo connection URL với format chuẩn của SQL Server JDBC
         connectionUrl = String.format("jdbc:sqlserver://%s:%s;databaseName=%s;user=%s;password=%s;encrypt=false;trustServerCertificate=true;",
                 DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS);
         
         try {
-            // Nạp và đăng ký JDBC driver
-            Class.forName(driverClass);
-        } catch (ClassNotFoundException e) {
-            System.err.println("Không tìm thấy driver JDBC: " + driverClass);
-            throw new RuntimeException("Lỗi nạp driver JDBC", e);
+            // Đăng ký JDBC Driver
+            Class.forName(DRIVER_CLASS);
+            
+            // Khởi tạo HikariCP Connection Pool
+            HikariConfig config = new HikariConfig();
+            config.setDriverClassName(DRIVER_CLASS);
+            config.setJdbcUrl(connectionUrl);
+            config.setUsername(DB_USER);
+            config.setPassword(DB_PASS);
+            
+            // Tối ưu hóa cấu hình Pool
+            int maxPoolSize = ConfigHelper.getInt("db.pool.maxSize", 10);
+            int minIdle = ConfigHelper.getInt("db.pool.minIdle", 2);
+            int timeout = ConfigHelper.getInt("db.pool.connectionTimeout", 10000);
+            
+            config.setMaximumPoolSize(maxPoolSize);
+            config.setMinimumIdle(minIdle);
+            config.setConnectionTimeout(timeout);
+            config.setIdleTimeout(30000);
+            config.setMaxLifetime(1800000); // 30 phút
+            config.setPoolName("ABCNews-HikariCP-Pool");
+            
+            dataSource = new HikariDataSource(config);
+            System.out.println("[INFO] Khởi tạo HikariCP Connection Pool thành công cho database: " + DB_NAME);
+            
+        } catch (Throwable e) {
+            System.err.println("[CẢNH BÁO] Không thể khởi tạo HikariCP Connection Pool (" + e.getMessage() + "). Chuyển sang chế độ DriverManager dự phòng.");
+            dataSource = null;
         }
     }
 
     /**
-     * Mở kết nối mới đến cơ sở dữ liệu SQL Server
+     * Mở kết nối đến cơ sở dữ liệu SQL Server từ HikariCP Pool
      * 
-     * Phương thức này sử dụng DriverManager để tạo một Connection mới.
-     * Connection này cần được đóng sau khi sử dụng xong để tránh memory leak.
-     * 
-     * @return Đối tượng Connection đã kết nối đến database
-     * @throws SQLException nếu không thể kết nối đến database (sai thông tin, database không tồn tại, v.v.)
+     * @return Đối tượng Connection
+     * @throws SQLException nếu không thể lấy kết nối
      */
     public static Connection getConnection() throws SQLException {
+        if (dataSource != null && !dataSource.isClosed()) {
+            return dataSource.getConnection();
+        }
+        // Dự phòng: Mở kết nối trực tiếp qua DriverManager nếu pool chưa khởi tạo
         return DriverManager.getConnection(connectionUrl);
     }
 

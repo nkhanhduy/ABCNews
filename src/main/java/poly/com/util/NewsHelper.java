@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 
 import poly.com.dao.NewsDAO;
 import poly.com.entity.News;
+import poly.com.service.NewsService;
 
 /**
  * Lớp tiện ích (Helper Class) để xử lý các logic liên quan đến News (Tin tức)
@@ -62,6 +63,28 @@ public class NewsHelper {
             }
             // Giới hạn tối đa 5 tin để hiển thị trong sidebar (không làm quá dài)
             // Tạo ArrayList mới từ subList để tránh UnsupportedOperationException
+            if (listViewedNews.size() > 5) {
+                listViewedNews = new ArrayList<>(listViewedNews.subList(0, 5));
+            }
+        }
+        return listViewedNews;
+    }
+
+    /**
+     * Overload lấy danh sách tin đã xem sử dụng tầng NewsService (3-Tier Architecture)
+     */
+    @SuppressWarnings("unchecked")
+    public static List<News> getViewedNews(HttpSession session, NewsService newsService, String contextPath) {
+        List<News> listViewedNews = new ArrayList<>();
+        List<String> viewedNewsIds = (List<String>) session.getAttribute("viewedNewsIds");
+        if (viewedNewsIds != null && !viewedNewsIds.isEmpty()) {
+            for (String newsId : viewedNewsIds) {
+                News news = newsService.findById(newsId);
+                if (news != null) {
+                    ImagePathHelper.normalizeImagePath(news, contextPath);
+                    listViewedNews.add(news);
+                }
+            }
             if (listViewedNews.size() > 5) {
                 listViewedNews = new ArrayList<>(listViewedNews.subList(0, 5));
             }
