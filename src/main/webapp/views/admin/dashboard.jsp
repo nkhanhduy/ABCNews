@@ -66,6 +66,35 @@
     </div>
 </div>
 
+<!-- KHU VỰC BIỂU ĐỒ TRỰC QUAN (Chart.js) -->
+<div class="dashboard-charts-grid">
+    <!-- Biểu đồ đường: Lượt xem bài viết nổi bật -->
+    <div class="chart-card card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3><i class="fas fa-chart-line me-2 text-primary"></i>Lượt xem Bài viết Hàng đầu</h3>
+            <span class="badge bg-primary">Top 5 Hot News</span>
+        </div>
+        <div class="card-body">
+            <div style="position: relative; height: 280px; width: 100%;">
+                <canvas id="viewsLineChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Biểu đồ tròn: Tỷ lệ bài viết theo danh mục -->
+    <div class="chart-card card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3><i class="fas fa-chart-pie me-2 text-success"></i>Tỷ lệ Bài viết theo Danh mục</h3>
+            <span class="badge bg-success">${totalCategories} Danh mục</span>
+        </div>
+        <div class="card-body">
+            <div style="position: relative; height: 280px; width: 100%;">
+                <canvas id="categoryDoughnutChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Card 6-7: Thống kê chi tiết -->
 <div class="dashboard-details-grid">
     <!-- Card: Phân bổ người dùng -->
@@ -628,5 +657,156 @@
     .export-grid {
         grid-template-columns: 1fr;
     }
+    
+    .dashboard-charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dashboard-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+}
+
+.chart-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chart-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 </style>
+
+<%-- Script khởi tạo biểu đồ Chart.js --%>
+<script>
+(function() {
+    function initDashboardCharts() {
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js chưa được nạp!');
+            return;
+        }
+
+        // 1. Biểu đồ đường (Line Chart): Lượt xem tin tức hàng đầu
+        var viewsCtx = document.getElementById('viewsLineChart');
+        if (viewsCtx) {
+            var newsLabels = ${not empty chartNewsLabels ? chartNewsLabels : '[]'};
+            var newsViews = ${not empty chartNewsViews ? chartNewsViews : '[]'};
+
+            // Gradient cho Line Chart
+            var ctx = viewsCtx.getContext('2d');
+            var gradient = ctx.createLinearGradient(0, 0, 0, 280);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.45)');
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0.02)');
+
+            new Chart(viewsCtx, {
+                type: 'line',
+                data: {
+                    labels: newsLabels.length > 0 ? newsLabels : ['Chưa có dữ liệu'],
+                    datasets: [{
+                        label: 'Lượt xem',
+                        data: newsViews.length > 0 ? newsViews : [0],
+                        borderColor: '#2563eb',
+                        backgroundColor: gradient,
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.38,
+                        pointBackgroundColor: '#2563eb',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.parsed.y.toLocaleString('vi-VN') + ' lượt xem';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { precision: 0 }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 2. Biểu đồ tròn (Doughnut Chart): Tỷ lệ bài viết theo danh mục
+        var catCtx = document.getElementById('categoryDoughnutChart');
+        if (catCtx) {
+            var catLabels = ${not empty chartCategoryLabels ? chartCategoryLabels : '[]'};
+            var catData = ${not empty chartCategoryData ? chartCategoryData : '[]'};
+
+            var palette = [
+                '#3b82f6', '#10b981', '#f59e0b', '#ef4444', 
+                '#8b5cf6', '#06b6d4', '#ec4899', '#64748b'
+            ];
+
+            new Chart(catCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: catLabels.length > 0 ? catLabels : ['Chưa có danh mục'],
+                    datasets: [{
+                        data: catData.length > 0 ? catData : [1],
+                        backgroundColor: palette.slice(0, catLabels.length || 1),
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '62%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 12,
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var total = context.dataset.data.reduce(function(acc, val) { return acc + val; }, 0);
+                                    var val = context.parsed;
+                                    var pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+                                    return ' ' + context.label + ': ' + val + ' bài (' + pct + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initDashboardCharts);
+    } else {
+        initDashboardCharts();
+    }
+})();
+</script>

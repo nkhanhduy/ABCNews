@@ -16,6 +16,11 @@
             </h1>
             
             <div class="d-flex align-items-center gap-3">
+                <!-- Nút chuyển đổi Dark / Light Mode -->
+                <button type="button" class="btn btn-outline-light btn-sm rounded-circle theme-toggle-btn" id="themeToggleBtn" title="Chuyển đổi giao diện Sáng / Tối" style="width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; padding: 0;">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+
                 <c:choose>
                     <%-- 1. Nếu ĐÃ ĐĂNG NHẬP (sessionScope.user tồn tại) --%>
                     <c:when test="${not empty sessionScope.user}">

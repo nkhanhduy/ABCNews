@@ -22,6 +22,7 @@ import poly.com.entity.Category;
 import poly.com.entity.News;
 import poly.com.entity.User;
 import poly.com.util.ImagePathHelper;
+import com.google.code.gson.Gson;
 
 /**
  * Servlet implementation class AdminController
@@ -106,6 +107,31 @@ public class AdminController extends HttpServlet {
         ImagePathHelper.normalizeImagePaths(top5HotNews, contextPath);
         ImagePathHelper.normalizeImagePaths(recentNews, contextPath);
         
+        // Chuẩn bị dữ liệu cho biểu đồ Chart.js
+        List<String> catLabels = new ArrayList<>();
+        List<Integer> catData = new ArrayList<>();
+        for (Category cat : categories) {
+            catLabels.add(cat.getName());
+            catData.add(newsCountByCategory.getOrDefault(cat.getId(), 0));
+        }
+
+        List<String> newsLabels = new ArrayList<>();
+        List<Integer> newsViews = new ArrayList<>();
+        for (News n : top5HotNews) {
+            String shortTitle = n.getTitle();
+            if (shortTitle != null && shortTitle.length() > 25) {
+                shortTitle = shortTitle.substring(0, 22) + "...";
+            }
+            newsLabels.add(shortTitle);
+            newsViews.add(n.getViewCount());
+        }
+
+        Gson gson = new Gson();
+        request.setAttribute("chartCategoryLabels", gson.toJson(catLabels));
+        request.setAttribute("chartCategoryData", gson.toJson(catData));
+        request.setAttribute("chartNewsLabels", gson.toJson(newsLabels));
+        request.setAttribute("chartNewsViews", gson.toJson(newsViews));
+
         // 3. Set attributes
         request.setAttribute("totalNews", totalNews);
         request.setAttribute("totalUsers", totalUsers);
@@ -203,6 +229,31 @@ public class AdminController extends HttpServlet {
             homeNewsPercentage = (double) newsOnHome / myTotalNews * 100;
         }
         
+        // Chuẩn bị dữ liệu biểu đồ cho Reporter
+        List<String> repCatLabels = new ArrayList<>();
+        List<Integer> repCatData = new ArrayList<>();
+        for (Category cat : categories) {
+            repCatLabels.add(cat.getName());
+            repCatData.add(myNewsCountByCategory.getOrDefault(cat.getId(), 0));
+        }
+
+        List<String> repNewsLabels = new ArrayList<>();
+        List<Integer> repNewsViews = new ArrayList<>();
+        for (News n : myTop5HotNews) {
+            String shortTitle = n.getTitle();
+            if (shortTitle != null && shortTitle.length() > 25) {
+                shortTitle = shortTitle.substring(0, 22) + "...";
+            }
+            repNewsLabels.add(shortTitle);
+            repNewsViews.add(n.getViewCount());
+        }
+
+        Gson repGson = new Gson();
+        request.setAttribute("chartCategoryLabels", repGson.toJson(repCatLabels));
+        request.setAttribute("chartCategoryData", repGson.toJson(repCatData));
+        request.setAttribute("chartNewsLabels", repGson.toJson(repNewsLabels));
+        request.setAttribute("chartNewsViews", repGson.toJson(repNewsViews));
+
         // 6. Set attributes
         request.setAttribute("myTotalNews", myTotalNews);
         request.setAttribute("totalViews", totalViews);

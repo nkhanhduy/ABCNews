@@ -110,9 +110,9 @@
             </div>
 
                     <div class="form-group">
-                <label for="content">Nội dung</label>
-                        <textarea name="content" rows="4" spellcheck="false">${newsItem.content}</textarea>
-            </div>
+                        <label for="newsContentEditor"><i class="fas fa-edit me-1"></i>Nội dung bài viết (CKEditor WYSIWYG)</label>
+                        <textarea name="content" id="newsContentEditor" rows="6" spellcheck="false">${newsItem.content}</textarea>
+                    </div>
             
                     <!-- Upload ảnh đại diện -->
                     <div class="form-group">
@@ -903,4 +903,65 @@ input[name="title"][id="title"] {
         });
     }
 })();
+
+// Khởi tạo CKEditor 5 cho ô Nội dung
+(function() {
+    function initCKEditor() {
+        var editorElem = document.querySelector('#newsContentEditor');
+        if (!editorElem || typeof ClassicEditor === 'undefined') {
+            return;
+        }
+        
+        // Tránh khởi tạo nhiều lần nếu đã có CKEditor
+        if (editorElem.classList.contains('ck-editor-initialized')) {
+            return;
+        }
+        editorElem.classList.add('ck-editor-initialized');
+
+        ClassicEditor
+            .create(editorElem, {
+                toolbar: [
+                    'heading', '|', 
+                    'bold', 'italic', 'underline', '|',
+                    'bulletedList', 'numberedList', '|',
+                    'blockQuote', 'insertTable', 'link', '|',
+                    'undo', 'redo'
+                ],
+                placeholder: 'Nhập nội dung bài viết chi tiết tại đây...'
+            })
+            .then(function(editor) {
+                var form = editorElem.closest('form');
+                if (form) {
+                    form.addEventListener('submit', function() {
+                        editorElem.value = editor.getData();
+                    });
+                }
+            })
+            .catch(function(error) {
+                console.error('Lỗi khi tải CKEditor 5:', error);
+            });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCKEditor);
+    } else {
+        initCKEditor();
+    }
+})();
 </script>
+
+<style>
+.ck-editor__editable_inline {
+    min-height: 240px;
+    max-height: 480px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    border-radius: 0 0 8px 8px !important;
+}
+.ck-toolbar {
+    border-radius: 8px 8px 0 0 !important;
+}
+.ck.ck-editor {
+    width: 100% !important;
+}
+</style>

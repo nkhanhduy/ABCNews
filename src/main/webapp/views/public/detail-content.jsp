@@ -19,7 +19,7 @@
             <h1 class="mb-4">${news.title}</h1>
             
             <!-- Thông tin meta -->
-            <div class="d-flex flex-wrap gap-3 mb-4 text-muted">
+            <div class="d-flex flex-wrap align-items-center gap-3 mb-3 text-muted">
                 <span><i class="fas fa-calendar-alt me-1"></i><fmt:formatDate value="${news.postedDate}" pattern="dd/MM/yyyy HH:mm" /></span>
                 <span><i class="fas fa-user me-1"></i>
                     <c:choose>
@@ -32,6 +32,37 @@
                     </c:choose>
                 </span>
                 <span><i class="fas fa-eye me-1"></i>${news.viewCount} lượt xem</span>
+                
+                <!-- Ước tính thời gian đọc bài viết -->
+                <span class="badge bg-light text-secondary border d-inline-flex align-items-center" id="readingTimeBadge" title="Thời gian đọc ước tính">
+                    <i class="fas fa-clock text-primary me-1"></i>
+                    <span id="readingTimeText">1 phút đọc</span>
+                </span>
+            </div>
+            
+            <!-- THANH CHIA SẺ MẠNG XÃ HỘI NHANH (Social Share Bar) -->
+            <div class="social-share-bar d-flex align-items-center flex-wrap gap-2 p-2 px-3 mb-4 bg-light rounded-3 border">
+                <span class="fw-semibold text-muted small me-2"><i class="fas fa-share-alt me-1"></i>Chia sẻ:</span>
+                
+                <!-- Facebook -->
+                <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary rounded-pill share-btn" id="shareFacebook" title="Chia sẻ lên Facebook">
+                    <i class="fab fa-facebook-f me-1"></i>Facebook
+                </a>
+                
+                <!-- Twitter / X -->
+                <a href="javascript:void(0)" class="btn btn-sm btn-outline-dark rounded-pill share-btn" id="shareTwitter" title="Chia sẻ lên X (Twitter)">
+                    <i class="fab fa-x-twitter me-1"></i>Twitter
+                </a>
+                
+                <!-- Telegram -->
+                <a href="javascript:void(0)" class="btn btn-sm btn-outline-info rounded-pill share-btn" id="shareTelegram" title="Chia sẻ qua Telegram">
+                    <i class="fab fa-telegram-plane me-1"></i>Telegram
+                </a>
+                
+                <!-- Sao chép link -->
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill ms-auto" id="copyLinkBtn" title="Sao chép liên kết bài viết">
+                    <i class="fas fa-link me-1"></i><span id="copyLinkText">Sao chép link</span>
+                </button>
             </div>
             
             <!-- Ảnh (nếu có) -->
@@ -95,3 +126,93 @@
         </div>
     </c:otherwise>
 </c:choose>
+
+<%-- Script tính thời gian đọc & chia sẻ mạng xã hội --%>
+<script>
+(function() {
+    // 1. Tính toán ước tính thời gian đọc
+    function calculateReadingTime() {
+        var contentEl = document.querySelector('.news-full-content');
+        var timeEl = document.getElementById('readingTimeText');
+        if (!contentEl || !timeEl) return;
+
+        var text = contentEl.innerText || contentEl.textContent || '';
+        var words = text.trim().split(/\s+/).filter(function(w) { return w.length > 0; }).length;
+        // Tốc độ đọc trung bình tiếng Việt khoảng 200 từ/phút
+        var minutes = Math.max(1, Math.round(words / 200));
+        timeEl.textContent = minutes + ' phút đọc (' + words + ' từ)';
+    }
+
+    // 2. Thiết lập nút chia sẻ mạng xã hội
+    function setupSocialShare() {
+        var currentUrl = encodeURIComponent(window.location.href);
+        var pageTitle = encodeURIComponent(document.title);
+
+        var fbBtn = document.getElementById('shareFacebook');
+        if (fbBtn) {
+            fbBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.open('https://www.facebook.com/sharer/sharer.php?u=' + currentUrl, 'fb-share', 'width=600,height=500,scrollbars=yes');
+            });
+        }
+
+        var twitterBtn = document.getElementById('shareTwitter');
+        if (twitterBtn) {
+            twitterBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.open('https://twitter.com/intent/tweet?url=' + currentUrl + '&text=' + pageTitle, 'twitter-share', 'width=600,height=500,scrollbars=yes');
+            });
+        }
+
+        var telegramBtn = document.getElementById('shareTelegram');
+        if (telegramBtn) {
+            telegramBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.open('https://t.me/share/url?url=' + currentUrl + '&text=' + pageTitle, 'telegram-share', 'width=600,height=500,scrollbars=yes');
+            });
+        }
+
+        // Sao chép link vào clipboard
+        var copyBtn = document.getElementById('copyLinkBtn');
+        var copyText = document.getElementById('copyLinkText');
+        if (copyBtn && copyText) {
+            copyBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(window.location.href).then(showCopiedSuccess);
+                } else {
+                    // Fallback
+                    var dummy = document.createElement('textarea');
+                    document.body.appendChild(dummy);
+                    dummy.value = window.location.href;
+                    dummy.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(dummy);
+                    showCopiedSuccess();
+                }
+            });
+        }
+
+        function showCopiedSuccess() {
+            copyBtn.classList.remove('btn-outline-secondary');
+            copyBtn.classList.add('btn-success');
+            copyText.textContent = 'Đã sao chép!';
+            setTimeout(function() {
+                copyBtn.classList.remove('btn-success');
+                copyBtn.classList.add('btn-outline-secondary');
+                copyText.textContent = 'Sao chép link';
+            }, 2500);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateReadingTime();
+            setupSocialShare();
+        });
+    } else {
+        calculateReadingTime();
+        setupSocialShare();
+    }
+})();
+</script>
