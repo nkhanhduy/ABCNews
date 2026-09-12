@@ -17,26 +17,73 @@ public class ValidationHelper {
     /**
      * Kiểm tra xem exception có phải là lỗi duplicate key (trùng khóa chính) không
      * 
-     * Phương thức này phân tích message của exception để xác định xem có phải là lỗi
-     * vi phạm ràng buộc PRIMARY KEY hoặc UNIQUE constraint không.
+     * Phương thức này phân tích exception (kể cả exception lồng nhau qua getCause())
+     * để xác định xem có phải là lỗi vi phạm ràng buộc PRIMARY KEY hoặc UNIQUE constraint không:
+     * - SQL Server Error Code: 2627 (Violation of UNIQUE KEY constraint), 2601 (Cannot insert duplicate key row with unique index)
+     * - SQLState: "23000" (Integrity constraint violation)
+     * - Các thông báo ngoại lệ liên quan đến duplicate/unique key
      * 
-     * Thường được dùng để hiển thị thông báo lỗi thân thiện cho người dùng khi
-     * họ cố gắng tạo ID hoặc email đã tồn tại.
-     * 
-     * @param e Exception cần kiểm tra (có thể là SQLException hoặc bất kỳ Exception nào)
-     * @return true nếu exception message chứa các từ khóa liên quan đến duplicate key,
-     *         false nếu không phải hoặc exception/null
+     * @param e Exception hoặc Throwable cần kiểm tra
+     * @return true nếu là lỗi vi phạm duplicate key / unique constraint, false nếu không phải
      */
-    public static boolean isDuplicateKeyException(Exception e) {
-        if (e == null || e.getMessage() == null) {
+    public static boolean isDuplicateKeyException(Throwable e) {
+        if (e == null) {
             return false;
         }
-        // Chuyển message sang chữ thường để so sánh không phân biệt hoa thường
-        String errorMessage = e.getMessage().toLowerCase();
-        // Kiểm tra các từ khóa thường gặp trong lỗi duplicate key
-        return errorMessage.contains("primary key") || 
-               errorMessage.contains("duplicate key") || 
-               errorMessage.contains("unique");
+        Throwable current = e;
+        while (current != null) {
+            if (current instanceof poly.com.exception.DuplicateSlugException) {
+                return true;
+            }
+            if (current instanceof java.sql.SQLException sqlEx) {
+                int errorCode = sqlEx.getErrorCode();
+                String sqlState = sqlEx.getSQLState();
+                if (errorCode == 2627 || errorCode == 2601 || "23000".equals(sqlState)) {
+                    return true;
+                }
+            }
+            String msg = current.getMessage();
+            if (msg != null) {
+                String lower = msg.toLowerCase();
+                if (lower.contains("primary key") || 
+                    lower.contains("duplicate key") || 
+                    lower.contains("unique") ||
+                    lower.contains("ux_categories_slug")) {
+                    return true;
+                }
+            }
+            current = current.getCause();
+        }
+        return false;
+    }
+
+    /**
+     * Kiểm tra xem ngoại lệ có phải do vi phạm tính duy nhất của đường dẫn thân thiện (Slug)
+     * của bảng Categories (UX_Categories_Slug) hay không.
+     * 
+     * @param e Exception hoặc Throwable cần kiểm tra
+     * @return true nếu vi phạm unique slug, false nếu không phải
+     */
+    public static boolean isDuplicateSlugException(Throwable e) {
+        if (e == null) {
+            return false;
+        }
+        Throwable current = e;
+        while (current != null) {
+            if (current instanceof poly.com.exception.DuplicateSlugException) {
+                return true;
+            }
+            String msg = current.getMessage();
+            if (msg != null) {
+                String lower = msg.toLowerCase();
+                if (lower.contains("ux_categories_slug") || 
+                   (lower.contains("slug") && (lower.contains("duplicate") || lower.contains("unique")))) {
+                    return true;
+                }
+            }
+            current = current.getCause();
+        }
+        return false;
     }
 
     /**

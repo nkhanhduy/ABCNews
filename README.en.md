@@ -14,10 +14,6 @@
 
 A Java Web platform built with Jakarta EE (Servlet & JSP) providing an online news portal for readers and a modern editorial administration system. Developed in 2025 with responsive design, Dark Mode support, and secure image storage.
 
-**Author:** Nguyen Khanh Duy  
-**Major:** Software Development — FPT Polytechnic College Ho Chi Minh City  
-**Year:** 2025
-
 ---
 
 ## Screenshots

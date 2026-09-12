@@ -18,6 +18,11 @@ public class HibernateInitializerListener implements ServletContextListener {
         System.out.println("==========================================================");
         System.out.println(">> ABCNews đang khởi động ứng dụng...");
         try {
+            // Nạp cấu hình Base URL cho toàn bộ ứng dụng (Canonical URL, SEO, Open Graph)
+            String appBaseUrl = ConfigHelper.getAppBaseUrl();
+            sce.getServletContext().setAttribute("appBaseUrl", appBaseUrl);
+            System.out.println(">> App Base URL đã nạp: " + appBaseUrl);
+
             // Kích hoạt Hibernate EntityManagerFactory để tự động sinh/cập nhật bảng CSDL
             JpaUtil.getEntityManagerFactory();
             System.out.println(">> Hibernate Schema DDL: Cơ chế tự tạo/cập nhật bảng đã sẵn sàng!");

@@ -14,10 +14,6 @@
 
 Đồ án xây dựng website tin tức trực tuyến và hệ thống quản trị nội dung tòa soạn trên nền tảng Java Web với Jakarta Servlet và JSP. Dự án hoàn thiện năm 2025 với giao diện hiện đại, hỗ trợ chế độ Sáng / Tối và cơ chế lưu trữ ảnh an toàn.
 
-**Tác giả:** Nguyễn Khánh Duy  
-**Chuyên ngành:** Phát triển Phần mềm — Trường Cao đẳng FPT Polytechnic TP. Hồ Chí Minh  
-**Thời gian thực hiện:** 2025
-
 ---
 
 ## Hình ảnh Giao diện Thực tế
@@ -62,7 +58,7 @@
 
 ### Phân Hệ Độc Giả
 - **Đọc tin tức:** Trang chủ hiển thị tin tiêu điểm, danh sách bài viết mới nhất và tin xem nhiều nhất.
-- **Chuyên mục tin:** Phân loại theo 5 danh mục: Kinh tế & Tài chính, Công nghệ & AI, Thể thao Quốc tế, Đời sống & Khoa học, Giáo dục & Kỹ năng.
+- **Chuyên mục tin:** Phân loại theo 5 danh mục: Kinh tế & Tài chính, Công nghệ & AI, Thể thao Quốc tế, Đời sống & Khoa học, Giáo dục & Kỹ năng. Hỗ trợ URL thân thiện chuẩn SEO (SEO-friendly category URLs using Vietnamese-aware slugs) theo định dạng `/category/{slug}` (ví dụ: `/category/cong-nghe-ai`), tự động sinh slug duy nhất và tương thích chuyển hướng từ URL ID cũ.
 - **Trang chi tiết bài viết:** Hiển thị nội dung đầy đủ, tác giả, ngày đăng, lượt xem, ước tính thời gian đọc bài và nút chia sẻ nhanh (Facebook, X, Telegram).
 - **Đánh dấu & Đọc sau:** Cho phép độc giả lưu các bài viết yêu thích vào danh sách đọc sau trực tiếp qua `localStorage` trình duyệt và quản lý tiện lợi trên ngăn kéo Offcanvas mà không cần đăng nhập.
 - **Bình luận & Thảo luận bạn đọc:** Độc giả gửi ý kiến đóng góp cho từng bài viết với định danh rõ ràng, hỗ trợ quy trình kiểm duyệt nội dung văn minh.
@@ -184,12 +180,13 @@ Dự án áp dụng kiểm thử tự động với JUnit 5 và Mockito, bao ph�
 - **Kiểm thử OTP:** Nhập đúng OTP, sai lần 1, sai lần 2, sai lần 3 dẫn đến khóa OTP, từ chối OTP hết hạn, từ chối OTP đã dùng, chống tiêu thụ trùng lặp.
 - **Kiểm thử Phân quyền (Authorization):** Phóng viên không vào được chức năng admin, phóng viên không sửa/xóa bài của phóng viên khác, admin thường không xóa được Super Admin, chặn tự xóa chính mình.
 - **Kiểm thử CSRF:** GET request tự khởi tạo token, POST thiếu token bị từ chối HTTP 403, token sai bị từ chối, token hợp lệ (form / header) được chấp thuận, callback công khai được miễn trừ.
+- **Kiểm thử Chuyên mục & Slug (SEO URLs):** Chuyển đổi slug tiếng Việt không dấu chuẩn SEO, xử lý xung đột trùng lặp slug tự động, tra cứu danh mục theo slug, kiểm tra tính duy nhất và đếm bài viết theo chuyên mục.
 
 Chạy toàn bộ test suite:
 ```bash
 mvn clean test
 ```
-*Kết quả:* **40/40 tests passed (100% SUCCESS)**.
+*Kết quả:* **75/75 tests passed (100% SUCCESS)**.
 
 ---
 
@@ -223,7 +220,9 @@ docker compose down
 Yêu cầu: JDK 17, Apache Maven 3.8+, SQL Server 2019+ và Apache Tomcat 10.1.
 
 1. Tạo database `ABCNews` trong SQL Server, thực thi kịch bản `schema/ABCNews.sql` rồi nạp dữ liệu mẫu `schema/seed_data.sql`.
-2. Chạy migration bảo mật: `schema/migrations/001_security_refactor.sql`.
+2. Chạy các bản cập nhật migration:
+   - `schema/migrations/001_security_refactor.sql` (Bảo mật OTP, Remember-Me, RBAC)
+   - `schema/migrations/002_category_slug.sql` (Cột Slug cho chuyên mục chuẩn SEO)
 3. Tạo file `src/main/resources/app.properties` và điền thông tin đăng nhập database.
 4. Chạy kiểm thử và đóng gói file WAR:
    ```bash
@@ -237,7 +236,7 @@ Yêu cầu: JDK 17, Apache Maven 3.8+, SQL Server 2019+ và Apache Tomcat 10.1.
 ## Thông tin Tác giả
 
 - **Họ và tên:** Nguyễn Khánh Duy
-- **Chuyên ngành:** Phát triển Phần mềm — Cao đẳng FPT Polytechnic TP. Hồ Chí Minh
+- **Chuyên ngành:** Phát triển Phần mềm — Trường Cao đẳng FPT Polytechnic TP. Hồ Chí Minh
 - **GitHub:** [github.com/nkhanhduy](https://github.com/nkhanhduy)
-- **Email:** khanhndts02168@gmail.com
+- **Email:** [khanhndts02168@gmail.com](mailto:khanhndts02168@gmail.com)
 - **Năm thực hiện:** 2025

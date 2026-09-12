@@ -14,10 +14,6 @@
 
 Ein Java-Webprojekt auf Basis von Jakarta EE (Servlet & JSP), das ein modernes Online-Nachrichtenportal für Leser und ein Redaktionssystem bereitstellt. Entwickelt im Jahr 2025 mit responsivem Design, Dunkelmodus sowie sicherer Dateiverwaltung.
 
-**Autor:** Nguyen Khanh Duy  
-**Fachbereich:** Softwareentwicklung — FPT Polytechnic College Ho-Chi-Minh-Stadt  
-**Jahr:** 2025
-
 ---
 
 ## Bildschirmfotos

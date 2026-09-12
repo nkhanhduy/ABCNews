@@ -23,13 +23,13 @@ VALUES
 GO
 
 -- 3. CHUYÊN MỤC TIN TỨC (CATEGORIES)
-INSERT INTO [dbo].[Categories] ([Id], [Name])
+INSERT INTO [dbo].[Categories] ([Id], [Name], [Slug])
 VALUES 
-('TECH', N'Công nghệ & AI'),
-('ECONOMY', N'Kinh tế & Tài chính'),
-('SPORT', N'Thể thao Quốc tế'),
-('LIFE', N'Đời sống & Khoa học'),
-('EDUCATION', N'Giáo dục & Kỹ năng');
+('TECH', N'Công nghệ & AI', 'cong-nghe-ai'),
+('ECONOMY', N'Kinh tế & Tài chính', 'kinh-te-tai-chinh'),
+('SPORT', N'Thể thao Quốc tế', 'the-thao-quoc-te'),
+('LIFE', N'Đời sống & Khoa học', 'doi-song-khoa-hoc'),
+('EDUCATION', N'Giáo dục & Kỹ năng', 'giao-duc-ky-nang');
 GO
 
 -- 4. BẢN TIN CHI TIẾT (NEWS) - 11 BÀI BÁO CHUYÊN SÂU CHUẨN PHONG CÁCH TÒA SOẠN SỐ

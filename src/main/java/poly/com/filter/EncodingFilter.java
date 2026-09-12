@@ -36,6 +36,16 @@ public class EncodingFilter extends HttpFilter {
         // Thiết lập bảng mã UTF-8 cho phản hồi đầu ra (HTML/JSP/JSON)
         res.setCharacterEncoding("UTF-8");
 
+        // Đảm bảo appBaseUrl luôn sẵn sàng cho toàn bộ JSP / JSTL
+        Object ctxAppBaseUrl = req.getServletContext().getAttribute("appBaseUrl");
+        if (ctxAppBaseUrl == null) {
+            String baseUrl = poly.com.util.ConfigHelper.getAppBaseUrl();
+            req.getServletContext().setAttribute("appBaseUrl", baseUrl);
+            req.setAttribute("appBaseUrl", baseUrl);
+        } else {
+            req.setAttribute("appBaseUrl", ctxAppBaseUrl);
+        }
+
         chain.doFilter(request, response);
     }
 }
