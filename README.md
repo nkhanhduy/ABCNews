@@ -1,15 +1,15 @@
 # 📰 ABCNews - Báo Điện Tử Trực Tuyến & Cổng Quản Trị Nội Dung Đa Tầng (Enterprise CMS)
 
 [![Java CI with Maven](https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg)](https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml)
-![Java 17](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Jakarta EE](https://img.shields.io/badge/Jakarta%20EE-10-F80000?style=for-the-badge&logo=jakarta-ee&logoColor=white)
-![Tomcat 10](https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=black)
-![HikariCP](https://img.shields.io/badge/HikariCP-5.1.0-2563EB?style=for-the-badge&logo=speedtest&logoColor=white)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-2019%2B-CC292B?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
-![JUnit 5](https://img.shields.io/badge/JUnit%205-13%20Passed-success?style=for-the-badge&logo=junit5&logoColor=white)
-![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
-![Chart.js](https://img.shields.io/badge/Chart.js-4.4-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
-![CKEditor 5](https://img.shields.io/badge/CKEditor-5-0288D1?style=for-the-badge&logo=ckeditor4&logoColor=white)
+![Java 17](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white)
+![Jakarta EE](https://img.shields.io/badge/Jakarta%20EE-10-F80000?logo=jakarta-ee&logoColor=white)
+![Tomcat 10](https://img.shields.io/badge/Tomcat-10.1-F8DC75?logo=apachetomcat&logoColor=black)
+![HikariCP](https://img.shields.io/badge/HikariCP-5.1.0-2563EB?logo=speedtest&logoColor=white)
+![SQL Server](https://img.shields.io/badge/SQL%20Server-2019%2B-CC292B?logo=microsoftsqlserver&logoColor=white)
+![JUnit 5](https://img.shields.io/badge/Tests-13%20Passed-success?logo=junit5&logoColor=white)
+![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-4.4-FF6384?logo=chartdotjs&logoColor=white)
+![CKEditor 5](https://img.shields.io/badge/CKEditor-5-0288D1?logo=ckeditor4&logoColor=white)
 
 > **ABCNews** là nền tảng báo điện tử và quản trị tòa soạn tin tức hoàn chỉnh được xây dựng trên nền tảng **Java Servlet/JSP (Jakarta EE 10)** kết hợp cơ sở dữ liệu **Microsoft SQL Server**. Dự án áp dụng chặt chẽ kiến trúc **3-Tier Layered Architecture**, kết nối cơ sở dữ liệu siêu tốc thông qua **HikariCP Connection Pool**, bảo mật mật khẩu đa lớp với **BCrypt & Google OAuth2**, cùng hệ thống phân tích trực quan **Chart.js** và biên tập **CKEditor 5 WYSIWYG**.
 
