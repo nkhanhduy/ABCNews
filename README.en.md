@@ -99,6 +99,7 @@ The seed database includes ready-to-use accounts for testing:
 - **Multi-Layered Security:**
   - One-way **BCrypt** password hashing prevents rainbow table and credential brute-force attacks.
   - **AuthFilter** enforces role-based access control (RBAC) across all `/admin/*` routes to block privilege escalation.
+  - **UUID v4 Standardization (RFC 4122):** Adopts 128-bit cryptographically secure UUID v4 strings (36 characters) for all news article identifiers across the database and public URLs (`/detail?id=...`). This completely eliminates predictable sequential IDs and protects the system against ID Enumeration and Insecure Direct Object References (IDOR).
   - **SafeImageStorage** module validates MIME types, enforces upload size limits, guards against Path Traversal (`../`) attacks, and purges obsolete avatar files on updates.
   - Secure password reset via time-bounded 6-digit **OTP tokens** delivered over Gmail SMTP TLS (5-minute expiration).
 - **Refined UX & Accessibility:**

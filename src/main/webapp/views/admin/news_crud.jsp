@@ -50,11 +50,12 @@
                 <!-- Cột trái: 3 trường -->
                 <div class="form-col-left">
                     <div class="form-group">
-                <label for="id">Mã bản tin (Id)</label>
+                <label for="id"><i class="fas fa-fingerprint me-1"></i> Mã bản tin (UUID v4)</label>
                 <input type="text" name="id" id="newsId" value="${newsItem.id}" readonly required
-                       style="background-color: #e9ecef; color: #333; font-weight: bold; cursor: not-allowed;">
-                <small class="text-muted" style="display: block; margin-top: 5px; font-size: 0.875rem;">
-                    <i class="fas fa-info-circle"></i> Mã bản tin sẽ tự động tạo khi bạn chọn loại tin
+                       placeholder="Hệ thống tự động cấp UUID..."
+                       style="background-color: #f8f9fa; color: #2d3748; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.9rem; font-weight: 600; cursor: not-allowed; border: 1px solid #ced4da;">
+                <small class="text-muted" style="display: block; margin-top: 5px; font-size: 0.85rem;">
+                    <i class="fas fa-shield-alt text-success"></i> Định danh bảo mật chuẩn UUID v4 (RFC 4122) chống đoán ID bài viết
                 </small>
             </div>
 
@@ -664,107 +665,35 @@ input[name="title"][id="title"] {
     }
 })();
 
-// Tự động tạo mã bản tin khi chọn loại tin
+// Tự động cấp phát mã UUID v4 khi tạo bài viết mới
 (function() {
     const newsIdInput = document.getElementById('newsId');
-    const categorySelect = document.getElementById('categoryId');
     const form = newsIdInput ? newsIdInput.closest('form') : null;
     
-    if (!newsIdInput || !categorySelect || !form) return;
+    if (!newsIdInput || !form) return;
     
-    // Chỉ tự động generate khi không phải chế độ edit
     const isEdit = newsIdInput.value && newsIdInput.value.trim() !== '';
-    if (isEdit) {
-        // Nếu đang edit, không làm gì cả
-        return;
-    }
     
-    // Khi chọn loại tin, tự động generate mã
-    categorySelect.addEventListener('change', function() {
-        const categoryId = this.value.trim();
-        
-        if (categoryId) {
-            // Hiển thị loading
-            newsIdInput.value = 'Đang tạo mã...';
-            newsIdInput.style.backgroundColor = '#e9ecef';
-            newsIdInput.style.color = '#333';
-            newsIdInput.style.fontWeight = 'bold';
-            
-            // Gọi AJAX để lấy mã mới
-            generateNewsId(categoryId);
-        } else {
-            // Nếu không chọn loại tin, xóa mã
-            newsIdInput.value = '';
+    function generateUUID() {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+            return crypto.randomUUID();
         }
-    });
-    
-    // Nếu đã có category được chọn sẵn (khi load lại trang), tự động generate
-    if (categorySelect.value && categorySelect.value.trim() !== '') {
-        generateNewsId(categorySelect.value.trim());
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
     
-    function generateNewsId(categoryId) {
-        const xhr = new XMLHttpRequest();
-        const url = '${pageContext.request.contextPath}/admin/news?action=generateId&categoryId=' + encodeURIComponent(categoryId);
-        
-        xhr.open('GET', url);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                try {
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.success && response.id) {
-                        newsIdInput.value = response.id;
-                        // Giữ style xám nhạt và chữ đậm
-                        newsIdInput.style.backgroundColor = '#e9ecef';
-                        newsIdInput.style.color = '#333';
-                        newsIdInput.style.fontWeight = 'bold';
-                        // Thêm hiệu ứng nhấp nháy để người dùng chú ý
-                        newsIdInput.style.borderColor = '#28a745';
-                        setTimeout(function() {
-                            newsIdInput.style.borderColor = '';
-                        }, 1000);
-                    } else {
-                        newsIdInput.value = '';
-                        newsIdInput.style.backgroundColor = '#e9ecef';
-                        newsIdInput.style.color = '#333';
-                        newsIdInput.style.fontWeight = 'bold';
-                        alert('Lỗi: ' + (response.message || 'Không thể tạo mã bản tin'));
-                    }
-                } catch (err) {
-                    console.error('Lỗi parse JSON:', err);
-                    newsIdInput.value = '';
-                    newsIdInput.style.backgroundColor = '#e9ecef';
-                    newsIdInput.style.color = '#333';
-                    newsIdInput.style.fontWeight = 'bold';
-                }
-            } else {
-                newsIdInput.value = '';
-                newsIdInput.style.backgroundColor = '#e9ecef';
-                newsIdInput.style.color = '#333';
-                newsIdInput.style.fontWeight = 'bold';
-                console.error('Lỗi khi gọi API:', xhr.status);
-            }
-        };
-        xhr.onerror = function() {
-            newsIdInput.value = '';
-            newsIdInput.style.backgroundColor = '#e9ecef';
-            newsIdInput.style.color = '#333';
-            newsIdInput.style.fontWeight = 'bold';
-            console.error('Lỗi kết nối');
-        };
-        xhr.send();
+    // Nếu tạo mới và chưa có ID, tự động gán UUID v4 ngay khi tải trang
+    if (!isEdit && (!newsIdInput.value || newsIdInput.value.trim() === '')) {
+        newsIdInput.value = generateUUID();
     }
     
     // Validate trước khi submit - đảm bảo có mã bản tin
     form.addEventListener('submit', function(e) {
-        const id = newsIdInput.value.trim();
-        if (!id || id === 'Đang tạo mã...') {
-            e.preventDefault();
-            alert('Vui lòng chọn loại tin để tạo mã bản tin!');
-            if (categorySelect) {
-                categorySelect.focus();
-            }
-            return false;
+        let id = newsIdInput.value.trim();
+        if (!id) {
+            newsIdInput.value = generateUUID();
         }
     });
 })();
