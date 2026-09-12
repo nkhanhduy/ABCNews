@@ -336,56 +336,100 @@ GO
 USE [ABCNews]
 GO
 
--- Nạp dữ liệu mẫu ban đầu (Sample Data)
+-- Nạp dữ liệu mẫu ban đầu (Sample Data) chuẩn UTF-8
 IF NOT EXISTS (SELECT * FROM Users WHERE Id = 'admin001')
 BEGIN
-    INSERT INTO Users (Id, Password, Fullname, Birthday, Gender, Mobile, Email, Role)
-    VALUES ('admin001', '123456', N'Tổng Biên Tập Admin', '1995-01-01', 1, '0912345678', 'admin@abcnews.com', 1);
+    INSERT INTO Users (Id, Password, Fullname, Birthday, Gender, Mobile, Email, Role, AuthProvider, Enabled)
+    VALUES ('admin001', '123456', N'Tổng Biên Tập - Nguyễn Khánh Duy', '2004-05-15', 1, '0912345678', 'admin@abcnews.com', 1, 'local', 1);
 END;
 
 IF NOT EXISTS (SELECT * FROM Users WHERE Id = 'rep001')
 BEGIN
-    INSERT INTO Users (Id, Password, Fullname, Birthday, Gender, Mobile, Email, Role)
-    VALUES ('rep001', '123456', N'Phóng Viên Khánh Duy', '2000-05-15', 1, '0987654321', 'reporter1@abcnews.com', 0);
+    INSERT INTO Users (Id, Password, Fullname, Birthday, Gender, Mobile, Email, Role, AuthProvider, Enabled)
+    VALUES ('rep001', '123456', N'Nhà Báo - Trần Khánh Duy', '1998-08-20', 1, '0987654321', 'reporter1@abcnews.com', 0, 'local', 1);
+END;
+
+IF NOT EXISTS (SELECT * FROM Users WHERE Id = 'rep002')
+BEGIN
+    INSERT INTO Users (Id, Password, Fullname, Birthday, Gender, Mobile, Email, Role, AuthProvider, Enabled)
+    VALUES ('rep002', '123456', N'Biên Tập Viên - Lê Minh Tú', '1999-11-05', 0, '0908123456', 'reporter2@abcnews.com', 0, 'local', 1);
 END;
 
 IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'TECH')
-    INSERT INTO Categories (Id, Name) VALUES ('TECH', N'Công nghệ');
+    INSERT INTO Categories (Id, Name) VALUES ('TECH', N'Công nghệ & AI');
 IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'ECONOMY')
-    INSERT INTO Categories (Id, Name) VALUES ('ECONOMY', N'Kinh tế');
+    INSERT INTO Categories (Id, Name) VALUES ('ECONOMY', N'Kinh tế & Tài chính');
 IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'SPORT')
-    INSERT INTO Categories (Id, Name) VALUES ('SPORT', N'Thể thao');
+    INSERT INTO Categories (Id, Name) VALUES ('SPORT', N'Thể thao Quốc tế');
 IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'LIFE')
-    INSERT INTO Categories (Id, Name) VALUES ('LIFE', N'Đời sống');
+    INSERT INTO Categories (Id, Name) VALUES ('LIFE', N'Đời sống & Khoa học');
+IF NOT EXISTS (SELECT * FROM Categories WHERE Id = 'EDUCATION')
+    INSERT INTO Categories (Id, Name) VALUES ('EDUCATION', N'Giáo dục & Kỹ năng');
 
 IF NOT EXISTS (SELECT * FROM News WHERE Id = 'NEWS001')
 BEGIN
-    INSERT INTO News (Id, Title, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
+    INSERT INTO News (Id, Title, Summary, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
     VALUES ('NEWS001', 
-            N'Trí tuệ Nhân tạo & Xu hướng Chuyển đổi Số Tòa soạn 2026', 
-            N'<p>Hệ thống báo chí số ngày nay đòi hỏi tốc độ xử lý thông tin tính bằng giây và khả năng chịu tải cực lớn trong các khung giờ cao điểm. Việc ứng dụng kiến trúc 3-Tier kết hợp cơ chế Connection Pool tối ưu bằng HikariCP đã đem lại khả năng phản hồi vượt trội cho ABCNews.</p><p>Công nghệ không thay thế nhà báo, mà nâng cánh cho sự sáng tạo và tính chính xác của thông tin.</p>', 
-            'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800', 
-            GETDATE(), 'admin001', 3420, 'TECH', 1);
+            N'Kỷ Nguyên Agentic AI: Bước Chuyển Mình Vượt Bậc Của Trí Tuệ Nhân Tạo Năm 2026', 
+            N'Không dừng lại ở mô hình ngôn ngữ lớn (LLM) phản hồi thụ động, thế giới công nghệ năm 2026 chứng kiến làn sóng bùng nổ của Agentic AI - hệ thống tác tử thông minh có khả năng tự lập kế hoạch, phối hợp công cụ và giải quyết bài toán phức tạp độc lập.',
+            N'<p class="lead">Năm 2026 đánh dấu cột mốc lịch sử khi trí tuệ nhân tạo chính thức chuyển mình từ các mô hình hội thoại thụ động sang kỷ nguyên <strong>Agentic AI</strong>.</p><h3>1. Sự Khác Biệt Giữa Generative AI Và Agentic AI</h3><p>Agentic AI sở hữu ba năng lực cốt lõi: Tự hoạch định mục tiêu (Goal Planning), Sử dụng công cụ linh hoạt (Tool Use) và Bộ nhớ dài hạn liên tục.</p><blockquote class="border-start border-4 border-success ps-3 my-3 fst-italic">"Agentic AI biến mỗi kỹ sư phần mềm trở thành một kiến trúc sư trưởng chỉ huy cả một đội ngũ tác tử AI chuyên trách."</blockquote>', 
+            'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80', 
+            DATEADD(HOUR, -3, GETDATE()), 'admin001', 8420, 'TECH', 1);
 END;
 
 IF NOT EXISTS (SELECT * FROM News WHERE Id = 'NEWS002')
 BEGIN
-    INSERT INTO News (Id, Title, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
+    INSERT INTO News (Id, Title, Summary, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
     VALUES ('NEWS002', 
-            N'Tối ưu hóa Database Doanh Nghiệp Với HikariCP Connection Pool', 
-            N'<p>HikariCP là một trong những thư viện Connection Pool nhẹ và nhanh nhất hiện nay trong hệ sinh thái Java. Khi triển khai trên Tomcat 10 kết hợp Microsoft SQL Server 2022, độ trễ kết nối giảm thiểu xuống mức tiệm cận 0ms.</p>', 
-            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800', 
-            GETDATE(), 'rep001', 1820, 'TECH', 1);
+            N'Tối Ưu Hóa Hạ Tầng Dữ Liệu Doanh Nghiệp Với HikariCP & Clean Architecture', 
+            N'Việc áp dụng giải pháp Connection Pool hiện đại như HikariCP kết hợp chuẩn thiết kế 3 tầng (3-Tier Architecture) giúp các hệ thống báo điện tử và thương mại điện tử duy trì thời gian phản hồi dưới 50ms ngay cả trong các khung giờ cao điểm.',
+            N'<p class="lead">Trong các hệ thống báo điện tử quy mô lớn, việc nghẽn cổ chai tại tầng truy xuất dữ liệu luôn là thách thức hàng đầu.</p><h3>1. Hiệu năng vượt trội của HikariCP</h3><p>FastList thay thế cho ArrayList cùng thuật toán lock-free giúp giảm tối đa overhead của Java Reflection.</p>', 
+            'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80', 
+            DATEADD(HOUR, -8, GETDATE()), 'rep001', 5690, 'TECH', 1);
 END;
 
 IF NOT EXISTS (SELECT * FROM News WHERE Id = 'NEWS003')
 BEGIN
-    INSERT INTO News (Id, Title, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
+    INSERT INTO News (Id, Title, Summary, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
     VALUES ('NEWS003', 
-            N'Kinh tế Số Việt Nam 2026: Động lực Bứt phá từ Công nghệ', 
-            N'<p>Kinh tế số đang đóng góp tỷ trọng ngày càng lớn trong GDP quốc gia. Các doanh nghiệp công nghệ tài chính và thương mại điện tử đang chứng kiến sự tăng trưởng ấn tượng trong quý đầu năm.</p>', 
-            'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800', 
-            GETDATE(), 'rep001', 950, 'ECONOMY', 1);
+            N'Chiến Lược Bảo Mật Zero-Trust: Phòng Thủ Toàn Diện Trước Các Cuộc Tấn Công Số 2026', 
+            N'Trước các hiểm họa mã độc tống tiền và tấn công mạng sử dụng AI ngày càng tinh vi, mô hình bảo mật Zero-Trust không còn là một lựa chọn xa xỉ mà đã trở thành tiêu chuẩn bắt buộc cho mọi nền tảng số.',
+            N'<p class="lead">Triết lý căn bản của Zero-Trust: <em>"Never Trust, Always Verify"</em>. Mọi thực thể đều phải trải qua quy trình xác thực định danh và phân quyền nghiêm ngặt.</p>', 
+            'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1200&q=80', 
+            DATEADD(DAY, -1, GETDATE()), 'admin001', 4210, 'TECH', 1);
+END;
+
+IF NOT EXISTS (SELECT * FROM News WHERE Id = 'NEWS004')
+BEGIN
+    INSERT INTO News (Id, Title, Summary, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
+    VALUES ('NEWS004', 
+            N'Kinh Tế Số Việt Nam 2026: Động Lực Tăng Trưởng Đột Phá Đóng Góp Lớn Cho GDP Quốc Gia', 
+            N'Báo cáo kinh tế quý 1/2026 cho thấy lĩnh vực thương mại điện tử, thanh toán không dùng tiền mặt và công nghệ số tiếp tục duy trì mức tăng trưởng ấn tượng trên 22%/năm, khẳng định vị thế trung tâm đổi mới sáng tạo khu vực.',
+            N'<p class="lead">Nền kinh tế số Việt Nam đang bước vào giai đoạn tăng tốc mạnh mẽ với quy mô dự kiến vượt mốc 50 tỷ USD trong năm nay.</p>', 
+            'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1200&q=80', 
+            DATEADD(HOUR, -5, GETDATE()), 'rep002', 6850, 'ECONOMY', 1);
+END;
+
+IF NOT EXISTS (SELECT * FROM News WHERE Id = 'NEWS005')
+BEGIN
+    INSERT INTO News (Id, Title, Summary, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
+    VALUES ('NEWS005', 
+            N'Thị Trường Vốn Toàn Cầu Dịch Chuyển Mạnh Sang Các Dự Án Năng Lượng Xanh & Net Zero', 
+            N'Các quỹ đầu tư mạo hiểm và ngân hàng thương mại quốc tế đang ưu tiên rót vốn vào các doanh nghiệp tuân thủ nghiêm ngặt tiêu chuẩn ESG, mở ra làn sóng phát hành trái phiếu xanh kỷ lục.',
+            N'<p class="lead">Tính bền vững và trách nhiệm môi trường đã trở thành thước đo hàng đầu trong việc định giá doanh nghiệp.</p>', 
+            'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80', 
+            DATEADD(DAY, -2, GETDATE()), 'rep001', 3120, 'ECONOMY', 1);
+END;
+
+IF NOT EXISTS (SELECT * FROM News WHERE Id = 'NEWS006')
+BEGIN
+    INSERT INTO News (Id, Title, Summary, Content, Image, PostedDate, Author, ViewCount, CategoryId, Home)
+    VALUES ('NEWS006', 
+            N'Đêm Chung Kết UEFA Champions League 2026: Đại Chiến Đỉnh Cao Và Cơn Mưa Bàn Thắng', 
+            N'Trận chung kết Cúp C1 châu Âu đã cống hiến cho hàng trăm triệu khán giả toàn cầu 90 phút thi đấu kịch tính với chất lượng chuyên môn đỉnh cao, khẳng định sức hấp dẫn số một của bóng đá đương đại.',
+            N'<p class="lead">Sân vận động chật kín hơn 75.000 khán giả đã được chứng kiến một trong những trận cầu kinh điển nhất lịch sử bóng đá hiện đại.</p>', 
+            'https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&q=80', 
+            DATEADD(HOUR, -12, GETDATE()), 'rep001', 7890, 'SPORT', 1);
 END;
 GO
 USE [master]

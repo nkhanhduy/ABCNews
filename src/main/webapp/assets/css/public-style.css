@@ -42,49 +42,30 @@
 }
 
 .news-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    border-color: #28a745;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--brand-accent);
 }
 
 /* Tiêu đề bài báo */
 .news-item h3 {
-    margin: 0 0 12px 0;
+    margin: 0 0 10px 0;
     position: relative;
     z-index: 1;
 }
 
 .news-item h3 a {
-    color: #333;
+    color: var(--brand-text);
     text-decoration: none;
-    font-weight: 600;
-    font-size: 1.3em;
+    font-weight: 700;
+    font-size: 1.25rem;
     line-height: 1.4;
-    transition: all 0.3s ease;
+    transition: var(--transition);
     display: inline-block;
-    position: relative;
-}
-
-/* Hiệu ứng underline khi hover */
-.news-item h3 a::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 0;
-    width: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #28a745, #20c997);
-    transition: width 0.3s ease;
-    border-radius: 2px;
-}
-
-.news-item h3 a:hover::after {
-    width: 100%;
 }
 
 .news-item h3 a:hover {
-    color: #28a745;
-    transform: translateX(5px);
+    color: var(--brand-accent);
 }
 
 /* Meta information */
@@ -116,59 +97,62 @@
 .news-thumb {
     position: relative;
     overflow: hidden;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
+    border-radius: var(--radius-sm);
+    flex: 0 0 200px;
+    max-width: 200px;
 }
 
-.news-item:hover .news-thumb {
-    transform: scale(1.05);
-}
-
-.news-thumb img {
-    transition: transform 0.5s ease;
+.news-thumb-img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    transition: transform 0.4s ease;
     display: block;
 }
 
-.news-item:hover .news-thumb img {
-    transform: scale(1.1);
+.news-item:hover .news-thumb-img {
+    transform: scale(1.05);
 }
 
-/* Overlay trên ảnh khi hover */
-.news-thumb::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(40, 167, 69, 0.1);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: 8px;
-}
-
-.news-item:hover .news-thumb::after {
-    opacity: 1;
+.meta-dot {
+    margin: 0 6px;
+    color: #cbd5e1;
 }
 
 /* Summary text */
 .news-summary {
     position: relative;
+    flex: 1;
 }
 
-.news-summary p {
-    color: #555;
+.summary-text {
+    margin: 0 0 8px 0;
     line-height: 1.6;
-    transition: color 0.3s ease;
+    color: var(--brand-text-body);
+    font-size: 0.95rem;
+}
+
+.read-more-link {
+    display: inline-block;
+    color: var(--brand-accent) !important;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.read-more-link:hover {
+    color: var(--brand-accent-hover) !important;
+    transform: translateX(4px);
 }
 
 .news-item:hover .news-summary p {
-    color: #333;
+    color: var(--brand-text);
 }
 
 /* Link "Xem chi tiết" */
 .news-summary a {
-    color: #28a745;
+    color: var(--brand-accent);
     text-decoration: none;
     font-weight: 600;
     display: inline-flex;
@@ -259,7 +243,7 @@
 }
 
 .category-news-item h4 a {
-    color: #333;
+    color: var(--brand-text);
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
@@ -267,13 +251,14 @@
 }
 
 .category-news-item:hover h4 a {
-    color: #28a745;
+    color: var(--brand-accent);
 }
 
 /* ========== Bootstrap Card Enhancements (Category Page) ========== */
 .card.shadow-sm {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--brand-border);
+    background: var(--brand-card-bg);
     overflow: hidden;
     position: relative;
 }
@@ -285,7 +270,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(40, 167, 69, 0.05), transparent);
+    background: linear-gradient(90deg, transparent, rgba(22, 163, 74, 0.05), transparent);
     transition: left 0.5s ease;
     z-index: 0;
     pointer-events: none;
@@ -298,7 +283,7 @@
 .card.shadow-sm:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
-    border-color: #28a745;
+    border-color: var(--brand-accent);
 }
 
 .card.shadow-sm .card-body {
@@ -307,7 +292,7 @@
 }
 
 .card.shadow-sm .card-title a {
-    color: #333;
+    color: var(--brand-text);
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
@@ -382,14 +367,15 @@
 
 /* ========== Detail Page Styles ========== */
 .detail-article {
-    background: #fff;
+    background: var(--brand-card-bg);
+    border: 1px solid var(--brand-border);
     border-radius: 12px;
     padding: 30px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
 }
 
 .detail-title {
-    color: #333;
+    color: var(--brand-text);
     margin-bottom: 20px;
     font-size: 2em;
     font-weight: 700;
@@ -401,8 +387,8 @@
     align-items: center;
     gap: 15px;
     padding: 15px 0;
-    border-top: 1px solid #e9ecef;
-    border-bottom: 1px solid #e9ecef;
+    border-top: 1px solid var(--brand-border);
+    border-bottom: 1px solid var(--brand-border);
     margin-bottom: 25px;
     flex-wrap: wrap;
 }
@@ -411,7 +397,7 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    color: #6c757d;
+    color: var(--brand-text-muted);
     font-size: 0.95em;
 }
 
@@ -432,7 +418,7 @@
 
 .detail-content {
     line-height: 1.8;
-    color: #444;
+    color: var(--brand-text-body);
     font-size: 1.05em;
 }
 

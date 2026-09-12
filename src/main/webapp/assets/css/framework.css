@@ -23,7 +23,7 @@
     border-radius: 6px !important;
     position: relative !important;
     overflow: hidden !important;
-    color: #333 !important;
+    color: var(--brand-text, #0f172a) !important;
     display: flex !important;
     align-items: center !important;
     gap: 10px !important;
@@ -54,29 +54,29 @@
     left: 100% !important;
 }
 
-/* Hover State - Mặc định màu xanh dương */
+/* Hover State - Màu Xanh Lá Emerald Đồng Bộ */
 .dropdown-menu .dropdown-item:hover {
-    background: linear-gradient(135deg, #007bff, #0056b3) !important;
-    color: #fff !important;
+    background: linear-gradient(135deg, #15803d, #16a34a) !important;
+    color: #ffffff !important;
     transform: translateX(8px) scale(1.02) !important;
     padding-left: 24px !important;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4) !important;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4) !important;
     font-weight: 600 !important;
     text-decoration: none !important;
 }
 
 .dropdown-menu .dropdown-item:hover i {
-    color: #fff !important;
+    color: #ffffff !important;
     transform: scale(1.15) translateX(2px) !important;
 }
 
-/* Link Dashboard và Quản lý Tin - màu xanh dương đậm */
+/* Link Dashboard và Quản lý Tin - màu xanh lá đậm */
 .dropdown-menu .dropdown-item[href*="/admin/dashboard"]:hover,
 .dropdown-menu .dropdown-item[href*="/admin/news"]:hover,
 .dropdown-menu .dropdown-item[href*="dashboard"]:hover {
-    background: linear-gradient(135deg, #007bff, #0056b3) !important;
-    color: #fff !important;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4) !important;
+    background: linear-gradient(135deg, #15803d, #16a34a) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4) !important;
 }
 
 /* Link Admin only - màu cam đậm */
@@ -87,7 +87,7 @@
 .dropdown-menu .dropdown-item[href*="users"]:hover,
 .dropdown-menu .dropdown-item[href*="newsletters"]:hover {
     background: linear-gradient(135deg, #ff9800, #f57c00) !important;
-    color: #fff !important;
+    color: #ffffff !important;
     box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4) !important;
 }
 
@@ -95,7 +95,7 @@
 .dropdown-menu .dropdown-item.text-danger:hover,
 .dropdown-menu .dropdown-item[href*="logout"]:hover {
     background: linear-gradient(135deg, #dc3545, #c82333) !important;
-    color: #fff !important;
+    color: #ffffff !important;
     box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4) !important;
 }
 
@@ -103,18 +103,18 @@
 .dropdown-menu .dropdown-item:hover i.fas,
 .dropdown-menu .dropdown-item:hover i.fa,
 .dropdown-menu .dropdown-item:hover i.bi {
-    color: #fff !important;
+    color: #ffffff !important;
 }
 
 /* Dropdown Header */
 .dropdown-menu .dropdown-header {
     font-weight: 700 !important;
-    color: #495057 !important;
+    color: var(--brand-text-muted, #94a3b8) !important;
     padding: 10px 20px !important;
     text-transform: uppercase !important;
     font-size: 0.75rem !important;
     letter-spacing: 0.5px !important;
-    background-color: #f8f9fa !important;
+    background-color: transparent !important;
     margin: 0 !important;
 }
 
@@ -182,7 +182,7 @@
 .card:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
-    border-color: #28a745 !important;
+    border-color: var(--brand-accent, #2563eb) !important;
 }
 
 /* ========== Link Enhancements ========== */

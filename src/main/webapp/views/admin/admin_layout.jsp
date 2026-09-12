@@ -16,12 +16,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <%-- Font Awesome Icons --%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- CSS Hệ thống Biến màu ABCNews & Theme Xanh Lá -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
     <!-- Framework CSS chung - Dropdown, Buttons, Cards -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/framework.css">
     <!-- Tải CSS của Admin -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin_style.css">
     <!-- UI Animations -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/animations.css">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/dark-mode.css">
+    <!-- Theme Toggle JS -->
+    <script src="${pageContext.request.contextPath}/assets/js/theme-toggle.js"></script>
 </head>
 <body>
 
@@ -49,7 +55,7 @@
                 <!-- Footer -->
                 <footer class="admin-footer">
                     <p class="mb-0">
-                        &copy; 2025 ABC News - FPT Polytechnic I'm Khánh
+                        &copy; 2026 ABC News CMS | Đồ án Web Java — Tác giả: <strong>Nguyễn Khánh Duy</strong> (FPT Polytechnic TP. Hồ Chí Minh).
                     </p>
                 </footer>
             </main>

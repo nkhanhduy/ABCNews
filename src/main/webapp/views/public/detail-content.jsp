@@ -18,31 +18,22 @@
             <!-- Tiêu đề -->
             <h1 class="mb-4">${news.title}</h1>
             
-            <!-- Thông tin meta -->
-            <div class="d-flex flex-wrap align-items-center gap-3 mb-3 text-muted">
-                <span><i class="fas fa-calendar-alt me-1"></i><fmt:formatDate value="${news.postedDate}" pattern="dd/MM/yyyy HH:mm" /></span>
-                <span><i class="fas fa-user me-1"></i>
-                    <c:choose>
-                        <c:when test="${not empty news.author}">
-                            ${news.author}
-                        </c:when>
-                        <c:otherwise>
-                            <span class="text-muted" style="font-style: italic;">Tác giả đã bị xóa</span>
-                        </c:otherwise>
-                    </c:choose>
-                </span>
-                <span><i class="fas fa-eye me-1"></i>${news.viewCount} lượt xem</span>
-                
-                <!-- Ước tính thời gian đọc bài viết -->
-                <span class="badge bg-light text-secondary border d-inline-flex align-items-center" id="readingTimeBadge" title="Thời gian đọc ước tính">
-                    <i class="fas fa-clock text-primary me-1"></i>
+            <!-- Thông tin meta chuẩn báo chí hiện đại -->
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-3 text-muted small">
+                <span><fmt:formatDate value="${news.postedDate}" pattern="dd/MM/yyyy HH:mm" /></span>
+                <span class="mx-1">•</span>
+                <span>Tác giả: <strong>${not empty news.author ? news.author : 'Ban Biên Tập'}</strong></span>
+                <span class="mx-1">•</span>
+                <span>${news.viewCount} lượt xem</span>
+                <span class="mx-1">•</span>
+                <span class="badge bg-light text-secondary border px-2 py-1" id="readingTimeBadge" title="Thời gian đọc ước tính">
                     <span id="readingTimeText">1 phút đọc</span>
                 </span>
             </div>
             
             <!-- THANH CHIA SẺ MẠNG XÃ HỘI NHANH (Social Share Bar) -->
             <div class="social-share-bar d-flex align-items-center flex-wrap gap-2 p-2 px-3 mb-4 bg-light rounded-3 border">
-                <span class="fw-semibold text-muted small me-2"><i class="fas fa-share-alt me-1"></i>Chia sẻ:</span>
+                <span class="fw-semibold text-muted small me-2">Chia sẻ:</span>
                 
                 <!-- Facebook -->
                 <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary rounded-pill share-btn" id="shareFacebook" title="Chia sẻ lên Facebook">
@@ -61,11 +52,11 @@
                 
                 <!-- Sao chép link -->
                 <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill ms-auto" id="copyLinkBtn" title="Sao chép liên kết bài viết">
-                    <i class="fas fa-link me-1"></i><span id="copyLinkText">Sao chép link</span>
+                    <span id="copyLinkText">Sao chép liên kết</span>
                 </button>
             </div>
             
-            <!-- Ảnh (nếu có) -->
+            <!-- Ảnh tiêu điểm -->
             <c:if test="${not empty news.image}">
                 <c:set var="imageUrl" value="${news.image}" />
                 <c:if test="${!fn:startsWith(imageUrl, pageContext.request.contextPath) && fn:startsWith(imageUrl, '/')}">
@@ -73,43 +64,42 @@
                 </c:if>
                 <div class="mb-4">
                     <img src="${imageUrl}" alt="${news.title}" 
-                         class="img-fluid rounded shadow-sm"
-                         onerror="this.src='https://placehold.co/800x400?text=Image+Not+Found'">
+                         class="img-fluid rounded-3 shadow-sm w-100"
+                         style="max-height: 520px; object-fit: cover;"
+                         onerror="this.src='https://placehold.co/800x400?text=ABC+News'">
                 </div>
             </c:if>
 
-            <!-- Tóm tắt -->
-            <div class="alert alert-light border-start border-4 border-primary mb-4">
-                <p class="mb-0 fst-italic fw-bold">${news.summary}</p>
-            </div>
+            <!-- Tóm tắt Sapo -->
+            <c:if test="${not empty news.summary}">
+                <div class="alert alert-light border-start border-4 border-primary mb-4 p-3 rounded-2">
+                    <p class="mb-0 fst-italic fw-semibold text-secondary" style="line-height: 1.7;">${news.summary}</p>
+                </div>
+            </c:if>
             
             <!-- NỘI DUNG CHÍNH -->
-            <div class="news-full-content mb-5" style="line-height: 1.8; font-size: 1.1rem;">
+            <div class="news-full-content mb-5" style="line-height: 1.85; font-size: 1.08rem; color: var(--brand-text-body);">
                 ${news.content}
             </div>
             
-            <hr class="my-5">
-            
-            <!-- TIN CÙNG LOẠI -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Tin cùng loại</h5>
-                </div>
-                <div class="list-group list-group-flush">
-                    <c:forEach var="related" items="${relatedNews}">
-                        <a href="${pageContext.request.contextPath}/detail?id=${related.id}" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">${related.title}</h6>
-                                <small class="text-muted">
-                                    <fmt:formatDate value="${related.postedDate}" pattern="dd/MM/yyyy"/>
-                                </small>
-                            </div>
-                        </a>
-                    </c:forEach>
-                    <c:if test="${empty relatedNews}">
-                        <div class="list-group-item text-muted">Không có tin nào cùng loại.</div>
-                    </c:if>
-                </div>
+            <!-- BÀI VIẾT CÙNG CHUYÊN MỤC -->
+            <div class="section-title mt-5">
+                <span>Bài viết cùng chuyên mục</span>
+            </div>
+            <div class="list-group list-group-flush border rounded-3 overflow-hidden shadow-sm">
+                <c:forEach var="related" items="${relatedNews}">
+                    <a href="${pageContext.request.contextPath}/detail?id=${related.id}" class="list-group-item list-group-item-action p-3">
+                        <div class="d-flex w-100 justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-semibold text-dark">${related.title}</h6>
+                            <small class="text-muted ms-3 text-nowrap">
+                                <fmt:formatDate value="${related.postedDate}" pattern="dd/MM/yyyy"/>
+                            </small>
+                        </div>
+                    </a>
+                </c:forEach>
+                <c:if test="${empty relatedNews}">
+                    <div class="list-group-item text-muted p-3">Không có bài viết liên quan trong chuyên mục này.</div>
+                </c:if>
             </div>
         </article>
     </c:when>

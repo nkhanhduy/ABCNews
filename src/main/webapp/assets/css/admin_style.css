@@ -4,15 +4,15 @@
 
 /* --- Reset & Base --- */
 :root {
-    --primary-color: #007bff;      /* Xanh dương chủ đạo */
-    --primary-dark: #0056b3;
+    --primary-color: #16a34a;      /* Xanh lá chủ đạo (Emerald Green) */
+    --primary-dark: #15803d;
     --secondary-color: #6c757d;    /* Xám phụ trợ */
-    --success-color: #28a745;      /* Xanh lá thành công */
+    --success-color: #16a34a;      /* Xanh lá thành công */
     --danger-color: #dc3545;       /* Đỏ cảnh báo/xóa */
     --warning-color: #ffc107;      /* Vàng cảnh báo/sửa */
-    --dark-bg: #343a40;            /* Nền sidebar */
-    --light-bg: #f8f9fa;           /* Nền nội dung */
-    --text-color: #333;
+    --dark-bg: #1e293b;            /* Nền sidebar Slate 800 */
+    --light-bg: #f8fafc;           /* Nền nội dung Slate 50 */
+    --text-color: #1e293b;
     --sidebar-width: 250px;
     --header-height: 60px;
     --shadow-sm: 0 2px 4px rgba(0,0,0,.05);
@@ -157,8 +157,16 @@ ul { list-style: none; padding: 0; margin: 0; }
     gap: 8px;
 }
 
+.user-profile-link .header-user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-color);
+}
+
 /* Tên người dùng trong link in đậm và in hoa */
-.user-profile-link > *:not(.badge) {
+.user-profile-link > *:not(.badge):not(.header-user-avatar) {
     font-weight: 700 !important;
     text-transform: uppercase !important;
 }

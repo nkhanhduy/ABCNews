@@ -8,98 +8,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập - ABC News</title>
+    <title>Đăng nhập - Tòa soạn ABC News</title>
+    
     <%-- Bootstrap 5 CSS --%>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <%-- Font Awesome Icons --%>
+    <%-- Font Awesome Icons (chỉ dùng cho icon chức năng: mắt ẩn hiện mật khẩu, dark mode) --%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <%-- Custom CSS --%>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
-    <!-- Framework CSS chung - Dropdown, Buttons, Cards -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/framework.css">
-    <!-- Public Style Framework -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/public-style.css">
+    
+    <%-- Design System CSS chính (kèm query param phá cache trình duyệt) --%>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css?v=2026.2">
+    <!-- Framework CSS chung -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/framework.css?v=2026.2">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/dark-mode.css?v=2026.2">
+    <!-- Theme Toggle JS -->
+    <script src="${pageContext.request.contextPath}/assets/js/theme-toggle.js?v=2026.2"></script>
+
+    <style>
+        /* CSS nhúng trực tiếp phòng ngừa tình trạng trình duyệt lưu cache style.css cũ */
+        .auth-wrapper {
+            min-height: calc(100vh - 160px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 36px 15px;
+        }
+        .auth-card {
+            background-color: var(--brand-card-bg, #ffffff);
+            border-radius: 14px;
+            border: 1px solid var(--brand-border, #e2e8f0);
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.06);
+            width: 100%;
+            max-width: 440px;
+            padding: 36px 30px;
+            margin: 0 auto;
+            transition: all 0.25s ease;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .auth-title {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--brand-text, #0f172a);
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        .auth-subtitle {
+            color: var(--brand-text-muted, #64748b);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+        .auth-form .form-label {
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--brand-text, #0f172a);
+            margin-bottom: 6px;
+            display: block;
+        }
+        .auth-form .form-control {
+            border: 1px solid var(--brand-input-border, #cbd5e1);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            color: var(--brand-text, #0f172a);
+            background-color: var(--brand-input-bg, #ffffff);
+            transition: all 0.2s ease;
+        }
+        .auth-form .form-control:focus {
+            border-color: var(--brand-accent, #2563eb);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            background-color: var(--brand-input-bg, #ffffff);
+            color: var(--brand-text, #0f172a);
+            outline: none;
+        }
+        .password-field-wrapper {
+            position: relative;
+        }
+        .password-toggle-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--brand-text-muted, #64748b);
+            cursor: pointer;
+            padding: 4px;
+        }
+        .password-toggle-btn:hover {
+            color: var(--brand-text, #0f172a);
+        }
+        .btn-auth-submit {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #ffffff !important;
+            border: none;
+            font-weight: 700;
+            font-size: 0.98rem;
+            padding: 11px 20px;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+        .btn-auth-submit:hover {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+        }
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 22px 0 18px;
+            color: var(--brand-text-muted, #64748b);
+            font-size: 0.82rem;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--brand-border, #e2e8f0);
+        }
+        .auth-divider span {
+            padding: 0 10px;
+        }
+        .demo-accounts-card {
+            background-color: var(--brand-demo-bg, #f8fafc);
+            border: 1px dashed var(--brand-demo-border, #cbd5e1);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-top: 22px;
+            font-size: 0.82rem;
+            color: var(--brand-text-body, #334155);
+        }
+        .demo-accounts-card .demo-title {
+            font-weight: 700;
+            color: var(--brand-text, #0f172a);
+            margin-bottom: 5px;
+        }
+        .demo-account-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+        }
+        .demo-account-item span {
+            color: var(--brand-text-muted, #64748b);
+        }
+        .demo-account-item strong {
+            color: var(--brand-accent, #2563eb) !important;
+            cursor: pointer;
+        }
+        .demo-account-item strong:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     
-    <%-- Header và Menu --%>
+    <%-- Header chuyên dụng cho trang Auth (không kèm menu tin tức rỗng) --%>
     <jsp:include page="/views/common/_header.jsp" />
-    <jsp:include page="/views/common/_menu.jsp" />
 
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-                <div class="card shadow-lg border-0 login-card">
-                    <div class="card-body p-5">
-                        <div class="text-center mb-4">
-                            <div class="login-icon-wrapper mb-3">
-                                <i class="fas fa-user-circle fa-3x text-success"></i>
-                            </div>
-                            <h2 class="fw-bold">Đăng nhập</h2>
-                            <p class="text-muted">Vui lòng đăng nhập để tiếp tục</p>
+    <div class="auth-wrapper">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4" style="max-width: 460px;">
+                    <div class="auth-card">
+                        <div class="auth-header">
+                            <h1 class="auth-title">Đăng nhập</h1>
+                            <p class="auth-subtitle">Chào mừng bạn quay trở lại với ABC News</p>
                         </div>
                         
-                        <%-- Hiển thị success message khi reset password thành công --%>
+                        <%-- Hiển thị thông báo khi reset password thành công --%>
                         <c:if test="${param.resetSuccess eq 'true'}">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <i class="fas fa-check-circle me-2"></i>Đã đặt lại mật khẩu thành công! Vui lòng đăng nhập.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                Đã đặt lại mật khẩu thành công! Vui lòng đăng nhập bằng mật khẩu mới.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
                             </div>
                         </c:if>
                         
-                        <%-- Hiển thị lỗi (nếu có) --%>
+                        <%-- Hiển thị lỗi xác thực nếu có --%>
                         <c:if test="${not empty error}">
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <i class="fas fa-exclamation-circle me-2"></i>${error}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                ${error}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
                             </div>
                         </c:if>
 
-                        <form action="${pageContext.request.contextPath}/login" method="post" id="loginForm">
+                        <form action="${pageContext.request.contextPath}/login" method="post" id="loginForm" class="auth-form">
                             <div class="mb-3">
-                                <label for="email" class="form-label">
-                                    <i class="fas fa-envelope me-1"></i>Email
-                                </label>
-                                <input type="email" class="form-control form-control-lg" id="email" name="email" value="${param.email}" placeholder="Nhập email của bạn" required autocomplete="email">
+                                <label for="email" class="form-label">Địa chỉ Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="${param.email}" placeholder="name@example.com" required autocomplete="email">
                             </div>
+                            
                             <div class="mb-3">
-                                <label for="password" class="form-label">
-                                    <i class="fas fa-lock me-1"></i>Mật khẩu
-                                </label>
-                                <div class="password-input-wrapper">
-                                    <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Nhập mật khẩu" required autocomplete="current-password">
-                                    <button type="button" class="btn-toggle-password" aria-label="Show password">
-                                        <i class="fas fa-eye"></i>
+                                <label for="password" class="form-label">Mật khẩu</label>
+                                <div class="password-field-wrapper">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu của bạn" required autocomplete="current-password">
+                                    <button type="button" class="password-toggle-btn" id="togglePasswordBtn" aria-label="Hiện mật khẩu">
+                                        <i class="fas fa-eye" id="passwordToggleIcon"></i>
                                     </button>
                                 </div>
                             </div>
+                            
                             <div class="mb-4 d-flex justify-content-between align-items-center">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="remember" name="remember" value="on">
-                                    <label class="form-check-label" for="remember">
-                                        Remember me
+                                    <label class="form-check-label text-muted" for="remember" style="font-size: 0.88rem;">
+                                        Ghi nhớ đăng nhập
                                     </label>
                                 </div>
-                                <a href="${pageContext.request.contextPath}/forgot-password" class="forgot-password-link">
-                                    <i class="fas fa-question-circle me-1"></i>Quên mật khẩu?
+                                <a href="${pageContext.request.contextPath}/forgot-password" style="font-size: 0.88rem; font-weight: 500;">
+                                    Quên mật khẩu?
                                 </a>
                             </div>
-                            <button type="submit" class="btn btn-success btn-lg w-100 login-submit-btn">
-                                <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                            
+                            <button type="submit" class="btn-auth-submit" id="submitBtn">
+                                Đăng nhập
                             </button>
                         </form>
                         
-                        <%-- Google Sign-In --%>
-                        <div class="text-center my-4">
-                            <div class="position-relative">
-                                <hr>
-                                <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted">
-                                    or
-                                </span>
-                            </div>
+                        <%-- Google Sign-In Divider --%>
+                        <div class="auth-divider">
+                            <span>Hoặc đăng nhập bằng</span>
                         </div>
                         
-                        <div class="d-flex justify-content-center mb-3 google-signin-wrapper">
+                        <div class="d-flex justify-content-center">
                             <div id="g_id_onload"
                                  data-client_id="248224711124-mr0usg1vgteil4fbo06hgrmshchtq4ca.apps.googleusercontent.com"
                                  data-callback="handleGoogleSignIn"
@@ -114,25 +250,39 @@
                                  data-logo_alignment="left">
                             </div>
                         </div>
+
+                        <%-- Thẻ gợi ý tài khoản mẫu tiện lợi cho Nhà tuyển dụng / Kiểm thử --%>
+                        <div class="demo-accounts-card">
+                            <div class="demo-title">
+                                <span>Tài khoản trải nghiệm nhanh</span>
+                            </div>
+                            <div class="demo-account-item">
+                                <span>Tổng Biên Tập (Admin):</span>
+                                <strong role="button" onclick="fillAccount('admin@abcnews.com', '123456')" title="Bấm để tự điền">admin@abcnews.com / 123456</strong>
+                            </div>
+                            <div class="demo-account-item">
+                                <span>Phóng Viên (Reporter):</span>
+                                <strong role="button" onclick="fillAccount('reporter1@abcnews.com', '123456')" title="Bấm để tự điền">reporter1@abcnews.com / 123456</strong>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <%-- Footer --%>
+    <%-- Footer chuẩn tòa soạn --%>
     <jsp:include page="/views/common/_footer.jsp" />
 
     <%-- Bootstrap 5 JS Bundle --%>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     
-    <%-- Google Sign-In JavaScript API --%>
+    <%-- Google Sign-In API --%>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <%-- Public UX Enhancements --%>
-    <script src="${pageContext.request.contextPath}/assets/js/public-ux.js"></script>
+    
     <script>
+        // Xử lý Google Sign-in
         function handleGoogleSignIn(response) {
-            // Gửi credential về server để verify
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '${pageContext.request.contextPath}/auth/google/verify';
@@ -146,185 +296,39 @@
             document.body.appendChild(form);
             form.submit();
         }
+
+        // Bật / Tắt hiển thị mật khẩu
+        const toggleBtn = document.getElementById('togglePasswordBtn');
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.getElementById('passwordToggleIcon');
         
-        // Login form enhancements
-        (function() {
-            // Password toggle
-            const toggleBtn = document.querySelector('.btn-toggle-password');
-            const passwordInput = document.getElementById('password');
-            
-            if (toggleBtn && passwordInput) {
-                toggleBtn.addEventListener('click', function() {
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-                    this.querySelector('i').classList.toggle('fa-eye');
-                    this.querySelector('i').classList.toggle('fa-eye-slash');
-                });
-            }
-            
-            // Form validation
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    const email = document.getElementById('email').value.trim();
-                    const password = document.getElementById('password').value;
-                    
-                    if (!email || !password) {
-                        e.preventDefault();
-                        return false;
-                    }
-                    
-                    // Show loading state
-                    const submitBtn = this.querySelector('.login-submit-btn');
-                    if (submitBtn) {
-                        submitBtn.disabled = true;
-                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang đăng nhập...';
-                    }
-                });
-            }
-            
-            // Input focus effects
-            const inputs = document.querySelectorAll('#loginForm input');
-            inputs.forEach(function(input) {
-                input.addEventListener('focus', function() {
-                    this.parentElement.classList.add('focused');
-                });
-                
-                input.addEventListener('blur', function() {
-                    if (!this.value) {
-                        this.parentElement.classList.remove('focused');
-                    }
-                });
+        if (toggleBtn && passwordInput && toggleIcon) {
+            toggleBtn.addEventListener('click', function() {
+                const isPassword = passwordInput.getAttribute('type') === 'password';
+                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                toggleIcon.classList.toggle('fa-eye', !isPassword);
+                toggleIcon.classList.toggle('fa-eye-slash', isPassword);
             });
-        })();
+        }
+
+        // Tiện ích tự điền tài khoản mẫu cho nhà tuyển dụng
+        function fillAccount(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            document.getElementById('email').focus();
+        }
+
+        // Hiệu ứng nút khi bấm submit
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function() {
+                const btn = document.getElementById('submitBtn');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerText = 'Đang xác thực...';
+                }
+            });
+        }
     </script>
-    <style>
-        /* Login Page Specific Styles */
-        .login-card {
-            animation: fadeInUp 0.5s ease-out;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-        
-        .login-icon-wrapper {
-            animation: bounceIn 0.6s ease-out;
-        }
-        
-        .login-icon-wrapper i {
-            transition: transform 0.3s ease;
-        }
-        
-        .login-card:hover .login-icon-wrapper i {
-            transform: scale(1.1);
-        }
-        
-        .password-input-wrapper {
-            position: relative;
-        }
-        
-        .btn-toggle-password {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #6c757d;
-            cursor: pointer;
-            padding: 5px 10px;
-            transition: color 0.3s ease;
-        }
-        
-        .btn-toggle-password:hover {
-            color: #28a745;
-        }
-        
-        .form-control:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-        }
-        
-        .login-submit-btn {
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .login-submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
-        }
-        
-        .login-submit-btn:active {
-            transform: translateY(0);
-        }
-        
-        .login-submit-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-        
-        .form-check-input:checked {
-            background-color: #28a745;
-            border-color: #28a745;
-        }
-        
-        .form-check-input:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-        }
-        
-        .google-signin-wrapper {
-            min-height: 50px;
-        }
-        
-        .forgot-password-link {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-        
-        .forgot-password-link:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes bounceIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.3);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            70% {
-                transform: scale(0.9);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .login-card .card-body {
-                padding: 2rem !important;
-            }
-        }
-    </style>
 </body>
 </html>

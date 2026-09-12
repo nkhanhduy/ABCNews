@@ -47,9 +47,14 @@ public class JDBCHelper {
     private static HikariDataSource dataSource;
 
     static {
-        // Tạo connection URL với format chuẩn của SQL Server JDBC
-        connectionUrl = String.format("jdbc:sqlserver://%s:%s;databaseName=%s;user=%s;password=%s;encrypt=false;trustServerCertificate=true;",
-                DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS);
+        // Ưu tiên đọc cấu hình db.url nếu có
+        String configuredUrl = ConfigHelper.get("db.url");
+        if (configuredUrl != null && !configuredUrl.trim().isEmpty()) {
+            connectionUrl = configuredUrl.trim();
+        } else {
+            connectionUrl = String.format("jdbc:sqlserver://%s:%s;databaseName=%s;user=%s;password=%s;encrypt=false;trustServerCertificate=true;sendStringParametersAsUnicode=true;characterEncoding=UTF-8;",
+                    DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS);
+        }
         
         try {
             // Đăng ký JDBC Driver
