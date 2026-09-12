@@ -277,4 +277,14 @@ public class JDBCHelper {
     public static void close(PreparedStatement stmt, Connection conn) {
         close(null, stmt, conn);
     }
+
+    /**
+     * Đóng HikariCP connection pool một cách an toàn
+     */
+    public static void closeDataSource() {
+        if (dataSource != null && !dataSource.isClosed()) {
+            dataSource.close();
+            System.out.println(">> Đã đóng HikariDataSource connection pool an toàn.");
+        }
+    }
 }

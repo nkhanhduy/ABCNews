@@ -1,0 +1,12 @@
+target/
+.git/
+.github/
+.settings/
+.project
+.classpath
+.idea/
+.vscode/
+.codegraph/
+*.log
+*.tmp
+schema/

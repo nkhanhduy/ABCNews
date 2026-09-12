@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="ABCNewsPU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- Managed Entity Classes -->
+        <class>poly.com.entity.Category</class>
+        <class>poly.com.entity.User</class>
+        <class>poly.com.entity.News</class>
+        <class>poly.com.entity.Newsletter</class>
+        <class>poly.com.entity.ActivityLog</class>
+        <class>poly.com.entity.OtpToken</class>
+
+        <properties>
+            <!-- Hibernate SQL Server Dialect -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+
+            <!-- Tự động sinh bảng và cập nhật cấu trúc schema CSDL (hbm2ddl.auto = update) -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
+
+            <!-- Cấu hình Logging SQL -->
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="false"/>
+
+            <!-- Connection Pool Tối ưu -->
+            <property name="hibernate.connection.provider_class" 
+                      value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider"/>
+        </properties>
+    </persistence-unit>
+</persistence>

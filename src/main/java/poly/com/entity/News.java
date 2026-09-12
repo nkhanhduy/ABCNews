@@ -1,22 +1,50 @@
 package poly.com.entity;
 
 import java.util.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 /**
  * Entity đại diện cho tin tức (News) trong hệ thống
- * Chứa thông tin: ID, tiêu đề, nội dung, ảnh, ngày đăng, tác giả, lượt xem, danh mục, trạng thái trang nhất
  */
+@Entity
+@Table(name = "News")
 public class News {
+    @Id
+    @Column(name = "Id", length = 50, nullable = false)
     private String id;
+
+    @Column(name = "Title", length = 500, nullable = false)
     private String title;
-    private String summary; // Cột bạn đã thêm vào CSDL
+
+    @Column(name = "Summary", length = 1000)
+    private String summary;
+
+    @Column(name = "Content", columnDefinition = "NVARCHAR(MAX)", nullable = false)
     private String content;
+
+    @Column(name = "Image", length = 500)
     private String image;
+
+    @Column(name = "PostedDate")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date postedDate;
-    private String author; // Mã phóng viên (tham chiếu đến Users.id)
+
+    @Column(name = "Author", length = 50)
+    private String author;
+
+    @Column(name = "ViewCount")
     private int viewCount;
-    private String categoryId; // Mã loại tin (tham chiếu đến Categories.id)
-    private boolean home; // true = Trang nhất
+
+    @Column(name = "CategoryId", length = 50)
+    private String categoryId;
+
+    @Column(name = "Home")
+    private boolean home;
 
     // Default constructor
     public News() {

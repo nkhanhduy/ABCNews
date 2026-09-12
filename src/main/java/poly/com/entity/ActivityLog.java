@@ -1,24 +1,59 @@
 package poly.com.entity;
 
 import java.util.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 
 /**
  * Entity đại diện cho một bản ghi lịch sử hoạt động
- * 
- * @author ABCNews Development Team
  */
+@Entity
+@Table(name = "ActivityLogs")
 public class ActivityLog {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "user_id", length = 50, nullable = false)
     private String userId;
+
+    @Column(name = "username", length = 100)
     private String username;
+
+    @Transient
     private String userEmail;
+
+    @Column(name = "action_type", length = 20, nullable = false)
     private String actionType;      // CREATE, UPDATE, DELETE, LOGIN, LOGOUT, EXPORT
+
+    @Column(name = "entity_type", length = 50)
     private String entityType;      // NEWS, USER, CATEGORY, NEWSLETTER
+
+    @Column(name = "entity_id", length = 50)
     private String entityId;
+
+    @Column(name = "description", length = 500)
     private String description;
+
+    @Column(name = "old_data", columnDefinition = "NVARCHAR(MAX)")
     private String oldData;         // JSON format
+
+    @Column(name = "new_data", columnDefinition = "NVARCHAR(MAX)")
     private String newData;         // JSON format
+
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
+    @Transient
     private String timeAgo;         // "5 phút trước", "2 giờ trước"
     
     // Constructors

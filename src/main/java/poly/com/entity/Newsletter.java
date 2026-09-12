@@ -1,14 +1,29 @@
 package poly.com.entity;
 
 import java.util.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 /**
  * Entity đại diện cho email đăng ký newsletter
  * Chứa thông tin: Email, trạng thái kích hoạt, ngày đăng ký
  */
+@Entity
+@Table(name = "Newsletters")
 public class Newsletter {
+    @Id
+    @Column(name = "Email", length = 255, nullable = false)
     private String email;
+
+    @Column(name = "Enabled", nullable = false)
     private boolean enabled;
+
+    @Column(name = "SubscribedDate")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date subscribedDate;
 
     // Default constructor

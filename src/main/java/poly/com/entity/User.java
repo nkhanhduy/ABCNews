@@ -1,55 +1,67 @@
 package poly.com.entity;
 
 import java.util.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 /**
  * Lớp Entity đại diện cho thông tin người dùng (User) trong hệ thống
- * 
- * Lớp này chứa tất cả các thông tin về người dùng bao gồm:
- * - Thông tin đăng nhập: ID, password, email
- * - Thông tin cá nhân: họ tên, ngày sinh, giới tính, số điện thoại
- * - Thông tin vai trò: role (Admin/Reporter), enabled (trạng thái hoạt động)
- * - Thông tin OAuth: Google ID, auth provider
- * - Ảnh đại diện: đường dẫn đến file ảnh
- * 
- * @author ABCNews Development Team
- * @version 1.0
  */
+@Entity
+@Table(name = "Users")
 public class User {
     /** Mã định danh duy nhất của người dùng (Username/ID) */
+    @Id
+    @Column(name = "Id", length = 50, nullable = false)
     private String id;
     
     /** Mật khẩu đăng nhập (Đã được mã hóa bảo mật bằng chuẩn BCrypt hash) */
+    @Column(name = "Password", length = 255, nullable = false)
     private String password;
     
     /** Họ và tên đầy đủ của người dùng */
+    @Column(name = "Fullname", length = 200)
     private String fullname;
     
     /** Ngày sinh của người dùng */
+    @Column(name = "Birthday")
+    @Temporal(TemporalType.DATE)
     private Date birthday;
     
     /** Giới tính: true = Nam, false = Nữ */
+    @Column(name = "Gender")
     private boolean gender;
     
     /** Số điện thoại liên hệ */
+    @Column(name = "Mobile", length = 20)
     private String mobile;
     
     /** Địa chỉ email (dùng để đăng nhập) */
+    @Column(name = "Email", length = 255)
     private String email;
     
     /** Vai trò trong hệ thống: true = Quản trị viên (Admin), false = Phóng viên (Reporter) */
+    @Column(name = "Role", nullable = false)
     private boolean role;
     
     /** Đường dẫn đến file ảnh đại diện của người dùng */
+    @Column(name = "ImagePath", length = 255)
     private String imagePath;
     
     /** ID từ Google OAuth (nếu đăng nhập bằng Google) */
+    @Column(name = "GoogleId", length = 255)
     private String googleId;
     
     /** Phương thức xác thực: 'local' (đăng nhập thường), 'google' (OAuth), hoặc 'both' (cả hai) */
+    @Column(name = "AuthProvider", length = 20)
     private String authProvider;
     
     /** Trạng thái tài khoản: true = Hoạt động, false = Bị khóa */
+    @Column(name = "Enabled")
     private boolean enabled;
 
     /**

@@ -22,7 +22,7 @@ import poly.com.entity.Category;
 import poly.com.entity.News;
 import poly.com.entity.User;
 import poly.com.util.ImagePathHelper;
-import com.google.code.gson.Gson;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class AdminController

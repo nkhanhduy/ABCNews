@@ -1,36 +1,52 @@
 package poly.com.entity;
 
 import java.util.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 /**
  * Entity class đại diện cho OTP Token trong hệ thống
- * 
- * OTP được sử dụng cho chức năng forgot password.
- * Mỗi OTP có thời gian hết hạn và chỉ được sử dụng 1 lần.
- * 
- * @author ABCNews Development Team
  */
+@Entity
+@Table(name = "OtpTokens")
 public class OtpToken {
     
     /** ID tự tăng trong database */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
     
     /** User ID (foreign key đến Users table) */
+    @Column(name = "user_id", length = 50, nullable = false)
     private String userId;
     
     /** Mã OTP 6 số (VD: "123456") */
+    @Column(name = "otp_code", length = 6, nullable = false)
     private String otpCode;
     
     /** Thời gian hết hạn */
+    @Column(name = "expiry_time", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date expiryTime;
     
     /** Thời gian tạo OTP */
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     
     /** Đánh dấu OTP đã được sử dụng chưa (true = đã dùng, false = chưa dùng) */
+    @Column(name = "is_used")
     private boolean isUsed;
     
     /** Số lần nhập sai (giới hạn 3 lần) */
+    @Column(name = "attempts")
     private int attempts;
     
     // Constructors

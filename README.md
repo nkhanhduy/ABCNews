@@ -4,9 +4,11 @@
 ![Java 17](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white)
 ![Jakarta EE](https://img.shields.io/badge/Jakarta%20EE-10-F80000?logo=jakarta-ee&logoColor=white)
 ![Tomcat 10](https://img.shields.io/badge/Tomcat-10.1-F8DC75?logo=apachetomcat&logoColor=black)
+![Hibernate](https://img.shields.io/badge/Hibernate-6.4-59666C?logo=hibernate&logoColor=white)
 ![HikariCP](https://img.shields.io/badge/HikariCP-5.1.0-2563EB?logo=speedtest&logoColor=white)
 ![SQL Server](https://img.shields.io/badge/SQL%20Server-2019%2B-CC292B?logo=microsoftsqlserver&logoColor=white)
-![JUnit 5](https://img.shields.io/badge/Tests-13%20Passed-success?logo=junit5&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![JUnit 5](https://img.shields.io/badge/Tests-14%20Passed-success?logo=junit5&logoColor=white)
 ![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
 ![Chart.js](https://img.shields.io/badge/Chart.js-4.4-FF6384?logo=chartdotjs&logoColor=white)
 ![CKEditor 5](https://img.shields.io/badge/CKEditor-5-0288D1?logo=ckeditor4&logoColor=white)
@@ -15,13 +17,30 @@
 
 ---
 
+## 📸 Giao Diện & Hình Ảnh Trực Quan (Screenshots & Demo)
+
+### 1. Dashboard Admin Phân Tích Dữ Liệu Với Chart.js
+Trực quan hóa xu hướng tương tác độc giả với Biểu đồ đường (Line Chart dải màu Gradient) và cơ cấu bài viết theo chuyên mục (Doughnut Chart):
+![Dashboard Admin Chart.js](docs/images/admin-dashboard.svg)
+
+### 2. Giao Diện Độc Giả Sáng / Tối (Dark Mode), Thời Gian Đọc & Chia Sẻ MXH
+Trang chi tiết bài viết hỗ trợ chế độ Dark Mode bảo vệ mắt, hiển thị thời gian đọc ước tính và cụm nút chia sẻ 1-click lên mạng xã hội:
+![Giao diện Độc giả Dark Mode](docs/images/public-darkmode-detail.svg)
+
+### 3. Bộ Soạn Thảo Tin Tức WYSIWYG Chuyên Nghiệp (CKEditor 5)
+Hỗ trợ phóng viên và ban biên tập soạn thảo bài viết phong phú với thanh công cụ WYSIWYG tích hợp:
+![Bộ soạn thảo CKEditor 5](docs/images/ckeditor5-editor.svg)
+
+---
+
 ## 🌟 Điểm Nhấn Công Nghệ & Tính Năng Nổi Bật
 
 ### 1. Kiến Trúc & Hiệu Năng (Architecture & Performance)
-* **3-Tier Layered Architecture**: Phân tách tường minh 3 lớp: `Controller` (Servlet điều hướng & nhận request) &rarr; `Service` (Interface & Impl xử lý toàn bộ Business Logic, Validation, Audit) &rarr; `DAO` (Data Access Object tương tác SQL Server).
+* **Hibernate 6 / Jakarta JPA ORM (Tự Động Sinh Bảng)**: Tích hợp Hibernate Core 6.4 với chế độ `hbm2ddl.auto = update`. Hệ thống tự động phân tích 6 Entity Java để khởi tạo và đồng bộ schema CSDL trong SQL Server ngay khi khởi động, giảm thiểu rủi ro sai lệch cấu trúc dữ liệu.
 * **HikariCP Connection Pool**: Thay thế hoàn toàn kết nối đơn lẻ `DriverManager.getConnection()` bằng Connection Pool nhanh nhất thế giới Java, thiết lập ngưỡng kết nối tối ưu, tự động thu hồi và chống rò rỉ bộ nhớ (Connection Leaks).
+* **Container Hóa Toàn Diện (Docker & Docker Compose)**: Cung cấp `Dockerfile` multi-stage build và `docker-compose.yml` để khởi chạy đồng bộ ứng dụng Tomcat 10 và cơ sở dữ liệu MS SQL Server 2022 chỉ bằng 1 câu lệnh duy nhất.
 * **Zero Hardcoded Credentials (12-Factor App)**: Tách biệt cấu hình ứng dụng (Database, Gmail SMTP, Google OAuth) ra biến môi trường hệ thống (`System.getenv()`) và file `app.properties` được Git bảo vệ tuyệt đối.
-* **Unit Testing với JUnit 5 & Mockito**: Kiểm thử tự động toàn diện các hàm logic nghiệp vụ cốt lõi: `UserServiceTest` (phân quyền RBAC, phòng chống xóa nhầm tài khoản chính mình), `PasswordUtilTest`, `OtpUtilTest` và `ValidationHelperTest` (13/13 tests passing).
+* **Unit Testing với JUnit 5 & Mockito**: Kiểm thử tự động toàn diện các hàm logic nghiệp vụ cốt lõi: `UserServiceTest` (phân quyền RBAC, phòng chống xóa nhầm tài khoản chính mình), `PasswordUtilTest`, `OtpUtilTest`, `ValidationHelperTest` và `JpaSchemaTest` (14/14 tests passing).
 
 ### 2. Trải Nghiệm Người Dùng (Modern UX/UI & Features)
 * **Dashboard Phân Tích Dữ Liệu Trực Quan (Chart.js)**: 
@@ -87,17 +106,34 @@ graph TD
 
 ---
 
-## ⚡ Hướng Dẫn Cài Đặt Nhanh Trong 3 Bước (Quickstart Guide)
+## ⚡ Hướng Dẫn Cài Đặt & Khởi Chạy (Quickstart Guide)
 
-### Bước 1: Khởi tạo Cơ sở dữ liệu SQL Server
-1. Mở **SQL Server Management Studio (SSMS)**.
-2. Mở và thực thi kịch bản cơ sở dữ liệu tại thư mục:
-   ```sql
-   schema/ABCNews.sql
-   ```
-   *(Kịch bản đã có sẵn cấu trúc bảng, khóa ngoại và dữ liệu mẫu phong phú).*
+### 🐳 Cách 1: Khởi chạy siêu tốc bằng Docker 1-Click (Khuyên dùng)
+Dự án đã được cấu hình sẵn môi trường đầy đủ gồm **Apache Tomcat 10.1 (Java 17)** và **Microsoft SQL Server 2022**. Bạn chỉ cần 1 câu lệnh duy nhất:
 
-### Bước 2: Cấu hình Thông tin Kết nối
+```bash
+# 1. Clone repository
+git clone https://github.com/nkhanhduy/ABCNews.git
+cd ABCNews
+
+# 2. Khởi chạy toàn bộ hệ thống bằng Docker Compose
+docker compose up -d
+```
+
+> Ứng dụng sẽ tự động biên dịch, khởi tạo cơ sở dữ liệu và sẵn sàng phục vụ tại: **`http://localhost:8080/home`**
+
+---
+
+### 💻 Cách 2: Cài đặt thủ công (Local Development)
+
+#### Bước 1: Khởi tạo Cơ sở dữ liệu SQL Server
+* **Cách tự động (Hibernate JPA)**: Bạn chỉ cần tạo một database rỗng tên `ABCNews` trong SQL Server. Hibernate 6 sẽ tự động kiểm tra và sinh toàn bộ bảng (`Users`, `News`, `Categories`, `Newsletters`, `ActivityLogs`, `OtpTokens`) ngay khi ứng dụng khởi chạy (`hbm2ddl.auto = update`).
+* **Cách thủ công (Full Data mẫu)**: Thực thi file script CSDL tại:
+  ```sql
+  schema/ABCNews.sql
+  ```
+
+#### Bước 2: Cấu hình Thông tin Kết nối
 Tạo file cấu hình `src/main/resources/app.properties` (dựa trên mẫu có sẵn `app.properties.example`):
 ```properties
 # Cấu hình Database SQL Server
@@ -112,9 +148,8 @@ smtp.password=your_app_password
 # Cấu hình Google OAuth 2.0 (Đăng nhập Google)
 google.client.id=your_google_client_id.apps.googleusercontent.com
 ```
-> *Mẹo: Dự án hỗ trợ cơ chế 12-Factor App, bạn cũng có thể thiết lập trực tiếp thông qua biến môi trường OS (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`...).*
 
-### Bước 3: Biên dịch, Chạy Unit Test & Triển khai
+#### Bước 3: Biên dịch, Chạy Unit Test & Triển khai
 1. Chạy kiểm thử tự động với Maven:
    ```bash
    mvn clean test
@@ -123,8 +158,7 @@ google.client.id=your_google_client_id.apps.googleusercontent.com
    ```bash
    mvn clean package
    ```
-3. Triển khai file `target/ABCNews.war` vào máy chủ **Apache Tomcat 10.1+** (hoặc cấu hình chạy trực tiếp trên Eclipse / IntelliJ IDEA / VS Code).
-4. Truy cập ứng dụng tại: `http://localhost:8080/ABCNews/home`
+3. Triển khai file `target/ABCNews.war` vào máy chủ **Apache Tomcat 10.1+** và truy cập: `http://localhost:8080/ABCNews/home`
 
 ---
 
