@@ -141,18 +141,22 @@ Ví dụ điển hình:
 
 ### Bước 1: Chuẩn bị database
 
-- Tạo database trên SQL Server (đúng tên mà bạn muốn dùng).
-- Import/cài schema + dữ liệu mẫu (nếu project có file `.sql`/backup đi kèm).
+- Tạo database trên SQL Server (mặc định tên là `ABCNews`).
+- Mở file kịch bản CSDL tại `schema/ABCNews.sql` và chạy trong SQL Server Management Studio (SSMS) để tự động khởi tạo bảng và dữ liệu mẫu.
 
-### Bước 2: Cấu hình kết nối
+### Bước 2: Cấu hình kết nối & Credentials
 
-- Mở phần cấu hình DB trong source (file tiện ích kết nối JDBC).
-- Sửa các giá trị `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS` cho đúng máy của bạn.
+- Sao chép file cấu hình mẫu `src/main/resources/app.properties.example` thành:
+  ```
+  src/main/resources/app.properties
+  ```
+- Cập nhật các thông số `db.user`, `db.password` và email SMTP nếu muốn dùng tính năng gửi OTP/Newsletter.
+- File `app.properties` đã được bảo vệ trong `.gitignore` để không bị lộ mật khẩu lên Git.
 
 ### Bước 3: (Tuỳ chọn) cấu hình Email & Google
 
-- Nếu muốn dùng **Quên mật khẩu (OTP)** hoặc **Newsletter**, cần cấu hình SMTP trong source (tiện ích gửi email).
-- Nếu muốn dùng **Đăng nhập Google**, cần cấu hình `CLIENT_ID` theo Google Console.
+- Nếu muốn dùng **Quên mật khẩu (OTP)** hoặc **Newsletter**, cấu hình tài khoản Gmail và Gmail App Password trong `src/main/resources/app.properties`.
+- Nếu muốn dùng **Đăng nhập Google**, cấu hình `CLIENT_ID` trong `GoogleVerifyController.java`.
 
 ### Bước 4: Build & chạy trên Tomcat
 
@@ -162,24 +166,21 @@ Cách A (Maven build WAR):
 mvn clean package
 ```
 
-- Deploy file `target/ABCNews.war` lên Tomcat.
+- Deploy file `target/ABCNews.war` lên Apache Tomcat 10.1+.
 - Start Tomcat và truy cập ứng dụng.
 
-Cách B (Eclipse):
+Cách B (Eclipse / IDE):
 
-- Import project Maven vào Eclipse.
-- Add project vào Tomcat Server trong Eclipse và chạy.
+- Import project Maven vào Eclipse hoặc IntelliJ IDEA.
+- Add project vào Tomcat Server (Jakarta EE 10 / Servlet 6.0) và chạy.
 
 ## Cấu hình
 
-### 1) Database
+Hệ thống sử dụng cơ chế nạp cấu hình linh hoạt thông qua lớp `ConfigHelper`:
 
-Hiện tại project cấu hình DB trong source (file tiện ích kết nối JDBC):
-
-- `DB_HOST`, `DB_PORT`, `DB_NAME`
-- `DB_USER`, `DB_PASS`
-
-Bạn cần sửa lại cho đúng môi trường của bạn.
+- **Ưu tiên 1**: Biến môi trường hệ thống (`DB_HOST`, `DB_PASSWORD`, `MAIL_SMTP_PASSWORD`...).
+- **Ưu tiên 2**: File cấu hình `src/main/resources/app.properties`.
+- Có sẵn file mẫu `src/main/resources/app.properties.example` để tham khảo.
 
 ### 2) Email SMTP (Forgot password + Newsletter)
 
