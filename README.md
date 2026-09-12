@@ -1,214 +1,161 @@
-# ABCNews
+# 📰 ABCNews - Báo Điện Tử Trực Tuyến & Cổng Quản Trị Nội Dung Đa Tầng (Enterprise CMS)
 
-Ứng dụng web tin tức (Java Servlet/JSP) với khu vực public để đọc tin và khu vực `/admin/*` để quản trị nội dung.
+[![Java CI with Maven](https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg)](https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml)
+![Java 17](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Jakarta EE](https://img.shields.io/badge/Jakarta%20EE-10-F80000?style=for-the-badge&logo=jakarta-ee&logoColor=white)
+![Tomcat 10](https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=black)
+![HikariCP](https://img.shields.io/badge/HikariCP-5.1.0-2563EB?style=for-the-badge&logo=speedtest&logoColor=white)
+![SQL Server](https://img.shields.io/badge/SQL%20Server-2019%2B-CC292B?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
+![JUnit 5](https://img.shields.io/badge/JUnit%205-13%20Passed-success?style=for-the-badge&logo=junit5&logoColor=white)
+![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-4.4-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
+![CKEditor 5](https://img.shields.io/badge/CKEditor-5-0288D1?style=for-the-badge&logo=ckeditor4&logoColor=white)
 
-## Chức năng chính
+> **ABCNews** là nền tảng báo điện tử và quản trị tòa soạn tin tức hoàn chỉnh được xây dựng trên nền tảng **Java Servlet/JSP (Jakarta EE 10)** kết hợp cơ sở dữ liệu **Microsoft SQL Server**. Dự án áp dụng chặt chẽ kiến trúc **3-Tier Layered Architecture**, kết nối cơ sở dữ liệu siêu tốc thông qua **HikariCP Connection Pool**, bảo mật mật khẩu đa lớp với **BCrypt & Google OAuth2**, cùng hệ thống phân tích trực quan **Chart.js** và biên tập **CKEditor 5 WYSIWYG**.
 
-- Tin tức
-  - Public: xem danh sách tin, xem chi tiết, tăng lượt xem, tin liên quan, tin “Trang nhất”.
-  - Admin/Reporter: CRUD tin tức, upload ảnh, tìm kiếm/lọc/sắp xếp.
-  - Newsletter: khi tạo tin có thể gửi email cho subscriber (tuỳ chọn trong form).
-- Newsletter (đăng ký nhận tin)
-  - Public: người dùng nhập email để đăng ký nhận bản tin từ sidebar (`POST /newsletter`).
-  - Admin: quản lý danh sách email đăng ký, bật/tắt subscription, xoá, tìm kiếm/lọc (`/admin/newsletters`).
-- Xác thực & tài khoản
-  - Đăng nhập thường + remember-me cookie (`/login`).
-  - Đăng nhập Google (verify ID token) và link với account có sẵn (`POST /auth/google/verify`).
-  - Quên mật khẩu OTP qua email + reset password (BCrypt) (`/forgot-password` → `/verify-otp`).
-  - Profile: xem thông tin tài khoản (`/admin/profile`).
-- Quản trị
-  - Dashboard phân quyền: Admin (tổng quan toàn hệ thống) và Reporter (chỉ số theo tin của mình).
-  - Quản lý Users (`/admin/users`), Categories (`/admin/categories`).
-- Activity Logs (Audit)
-  - Ghi nhận các hành động quan trọng (login/logout, CRUD, lock/unlock, export…).
-  - Có filter, phân trang (`/admin/activity-logs`).
-- Export dữ liệu
-  - Export News/Users/Categories/Newsletters theo CSV/Excel/PDF (`/admin/export`).
-  - Reporter chỉ export News của chính mình; Admin export được tất cả module.
+---
 
-## Roles & Permissions
+## 🌟 Điểm Nhấn Công Nghệ & Tính Năng Nổi Bật
 
-Ghi chú:
+### 1. Kiến Trúc & Hiệu Năng (Architecture & Performance)
+* **3-Tier Layered Architecture**: Phân tách tường minh 3 lớp: `Controller` (Servlet điều hướng & nhận request) &rarr; `Service` (Interface & Impl xử lý toàn bộ Business Logic, Validation, Audit) &rarr; `DAO` (Data Access Object tương tác SQL Server).
+* **HikariCP Connection Pool**: Thay thế hoàn toàn kết nối đơn lẻ `DriverManager.getConnection()` bằng Connection Pool nhanh nhất thế giới Java, thiết lập ngưỡng kết nối tối ưu, tự động thu hồi và chống rò rỉ bộ nhớ (Connection Leaks).
+* **Zero Hardcoded Credentials (12-Factor App)**: Tách biệt cấu hình ứng dụng (Database, Gmail SMTP, Google OAuth) ra biến môi trường hệ thống (`System.getenv()`) và file `app.properties` được Git bảo vệ tuyệt đối.
+* **Unit Testing với JUnit 5 & Mockito**: Kiểm thử tự động toàn diện các hàm logic nghiệp vụ cốt lõi: `UserServiceTest` (phân quyền RBAC, phòng chống xóa nhầm tài khoản chính mình), `PasswordUtilTest`, `OtpUtilTest` và `ValidationHelperTest` (13/13 tests passing).
 
-- Hệ thống có 4 nhóm quyền chính: Guest, Reporter, Admin, Super Admin.
-- Khu vực quản trị nằm dưới `/admin/*` và yêu cầu đăng nhập.
-- Super Admin có toàn bộ quyền của Admin và thêm quyền quản trị tài khoản cấp cao.
+### 2. Trải Nghiệm Người Dùng (Modern UX/UI & Features)
+* **Dashboard Phân Tích Dữ Liệu Trực Quan (Chart.js)**: 
+  * *Biểu đồ đường (Line Chart)*: Phân tích xu hướng lượt xem các bài viết hàng đầu với hiệu ứng dải màu Gradient hiện đại.
+  * *Biểu đồ tròn (Doughnut Chart)*: Trực quan hóa tỷ lệ cơ cấu phân bổ bài viết theo từng danh mục tin tức.
+* **Bộ Soạn Thảo Tin Tức WYSIWYG (CKEditor 5)**: Hỗ trợ phóng viên và biên tập viên soạn bài chuyên nghiệp: in đậm, nghiêng, gạch chân, tiêu đề H1-H3, danh sách, khối trích dẫn, bảng biểu và chèn ảnh minh họa.
+* **Chế Độ Giao Diện Sáng / Tối (Dark / Light Mode Toggle)**: Chuyển đổi mượt mà 1-click, bảng màu tối dịu mắt (`#0f172a` Slate), tự động ghi nhớ trạng thái người dùng qua `localStorage` và xử lý chống giật màn hình (FOUC).
+* **Ước Tính Thời Gian Đọc Bài Viết**: Tự động tính toán dung lượng từ ngữ bài viết theo thuật toán đọc trung bình (~200 từ/phút), hiển thị trực quan `⏱️ X phút đọc`.
+* **Thanh Chia Sẻ Mạng Xã Hội Nhanh (1-Click Social Share)**: Tích hợp nút chia sẻ bài viết nhanh lên Facebook, X (Twitter), Telegram và sao chép liên kết vào bộ nhớ tạm kèm hiệu ứng Toast phản hồi tức thì.
 
-### Guest (chưa đăng nhập)
+### 3. Bảo Mật & Quản Trị Tòa Soạn (Security & Administration)
+* **Bảo Mật Mật Khẩu BCrypt & Graceful Auto-Migration**: Toàn bộ mật khẩu được mã hóa salt 12 rounds. Tích hợp thuật toán tự động nhận diện và nâng cấp mật khẩu cũ dạng chuỗi trần sang hash BCrypt ngay trong lần đăng nhập đầu tiên.
+* **Xác Thực 2 Lớp OTP & Google OAuth2**: Tích hợp Google Identity Services (ID Token verification) và luồng Quên mật khẩu gửi mã OTP 6 số ngẫu nhiên qua Gmail SMTP.
+* **Phân Quyền Chi Tiết (RBAC)**: 4 cấp bậc phân quyền rõ ràng:
+  * `Guest`: Đọc báo, tìm kiếm tin tức, đăng ký bản tin Newsletter, gửi yêu cầu đặt lại mật khẩu.
+  * `Reporter`: Dashboard theo dõi chỉ số tin tức cá nhân, quản lý và đăng bài viết của chính mình, xuất báo cáo tin cá nhân.
+  * `Admin`: Quản lý toàn bộ tin tức, chuyên mục, tài khoản phóng viên/người dùng, hệ thống Newsletter và xuất báo cáo toàn sàn.
+  * `Super Admin`: Cấp bậc tối cao, toàn quyền quản trị và phân quyền cho các tài khoản Admin khác.
+* **Xuất Báo Cáo Đa Định Dạng (Export Engine)**: Xuất dữ liệu danh sách Tin tức, Người dùng, Chuyên mục ra file **Excel (.xlsx - Apache POI)** và **PDF (iText 7)** có định dạng bảng biểu, tiêu đề chuẩn mực.
+* **Nhật Ký Hoạt Động (Audit Trail & Activity Logs)**: Ghi vết toàn bộ hành vi quan trọng (Đăng nhập, Đăng xuất, Thêm/Sửa/Xóa tin, Khóa/Mở khóa tài khoản) kèm địa chỉ IP và thời gian thực.
 
-- **Public pages**: đọc tin, xem chi tiết tin.
-- **Newsletter subscribe**: `POST /newsletter`.
-- **Authentication**:
-  - Đăng nhập thường: `/login`
-  - Google verify: `POST /auth/google/verify`
-  - Quên mật khẩu: `/forgot-password` → `/verify-otp`
+---
 
-### Reporter (đã đăng nhập, `role=false`)
+## 🏗️ Sơ Đồ Kiến Trúc Hệ Thống (Architecture Diagram)
 
-- **Dashboard**: xem thống kê theo tin của chính mình: `GET /admin/dashboard`.
-- **Quản lý tin tức**: `GET/POST /admin/news`
-  - Xem danh sách tin của mình.
-  - Tạo/Sửa/Xóa tin của mình.
-  - Tìm kiếm/lọc/sắp xếp (áp trên scope tin của mình).
-- **Export**:
-  - Có thể export **News của chính mình**: `GET /admin/export?type=news...`.
-  - Không được export `users/categories/newsletters` (controller trả `403`).
-- **Profile**:
-  - Xem profile của chính mình: `GET /admin/profile`.
-  - Nếu truyền `?id=...` vẫn chỉ xem được chính mình (controller tự fallback).
+```mermaid
+graph TD
+    subgraph Client_Layer ["Client Layer (Trình Duyệt)"]
+        UI_Public["Giao diện Độc giả<br/>(Public UI, Dark Mode, Social Share)"]
+        UI_Admin["Giao diện Quản trị Tòa soạn<br/>(Admin Dashboard, Chart.js, CKEditor 5)"]
+    end
 
-### Admin (đã đăng nhập, `role=true`)
+    subgraph Presentation_Layer ["Presentation Layer (MVC Controllers)"]
+        Filter["Authentication & UTF-8 Filters"]
+        Controllers["Jakarta Servlets<br/>(Home, Detail, NewsAdmin, UserAdmin, Export)"]
+    end
 
-- **Dashboard**: xem tổng quan toàn hệ thống: `GET /admin/dashboard`.
-- **Quản lý tin tức**: `GET/POST /admin/news`
-  - Xem tất cả tin.
-  - Có thể filter theo tác giả (`filterAuthor`).
-- **Quản lý người dùng**: `GET/POST /admin/users`.
-  - CRUD user.
-  - Khóa/mở khóa user.
-  - Xóa user: Admin thường **không** xóa/khóa được Admin khác.
-  - Không được tạo Super Admin.
-- **Quản lý loại tin**: `GET/POST /admin/categories`.
-- **Quản lý newsletter (subscribers)**: `GET /admin/newsletters` (delete/toggle/search).
-- **Activity logs**: `GET /admin/activity-logs`.
-- **Export**:
-  - Export News/Users/Categories/Newsletters: `GET /admin/export?...`.
-  - Export nhiều module gộp 1 file (multi-select `type`).
+    subgraph Service_Layer ["Service Layer (Business Logic & Services)"]
+        UserService["UserService / UserServiceImpl"]
+        NewsService["NewsService / NewsServiceImpl"]
+        CatService["CategoryService / CategoryServiceImpl"]
+        NewsLetterService["NewsletterService / NewsletterServiceImpl"]
+        Utils["Utilities<br/>(PasswordUtil BCrypt, ConfigHelper, EmailService, ExportHelper)"]
+    end
 
-### Super Admin (Admin đặc biệt, `isSuperAdmin=true`)
+    subgraph Data_Access_Layer ["Data Access Layer (DAO & Connection Pool)"]
+        DAOs["Data Access Objects<br/>(UserDAO, NewsDAO, CategoryDAO, ActivityLogDAO)"]
+        HikariCP["HikariCP Connection Pool<br/>(HikariDataSource Singleton)"]
+    end
 
-- **Toàn bộ quyền của Admin**.
-- **Quản lý Admin/Super Admin (trong Users module)**:
-  - Có thể tạo Super Admin (`role=super`).
-  - Có thể khóa/xóa Admin khác (trừ chính mình).
-  - Admin thường bị chặn khi sửa user là Super Admin.
+    subgraph Database_Layer ["Database Layer"]
+        SQLServer[("Microsoft SQL Server<br/>(Database: ABCNews)")]
+    end
 
-## Kiến trúc (tổng quan)
-
-Kiểu kiến trúc gần với **MVC/3-layer**:
-
-- Tầng điều khiển (Servlet): nhận request, kiểm tra dữ liệu đầu vào, gọi tầng xử lý dữ liệu, rồi render JSP.
-- Tầng truy cập dữ liệu (DAO): làm việc với SQL Server (JDBC).
-- Tầng mô hình (Entity): ánh xạ dữ liệu theo bảng.
-- Tầng dịch vụ/tiện ích: các phần dùng chung (ghi log, export, email, OTP, mã hoá mật khẩu, upload…).
-- Tầng giao diện (JSP): public/admin + layout.
-
-Khu vực `/admin/*` yêu cầu đăng nhập.
-
-## Luồng xử lý (request → database → response)
-
-Ví dụ điển hình:
-
-- `GET /admin/news`
-  - Hệ thống kiểm tra bạn đã đăng nhập chưa.
-  - Lấy danh sách tin theo quyền:
-    - Admin: xem tất cả tin.
-    - Reporter: chỉ xem tin do mình đăng.
-  - Render trang quản trị tin tức.
-
-- `POST /forgot-password` → `POST /verify-otp`
-  - Người dùng nhập email để nhận mã OTP.
-  - Hệ thống gửi OTP qua email và lưu OTP để đối chiếu.
-  - Người dùng nhập OTP + mật khẩu mới.
-  - Hệ thống kiểm tra OTP (hợp lệ/hết hạn/số lần thử) và cập nhật mật khẩu mới.
-
-- `POST /admin/news?action=create&sendNewsletter=true`
-  - Lưu tin vào DB.
-  - Nếu bật tuỳ chọn gửi newsletter: hệ thống gửi email thông báo tới danh sách người đã đăng ký nhận tin.
-  - Ghi lại lịch sử thao tác (audit log).
-
-## Công nghệ sử dụng
-
-- Java 17
-- Jakarta Servlet/JSP/JSTL (WAR)
-- Maven
-- SQL Server (JDBC Driver)
-- Apache Commons BeanUtils
-- Jakarta Mail (Angus)
-- Apache POI (Excel)
-- iText7 (PDF)
-- BCrypt (jbcrypt)
-- Google OAuth token verify (Google API Client)
-
-## Yêu cầu môi trường
-
-- JDK 17+
-- Maven 3.8+
-- Apache Tomcat **10.1+** (Jakarta EE 10 / Servlet 6)
-- SQL Server
-
-## Cách sử dụng khi tải về (Quick start)
-
-### Bước 1: Chuẩn bị database
-
-- Tạo database trên SQL Server (mặc định tên là `ABCNews`).
-- Mở file kịch bản CSDL tại `schema/ABCNews.sql` và chạy trong SQL Server Management Studio (SSMS) để tự động khởi tạo bảng và dữ liệu mẫu.
-
-### Bước 2: Cấu hình kết nối & Credentials
-
-- Sao chép file cấu hình mẫu `src/main/resources/app.properties.example` thành:
-  ```
-  src/main/resources/app.properties
-  ```
-- Cập nhật các thông số `db.user`, `db.password` và email SMTP nếu muốn dùng tính năng gửi OTP/Newsletter.
-- File `app.properties` đã được bảo vệ trong `.gitignore` để không bị lộ mật khẩu lên Git.
-
-### Bước 3: (Tuỳ chọn) cấu hình Email & Google
-
-- Nếu muốn dùng **Quên mật khẩu (OTP)** hoặc **Newsletter**, cấu hình tài khoản Gmail và Gmail App Password trong `src/main/resources/app.properties`.
-- Nếu muốn dùng **Đăng nhập Google**, cấu hình `CLIENT_ID` trong `GoogleVerifyController.java`.
-
-### Bước 4: Build & chạy trên Tomcat
-
-Cách A (Maven build WAR):
-
-```bash
-mvn clean package
+    UI_Public --> Filter
+    UI_Admin --> Filter
+    Filter --> Controllers
+    Controllers --> Service_Layer
+    Service_Layer --> DAOs
+    DAOs --> HikariCP
+    HikariCP --> SQLServer
 ```
 
-- Deploy file `target/ABCNews.war` lên Apache Tomcat 10.1+.
-- Start Tomcat và truy cập ứng dụng.
+---
 
-Cách B (Eclipse / IDE):
+## ⚡ Hướng Dẫn Cài Đặt Nhanh Trong 3 Bước (Quickstart Guide)
 
-- Import project Maven vào Eclipse hoặc IntelliJ IDEA.
-- Add project vào Tomcat Server (Jakarta EE 10 / Servlet 6.0) và chạy.
+### Bước 1: Khởi tạo Cơ sở dữ liệu SQL Server
+1. Mở **SQL Server Management Studio (SSMS)**.
+2. Mở và thực thi kịch bản cơ sở dữ liệu tại thư mục:
+   ```sql
+   schema/ABCNews.sql
+   ```
+   *(Kịch bản đã có sẵn cấu trúc bảng, khóa ngoại và dữ liệu mẫu phong phú).*
 
-## Cấu hình
+### Bước 2: Cấu hình Thông tin Kết nối
+Tạo file cấu hình `src/main/resources/app.properties` (dựa trên mẫu có sẵn `app.properties.example`):
+```properties
+# Cấu hình Database SQL Server
+db.url=jdbc:sqlserver://localhost:1433;databaseName=ABCNews;encrypt=true;trustServerCertificate=true;
+db.username=sa
+db.password=123456
 
-Hệ thống sử dụng cơ chế nạp cấu hình linh hoạt thông qua lớp `ConfigHelper`:
+# Cấu hình Gmail SMTP (Gửi OTP & Bản tin Newsletter)
+smtp.user=your_email@gmail.com
+smtp.password=your_app_password
 
-- **Ưu tiên 1**: Biến môi trường hệ thống (`DB_HOST`, `DB_PASSWORD`, `MAIL_SMTP_PASSWORD`...).
-- **Ưu tiên 2**: File cấu hình `src/main/resources/app.properties`.
-- Có sẵn file mẫu `src/main/resources/app.properties.example` để tham khảo.
-
-### 2) Email SMTP (Forgot password + Newsletter)
-
-Cấu hình đang được hardcode trong source (tiện ích gửi email):
-
-- `SMTP_USER`
-- `SMTP_PASSWORD` (Gmail App Password)
-
-Khuyến nghị chuyển sang biến môi trường hoặc file config và **không commit credential lên Git**.
-
-### 3) Google OAuth
-
-Endpoint: `POST /auth/google/verify`
-
-Cần cấu hình `CLIENT_ID` theo Google Console.
-
-## Build & Deploy
-
-- Build WAR:
-
-```bash
-mvn clean package
+# Cấu hình Google OAuth 2.0 (Đăng nhập Google)
+google.client.id=your_google_client_id.apps.googleusercontent.com
 ```
+> *Mẹo: Dự án hỗ trợ cơ chế 12-Factor App, bạn cũng có thể thiết lập trực tiếp thông qua biến môi trường OS (`DB_URL`, `DB_USERNAME`, `DB_PASSWORD`...).*
 
-- Deploy:
-  - Deploy file `target/ABCNews.war` lên Tomcat.
-  - Hoặc add project vào Eclipse + Tomcat Server.
+### Bước 3: Biên dịch, Chạy Unit Test & Triển khai
+1. Chạy kiểm thử tự động với Maven:
+   ```bash
+   mvn clean test
+   ```
+2. Đóng gói ứng dụng thành file `.war`:
+   ```bash
+   mvn clean package
+   ```
+3. Triển khai file `target/ABCNews.war` vào máy chủ **Apache Tomcat 10.1+** (hoặc cấu hình chạy trực tiếp trên Eclipse / IntelliJ IDEA / VS Code).
+4. Truy cập ứng dụng tại: `http://localhost:8080/ABCNews/home`
 
+---
 
+## 🔑 Tài Khoản Trải Nghiệm Mặc Định (Demo Accounts)
 
+| Vai trò (Role) | Tài khoản (Email) | Mật khẩu mặc định | Quyền hạn chính |
+| :--- | :--- | :--- | :--- |
+| **Super Admin** | `admin@abcnews.com` | `123456` | Toàn quyền quản trị tòa soạn, phân bổ quyền và cấu hình hệ thống |
+| **Phóng viên (Reporter)** | `reporter1@abcnews.com` | `123456` | Dashboard cá nhân, viết bài, sửa bài của mình, xuất báo cáo tin |
+| **Độc giả (Guest)** | *(Không cần đăng nhập)* | *(Tự do)* | Đọc bài viết, đổi theme Dark Mode, đăng ký nhận bản tin |
 
+---
+
+## 🛠️ Ngăn Xếp Công Nghệ (Tech Stack)
+
+* **Backend Core**: Java 17, Jakarta EE 10 (Servlet 6.0, JSP 3.1, JSTL 3.0).
+* **Database & Pooling**: Microsoft SQL Server, HikariCP 5.1.0, JDBC.
+* **Security & Auth**: BCrypt (jBCrypt 0.4), Google API Client & OAuth2, Jakarta Mail 2.1.
+* **Testing**: JUnit 5 (Jupiter), Mockito Core, Mockito JUnit Jupiter.
+* **Frontend & UI/UX**: Bootstrap 5.3, HTML5/CSS3, FontAwesome 6.5, Chart.js 4.4, CKEditor 5.
+* **Reporting Engine**: Apache POI 5.2.5 (Excel Export), iText 7.2.5 (PDF Export).
+* **Build & DevOps**: Apache Maven, GitHub Actions CI/CD.
+
+---
+
+## 👨‍💻 Tác Giả & Liên Hệ (Author)
+
+* **Họ và tên**: **Nguyễn Khánh Duy**
+* **GitHub**: [@nkhanhduy](https://github.com/nkhanhduy)
+* **Email**: [khanhndts02168@gmail.com](mailto:khanhndts02168@gmail.com)
+* **Dự án**: [https://github.com/nkhanhduy/ABCNews](https://github.com/nkhanhduy/ABCNews)
+
+---
+*© 2025 ABCNews Project. Được phát triển với mục tiêu học tập, nghiên cứu và xây dựng hồ sơ năng lực chuyên nghiệp.*
