@@ -12,7 +12,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2ea44f?style=flat-square" alt="License MIT"></a>
 </p>
 
-Đồ án xây dựng website tin tức trực tuyến và hệ thống quản trị nội dung tòa soạn trên nền tảng Java Web với Jakarta Servlet và JSP. Dự án hoàn thiện năm 2025 với giao diện hiện đại, hỗ trợ chế độ Sáng / Tối và cơ chế lưu trữ ảnh an toàn.
+Dự án cá nhân xây dựng website tin tức trực tuyến và hệ thống quản trị nội dung tòa soạn trên nền tảng Java Web với Jakarta Servlet và JSP. Dự án được thực hiện trong quá trình học tập (năm 2025) với giao diện hiện đại, hỗ trợ chế độ Sáng / Tối và cơ chế lưu trữ ảnh an toàn.
 
 ---
 
