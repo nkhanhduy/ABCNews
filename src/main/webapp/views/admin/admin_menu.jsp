@@ -34,19 +34,19 @@
                <i class="fas fa-newspaper me-2"></i>Quản lý Tin
             </a>
         </li>
-        <li>
-            <a href="${pageContext.request.contextPath}/admin/comments" 
-               class="${view.contains('comment_crud.jsp') ? 'active' : ''} d-flex align-items-center justify-content-between">
-               <span><i class="fas fa-comments me-2"></i>Quản lý Bình luận</span>
-               <c:if test="${not empty sessionScope.pendingCommentCount && sessionScope.pendingCommentCount > 0}">
-                   <span class="badge bg-warning text-dark rounded-pill">${sessionScope.pendingCommentCount}</span>
-               </c:if>
-            </a>
-        </li>
         
-        <%-- Chỉ Admin (role=true) mới thấy các mục này --%>
+        <%-- Chỉ Admin (role=true) mới thấy các mục Quản lý Bình luận, Loại tin, User, Newsletter, Lịch sử --%>
         <c:if test="${sessionScope.user.role == true}">
-             <li>
+            <li>
+                <a href="${pageContext.request.contextPath}/admin/comments" 
+                   class="${view.contains('comment_crud.jsp') ? 'active' : ''} d-flex align-items-center justify-content-between">
+                   <span><i class="fas fa-comments me-2"></i>Quản lý Bình luận</span>
+                   <c:if test="${not empty sessionScope.pendingCommentCount && sessionScope.pendingCommentCount > 0}">
+                       <span class="badge bg-warning text-dark rounded-pill">${sessionScope.pendingCommentCount}</span>
+                   </c:if>
+                </a>
+            </li>
+            <li>
                 <a href="${pageContext.request.contextPath}/admin/categories"
                    class="${view.contains('category_crud.jsp') ? 'active' : ''}">
                    <i class="fas fa-tags me-2"></i>Quản lý Loại tin

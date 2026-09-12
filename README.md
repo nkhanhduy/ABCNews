@@ -52,6 +52,7 @@ ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành
 ### Xác thực và bảo mật
 - Đăng nhập cục bộ bằng tài khoản và mật khẩu được băm bằng thuật toán BCrypt.
 - Đăng nhập bằng Google với xác minh ID token phía server.
+- Đổi mật khẩu: Người dùng đã đăng nhập có thể thay đổi mật khẩu sau khi xác minh mật khẩu hiện tại. Các token Remember Me hiện có sẽ bị thu hồi sau khi đổi mật khẩu.
 - Quên mật khẩu qua mã OTP 6 chữ số gửi qua Gmail SMTP với thời hạn 5 phút và giới hạn 3 lần nhập sai.
 - Duy trì đăng nhập với token ngẫu nhiên 256-bit, lưu bản băm SHA-256 trong cơ sở dữ liệu và xoay vòng token khi tự động đăng nhập thành công.
 - Trạng thái kích hoạt tài khoản được kiểm tra tại bộ lọc xác thực và các điểm đăng nhập.
@@ -63,6 +64,7 @@ ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành
 - Phóng viên chỉ được chỉnh sửa hoặc xóa bài viết do chính mình làm tác giả.
 - Quản trị viên quản lý toàn bộ bài viết, chuyên mục và kiểm duyệt bình luận.
 - Quản trị tối cao được xác định bằng trường IsSuperAdmin trong cơ sở dữ liệu, có quyền quản lý các tài khoản quản trị khác và bị chặn tự xóa hoặc tự khóa chính mình.
+- Quản lý người dùng: Admin có thể cập nhật thông tin, thiết lập vai trò, thay đổi trạng thái tài khoản và đặt lại mật khẩu cho các tài khoản được phép quản lý.
 
 ### Quản trị nội dung tòa soạn
 - Bảng điều khiển quản trị tổng hợp số lượng bài viết, tài khoản, chuyên mục, bình luận và biểu đồ trực quan qua Chart.js.
@@ -158,6 +160,7 @@ Dự án tổ chức theo Layered MVC với Service layer cho các nghiệp vụ
 
 Các biện pháp bảo vệ trong dự án được xây dựng dựa trên nguyên tắc phòng thủ cơ bản:
 - Băm mật khẩu: Mật khẩu người dùng được băm một chiều bằng thuật toán BCrypt trước khi lưu vào cơ sở dữ liệu.
+- Thay đổi mật khẩu: Mật khẩu hiện tại được xác minh trước khi cập nhật mật khẩu mới; mật khẩu mới được lưu dưới dạng BCrypt hash.
 - Token Remember-Me an toàn: Token ngẫu nhiên 256-bit được sinh qua SecureRandom. Cơ sở dữ liệu chỉ lưu bản băm SHA-256. Cookie trình duyệt sử dụng cờ HttpOnly và SameSite=Lax. Token được xoay vòng sau mỗi lần tự động đăng nhập thành công nhằm giảm thiểu rủi ro bị tấn công phát lại.
 - Email OTP: Mã OTP 6 chữ số có hiệu lực trong 5 phút. Việc so khớp sử dụng thuật toán so sánh thời gian hằng số MessageDigest.isEqual để giảm thiểu nguy cơ timing attack, kết hợp giới hạn tối đa 3 lần nhập sai.
 - Phân quyền vai trò và chặn leo thang đặc quyền: Vai trò Quản trị tối cao được xác định bằng trường IsSuperAdmin trong cơ sở dữ liệu. Quản trị viên thông thường không được phép sửa, khóa hoặc xóa tài khoản của Quản trị viên khác.

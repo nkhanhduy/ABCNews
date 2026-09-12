@@ -135,35 +135,108 @@
         .auth-divider span {
             padding: 0 10px;
         }
+        /* Box tài khoản trải nghiệm tối giản, hiện đại, không dùng icon */
         .demo-accounts-card {
-            background-color: var(--brand-demo-bg, #f8fafc);
-            border: 1px dashed var(--brand-demo-border, #cbd5e1);
+            background-color: var(--brand-card-bg-subtle, #f8fafc);
+            border: 1px solid var(--brand-border, #e2e8f0);
             border-radius: 8px;
-            padding: 12px 14px;
-            margin-top: 22px;
-            font-size: 0.82rem;
-            color: var(--brand-text-body, #334155);
+            padding: 10px 12px;
+            margin-top: 18px;
         }
-        .demo-accounts-card .demo-title {
-            font-weight: 700;
-            color: var(--brand-text, #0f172a);
-            margin-bottom: 5px;
-        }
-        .demo-account-item {
+        .demo-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 3px 0;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--brand-border, #e2e8f0);
         }
-        .demo-account-item span {
+        .demo-card-title {
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             color: var(--brand-text-muted, #64748b);
         }
-        .demo-account-item strong {
-            color: var(--brand-accent, #2563eb) !important;
-            cursor: pointer;
+        .demo-card-pass {
+            font-size: 0.76rem;
+            color: var(--brand-text-muted, #64748b);
         }
-        .demo-account-item strong:hover {
-            text-decoration: underline;
+        .demo-card-pass code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-weight: 700;
+            color: var(--brand-text, #0f172a);
+            background: transparent;
+            padding: 0;
+            font-size: 0.8rem;
+        }
+        .demo-accounts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .demo-account-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 5px 9px;
+            background-color: var(--brand-card-bg, #ffffff);
+            border: 1px solid var(--brand-border, #e2e8f0);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--brand-text, #0f172a);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+        }
+        .demo-account-btn:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .demo-account-btn:active {
+            transform: scale(0.99);
+        }
+        .demo-role-name {
+            font-weight: 600;
+            color: var(--brand-text, #0f172a);
+            font-size: 0.8rem;
+        }
+        .demo-account-email {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.76rem;
+            color: var(--brand-text-muted, #64748b);
+        }
+
+        /* Dark mode overrides cho box tài khoản trải nghiệm */
+        [data-theme="dark"] .demo-accounts-card {
+            background-color: #1e293b;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .demo-card-header {
+            border-bottom-color: #334155;
+        }
+        [data-theme="dark"] .demo-card-title,
+        [data-theme="dark"] .demo-card-pass {
+            color: #94a3b8;
+        }
+        [data-theme="dark"] .demo-card-pass code {
+            color: #f1f5f9;
+        }
+        [data-theme="dark"] .demo-account-btn {
+            background-color: #0f172a;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .demo-account-btn:hover {
+            background-color: #1e293b;
+            border-color: #475569;
+        }
+        [data-theme="dark"] .demo-role-name {
+            color: #f8fafc;
+        }
+        [data-theme="dark"] .demo-account-email {
+            color: #94a3b8;
         }
     </style>
 </head>
@@ -252,20 +325,24 @@
                             </div>
                         </div>
 
-                        <%-- Thẻ tài khoản trải nghiệm nhanh --%>
+                        <%-- Thẻ tài khoản trải nghiệm nhanh (Thiết kế tối giản, chuyên nghiệp, không icon) --%>
                         <div class="demo-accounts-card">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="fw-bold text-dark small"><i class="fas fa-bolt text-warning me-1"></i>Tài khoản trải nghiệm nhanh</span>
-                                <span class="text-muted small">Mật khẩu: <code class="fw-bold text-dark">123456</code></span>
+                            <div class="demo-card-header">
+                                <span class="demo-card-title">Tài khoản trải nghiệm</span>
+                                <span class="demo-card-pass">Mật khẩu: <code>123456</code></span>
                             </div>
-                            <div class="d-grid gap-1">
-                                <button type="button" class="btn btn-sm btn-outline-success text-start py-1 px-2 d-flex justify-content-between align-items-center" onclick="fillAccount('admin@abcnews.com', '123456')" title="Bấm để tự động điền tài khoản Tổng Biên Tập">
-                                    <span><i class="fas fa-user-shield me-1"></i><strong>Tổng Biên Tập</strong></span>
-                                    <span class="small font-monospace">admin@abcnews.com</span>
+                            <div class="demo-accounts-list">
+                                <button type="button" class="demo-account-btn" onclick="fillAccount('superadmin@abcnews.com', '123456')" title="Chọn tài khoản Super Admin">
+                                    <span class="demo-role-name">Super Admin</span>
+                                    <span class="demo-account-email">superadmin@abcnews.com</span>
                                 </button>
-                                <button type="button" class="btn btn-sm btn-outline-primary text-start py-1 px-2 d-flex justify-content-between align-items-center" onclick="fillAccount('reporter1@abcnews.com', '123456')" title="Bấm để tự động điền tài khoản Phóng Viên">
-                                    <span><i class="fas fa-feather-alt me-1"></i><strong>Phóng Viên</strong></span>
-                                    <span class="small font-monospace">reporter1@abcnews.com</span>
+                                <button type="button" class="demo-account-btn" onclick="fillAccount('admin@abcnews.com', '123456')" title="Chọn tài khoản Quản trị viên">
+                                    <span class="demo-role-name">Quản trị viên</span>
+                                    <span class="demo-account-email">admin@abcnews.com</span>
+                                </button>
+                                <button type="button" class="demo-account-btn" onclick="fillAccount('reporter1@abcnews.com', '123456')" title="Chọn tài khoản Phóng viên">
+                                    <span class="demo-role-name">Phóng viên</span>
+                                    <span class="demo-account-email">reporter1@abcnews.com</span>
                                 </button>
                             </div>
                         </div>

@@ -30,7 +30,7 @@
 		<div class="card-body">
 		<c:set var="isEdit" value="${not empty userItem}" />
 
-		<form action="${pageContext.request.contextPath}/admin/users"
+		<form action="${pageContext.request.contextPath}/admin/users?_csrf=${sessionScope.CSRF_TOKEN}"
 			method="post" enctype="multipart/form-data">
 			<input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}" />
 			<c:choose>
@@ -59,14 +59,22 @@
 						</small>
 					</div>
 
-					<div class="form-group">
-						<label for="password">
-							<i class="fas fa-lock me-1"></i>Mật khẩu
-						</label>
-						<input type="password" name="password" id="password"
-						       value="${userItem.password}" required
-						       placeholder="Nhập mật khẩu">
-					</div>
+					<%-- Chỉ hiển thị ô nhập mật khẩu khi Thêm mới người dùng, khi Chỉnh sửa người dùng sẽ ẩn vì đã có tính năng đổi mật khẩu chuyên biệt --%>
+					<c:if test="${!isEdit}">
+						<div class="form-group">
+							<label for="password">
+								<i class="fas fa-lock me-1"></i>Mật khẩu
+							</label>
+							<input type="password" name="password" id="password"
+							       value=""
+							       autocomplete="new-password"
+							       required minlength="8"
+							       placeholder="Nhập mật khẩu (tối thiểu 8 ký tự)">
+							<small class="form-hint">
+								<i class="fas fa-info-circle"></i> Mật khẩu tối thiểu 8 ký tự.
+							</small>
+						</div>
+					</c:if>
 
 					<div class="form-group">
 						<label for="fullname">
@@ -145,7 +153,8 @@
 									<c:set var="userImageUrl" value="${pageContext.request.contextPath}${userItem.imagePath}" />
 								</c:if>
 								<img src="${userImageUrl}" alt="Ảnh hiện tại" 
-								     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+								     style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; object-position: center 15%; border: 3px solid #16a34a;"
+								     onerror="this.style.setProperty('display', 'none', 'important'); this.nextElementSibling.style.display='block';">
 								<small class="image-error" style="display:none; color:red;"><i class="fas fa-exclamation-triangle me-1"></i> Không thể tải ảnh. Vui lòng chọn ảnh mới.</small>
 								<small class="image-label">Ảnh hiện tại</small>
 							</div>

@@ -374,14 +374,12 @@ hr {
     text-align: center;
     vertical-align: middle;
     cursor: pointer;
-    background-color: transparent;
     border: 1px solid transparent;
     padding: 10px 20px;
     font-size: 14px;
     line-height: 1.5;
     border-radius: 5px;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    color: #fff;
     box-shadow: 0 2px 4px rgba(0,0,0,.1);
 }
 
@@ -395,17 +393,17 @@ hr {
     box-shadow: none;
 }
 
-.btn-create { background-color: var(--success-color); border-color: var(--success-color); }
-.btn-create:hover { background-color: #218838; border-color: #1e7e34; }
+.btn-create { background-color: var(--success-color); border-color: var(--success-color); color: #fff; }
+.btn-create:hover { background-color: #218838; border-color: #1e7e34; color: #fff; }
 
-.btn-update { background-color: var(--primary-color); border-color: var(--primary-color); }
-.btn-update:hover { background-color: #0069d9; border-color: #0062cc; }
+.btn-update { background-color: var(--primary-color); border-color: var(--primary-color); color: #fff; }
+.btn-update:hover { background-color: #0069d9; border-color: #0062cc; color: #fff; }
 
-.btn-delete { background-color: var(--danger-color); border-color: var(--danger-color); }
-.btn-delete:hover { background-color: #c82333; border-color: #bd2130; }
+.btn-delete { background-color: var(--danger-color); border-color: var(--danger-color); color: #fff; }
+.btn-delete:hover { background-color: #c82333; border-color: #bd2130; color: #fff; }
 
-.btn-reset { background-color: var(--secondary-color); border-color: var(--secondary-color); }
-.btn-reset:hover { background-color: #5a6268; border-color: #545b62; }
+.btn-reset { background-color: var(--secondary-color); border-color: var(--secondary-color); color: #fff; }
+.btn-reset:hover { background-color: #5a6268; border-color: #545b62; color: #fff; }
 
 /* Nút Profile - màu xanh lá để phân biệt với nền */
 a.btn.btn-sm.btn-profile,

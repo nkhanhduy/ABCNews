@@ -10,31 +10,31 @@
     <table class="crud-table">
         <thead>
             <tr>
-                <th>Email</th>
-                <th>Trạng thái</th>
-                <th>Ngày đăng ký</th>
-                <th>Hành động</th>
+                <th style="width: 38%; text-align: left; padding-left: 20px;">Email</th>
+                <th style="width: 22%; text-align: center;">Trạng thái</th>
+                <th style="width: 20%; text-align: center;">Ngày đăng ký</th>
+                <th style="width: 20%; text-align: center;">Hành động</th>
             </tr>
         </thead>
         <tbody>
             <c:forEach var="n" items="${newsletterList}">
                 <tr>
-                    <td>${n.email}</td>
+                    <td style="text-align: left; padding-left: 20px;">${n.email}</td>
                     <td style="text-align: center;">
                         <span class="badge ${n.enabled ? 'bg-success' : 'bg-secondary'}" style="min-width: 120px; text-align: center; display: inline-block;">
                             ${n.enabled ? 'Đang hoạt động' : 'Đã hủy'}
                         </span>
                     </td>
-                    <td><fmt:formatDate value="${n.subscribedDate}" pattern="dd/MM/yyyy"/></td>
-                    <td>
+                    <td style="text-align: center;"><fmt:formatDate value="${n.subscribedDate}" pattern="dd/MM/yyyy"/></td>
+                    <td style="text-align: center;">
                         <form method="post" action="${pageContext.request.contextPath}/admin/newsletters" style="display:inline; margin:0 3px;" onsubmit="return confirm('Xóa email này?')">
-                            <input type="hidden" name="_csrf" value="${csrfToken}">
+                            <input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="email" value="${n.email}">
                             <button type="submit" class="btn btn-sm btn-delete" style="border:none; cursor:pointer;">Xóa</button>
                         </form>
                         <form method="post" action="${pageContext.request.contextPath}/admin/newsletters" style="display:inline; margin:0 3px;">
-                            <input type="hidden" name="_csrf" value="${csrfToken}">
+                            <input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
                             <input type="hidden" name="action" value="toggle">
                             <input type="hidden" name="email" value="${n.email}">
                             <button type="submit" class="btn btn-sm btn-update" style="border:none; cursor:pointer;">

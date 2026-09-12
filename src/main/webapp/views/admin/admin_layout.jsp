@@ -45,6 +45,24 @@
             <!-- 2.2. Nội dung thay đổi -->
             <main class="admin-content">
                 <div class="content-box">
+                    <%-- Global Flash Toast Messages --%>
+                    <c:if test="${not empty sessionScope.toastSuccess}">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Thành công!</strong> ${sessionScope.toastSuccess}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <c:remove var="toastSuccess" scope="session"/>
+                    </c:if>
+                    <c:if test="${not empty sessionScope.toastError}">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Thông báo:</strong> ${sessionScope.toastError}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <c:remove var="toastError" scope="session"/>
+                    </c:if>
+
                     <!-- 
                       Nội dung chính sẽ được nạp vào đây 
                       (ví dụ: dashboard.jsp, news_crud.jsp...)

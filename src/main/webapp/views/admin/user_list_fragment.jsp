@@ -10,13 +10,13 @@
 	<table class="crud-table user-table">
 		<thead>
 			<tr>
-				<th>ID</th>
-				<th>Họ tên</th>
-				<th>Email</th>
-				<th>Vai trò</th>
-				<th>Số tin</th>
-				<th>Trạng thái</th>
-				<th>Hành động</th>
+				<th style="width: 10%; text-align: center;">ID</th>
+				<th style="text-align: left; padding-left: 15px;">Họ tên</th>
+				<th style="text-align: left; padding-left: 15px;">Email</th>
+				<th style="width: 14%; text-align: center;">Vai trò</th>
+				<th style="width: 8%; text-align: center;">Số tin</th>
+				<th style="width: 14%; text-align: center;">Trạng thái</th>
+				<th style="width: 18%; text-align: center;">Hành động</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -29,8 +29,8 @@
 				
 				<tr data-user-id="${u.id}" class="user-row" style="cursor: pointer;">
 					<td style="text-align: center;">${u.id}</td>
-					<td style="text-align: center;">${u.fullname}</td>
-					<td style="text-align: center;">${u.email}</td>
+					<td style="text-align: left; padding-left: 15px;">${u.fullname}</td>
+					<td style="text-align: left; padding-left: 15px;">${u.email}</td>
 					<td style="text-align: center;">
 						<span style="color: ${isUserSuperAdmin ? 'purple' : (u.role ? 'red' : 'blue')}; font-weight: bold;">
 							${isUserSuperAdmin ? 'Super Admin' : (u.role ? 'Admin' : 'Phóng viên')}

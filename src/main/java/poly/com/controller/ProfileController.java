@@ -13,14 +13,16 @@ import jakarta.servlet.http.HttpSession;
 import poly.com.dao.NewsDAO;
 import poly.com.dao.UserDAO;
 import poly.com.entity.User;
+import poly.com.service.UserService;
+import poly.com.service.impl.UserServiceImpl;
 import poly.com.util.ImagePathHelper;
 import poly.com.util.SafeImageStorage;
 
 /**
- * Controller xử lý xem profile và cập nhật ảnh đại diện thông minh của user
+ * Controller xử lý xem profile, đổi mật khẩu và cập nhật ảnh đại diện thông minh của user
  * Có thể xem profile của chính mình hoặc của user khác (nếu là admin)
  */
-@WebServlet("/admin/profile")
+@WebServlet({"/admin/profile", "/admin/profile/change-password"})
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024 * 2, // 2MB
     maxFileSize = 1024 * 1024 * 5,       // 5MB
@@ -31,11 +33,13 @@ public class ProfileController extends HttpServlet {
     
     private UserDAO userDAO;
     private NewsDAO newsDAO;
+    private UserService userService;
 
     @Override
     public void init() throws ServletException {
         userDAO = new UserDAO();
         newsDAO = new NewsDAO();
+        userService = new UserServiceImpl();
     }
 
     /**
@@ -101,14 +105,15 @@ public class ProfileController extends HttpServlet {
                 newsCount = newsDAO.findByAuthor(profileUser.getId()).size();
             }
             
-            // Kiểm tra quyền để hiển thị nút chỉnh sửa và đổi avatar
+            // Kiểm tra quyền để hiển thị tính năng đổi avatar và quản lý tài khoản
             boolean canEdit = false;
+            boolean canManageUser = false;
             if (currentUser != null && profileUser != null) {
                 boolean isCurrentUser = currentUser.getId().equals(profileUser.getId());
                 boolean isCurrentUserSuperAdmin = currentUser.isSuperAdmin();
                 boolean isProfileUserSuperAdmin = profileUser.isSuperAdmin();
                 
-                // Có thể sửa nếu:
+                // Quyền đổi avatar:
                 // 1. Là chính mình, hoặc
                 // 2. Là Super Admin (có thể sửa tất cả), hoặc
                 // 3. Là Admin thường và profileUser không phải Super Admin
@@ -116,11 +121,18 @@ public class ProfileController extends HttpServlet {
                     (currentUser.isRole() && !isProfileUserSuperAdmin)) {
                     canEdit = true;
                 }
+
+                // Quyền chỉnh sửa người dùng tại trang Quản lý User (/admin/users):
+                // BẮT BUỘC phải là Quản trị viên (role=true) và tuân thủ thứ bậc Super Admin
+                if (currentUser.isRole() && (isCurrentUserSuperAdmin || !isProfileUserSuperAdmin)) {
+                    canManageUser = true;
+                }
             }
             
             request.setAttribute("profileUser", profileUser);
             request.setAttribute("newsCount", newsCount);
             request.setAttribute("canEdit", canEdit);
+            request.setAttribute("canManageUser", canManageUser);
             request.setAttribute("pageTitle", "Thông tin " + profileUser.getFullname());
             request.setAttribute("view", "/views/admin/profile.jsp");
             
@@ -145,6 +157,18 @@ public class ProfileController extends HttpServlet {
         
         if (currentUser == null) {
             response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        // Kiểm tra nếu là thao tác đổi mật khẩu
+        String servletPath = request.getServletPath();
+        String uri = request.getRequestURI();
+        String action = request.getParameter("action");
+        boolean isChangePassword = (servletPath != null && servletPath.endsWith("/change-password")) ||
+                                   (uri != null && uri.endsWith("/change-password")) ||
+                                   "change-password".equals(action);
+        if (isChangePassword) {
+            handleChangePassword(request, response, currentUser);
             return;
         }
 
@@ -208,6 +232,29 @@ public class ProfileController extends HttpServlet {
         }
 
         // Điều hướng thông minh về đúng trang profile tương ứng
+        response.sendRedirect(redirectUrl);
+    }
+
+    /**
+     * Xử lý đổi mật khẩu cho người dùng đang đăng nhập
+     */
+    private void handleChangePassword(HttpServletRequest request, HttpServletResponse response, User currentUser) 
+            throws IOException {
+        String currentPassword = request.getParameter("currentPassword");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+        String redirectUrl = request.getContextPath() + "/admin/profile";
+
+        try {
+            userService.changePassword(currentUser.getId(), currentPassword, newPassword, confirmPassword);
+            request.getSession().setAttribute("toastSuccess", "Đổi mật khẩu thành công.");
+        } catch (IllegalArgumentException e) {
+            request.getSession().setAttribute("toastError", e.getMessage());
+        } catch (Exception e) {
+            System.err.println("[ERROR] ProfileController.handleChangePassword: " + e.getMessage());
+            request.getSession().setAttribute("toastError", "Đã xảy ra lỗi khi đổi mật khẩu. Vui lòng thử lại.");
+        }
+
         response.sendRedirect(redirectUrl);
     }
 }

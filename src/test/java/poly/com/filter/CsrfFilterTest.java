@@ -131,4 +131,58 @@ public class CsrfFilterTest {
         verify(chain, times(1)).doFilter(request, response);
         verify(response, never()).sendError(anyInt(), anyString());
     }
+
+    @Test
+    @DisplayName("POST Multipart Request có CSRF token hợp lệ qua Part: Cho phép thực hiện")
+    void testPostMultipartRequest_ValidPartToken_Accepted() throws ServletException, IOException {
+        String token = "multipart_csrf_token_123";
+        jakarta.servlet.http.Part mockPart = mock(jakarta.servlet.http.Part.class);
+        when(mockPart.getInputStream()).thenReturn(new java.io.ByteArrayInputStream(token.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getRequestURI()).thenReturn("/ABCNews/admin/profile");
+        when(request.getSession(false)).thenReturn(session);
+        when(session.getAttribute(CsrfUtil.CSRF_SESSION_ATTR)).thenReturn(token);
+        when(request.getContentType()).thenReturn("multipart/form-data; boundary=----WebKitFormBoundaryXYZ");
+        when(request.getParameter("_csrf")).thenReturn(null);
+        when(request.getHeader("X-CSRF-TOKEN")).thenReturn(null);
+        when(request.getPart("_csrf")).thenReturn(mockPart);
+
+        csrfFilter.doFilter(request, response, chain);
+
+        verify(chain, times(1)).doFilter(request, response);
+        verify(response, never()).sendError(anyInt(), anyString());
+    }
+
+    @Test
+    @DisplayName("POST /admin/profile/change-password thiếu CSRF token: Bị chặn HTTP 403 Forbidden")
+    void testChangePassword_MissingCsrfToken_Forbidden() throws ServletException, IOException {
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getRequestURI()).thenReturn("/ABCNews/admin/profile/change-password");
+        when(request.getSession(false)).thenReturn(session);
+        when(session.getAttribute(CsrfUtil.CSRF_SESSION_ATTR)).thenReturn("secret_token_123");
+        when(request.getParameter("_csrf")).thenReturn(null);
+        when(request.getHeader("X-CSRF-TOKEN")).thenReturn(null);
+
+        csrfFilter.doFilter(request, response, chain);
+
+        verify(response, times(1)).sendError(eq(HttpServletResponse.SC_FORBIDDEN), anyString());
+        verify(chain, never()).doFilter(request, response);
+    }
+
+    @Test
+    @DisplayName("POST /admin/profile/change-password có CSRF token hợp lệ: Cho phép đi qua")
+    void testChangePassword_ValidCsrfToken_Accepted() throws ServletException, IOException {
+        String token = "secret_token_123";
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getRequestURI()).thenReturn("/ABCNews/admin/profile/change-password");
+        when(request.getSession(false)).thenReturn(session);
+        when(session.getAttribute(CsrfUtil.CSRF_SESSION_ATTR)).thenReturn(token);
+        when(request.getParameter("_csrf")).thenReturn(token);
+
+        csrfFilter.doFilter(request, response, chain);
+
+        verify(chain, times(1)).doFilter(request, response);
+        verify(response, never()).sendError(anyInt(), anyString());
+    }
 }

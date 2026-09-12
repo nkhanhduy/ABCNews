@@ -48,12 +48,16 @@ public class CsrfFilter extends HttpFilter {
         String method = req.getMethod();
         String path = req.getRequestURI().substring(req.getContextPath().length());
 
-        // 1. Đối với request an toàn (GET, HEAD...), khởi tạo CSRF token trong session nếu chưa có
+        // Đồng bộ CSRF token vào session và request attributes nếu có session
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            String token = CsrfUtil.getOrCreateToken(session);
+            req.setAttribute("csrfToken", token);
+            req.setAttribute("CSRF_TOKEN", token);
+        }
+
+        // 1. Đối với request an toàn (GET, HEAD...)
         if (SAFE_METHODS.contains(method)) {
-            HttpSession session = req.getSession(false);
-            if (session != null) {
-                CsrfUtil.getOrCreateToken(session);
-            }
             chain.doFilter(request, response);
             return;
         }

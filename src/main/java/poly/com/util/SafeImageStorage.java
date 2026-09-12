@@ -110,8 +110,9 @@ public class SafeImageStorage {
         }
 
         // Xác thực nội dung nhị phân xem có phải là ảnh hợp lệ không (chống webshell)
+        BufferedImage bimg;
         try (InputStream is = filePart.getInputStream()) {
-            BufferedImage bimg = ImageIO.read(is);
+            bimg = ImageIO.read(is);
             if (bimg == null) {
                 throw new IllegalArgumentException("Tệp tải lên không phải là định dạng hình ảnh hợp lệ hoặc đã bị lỗi.");
             }
@@ -138,10 +139,46 @@ public class SafeImageStorage {
             throw new SecurityException("Phát hiện đường dẫn tệp không an toàn.");
         }
 
-        // Ghi file
-        try (InputStream is = filePart.getInputStream()) {
-            Files.copy(is, targetFile, StandardCopyOption.REPLACE_EXISTING);
+        // Tự động cắt vuông và căn chỉnh vùng đầu/mặt nếu ảnh chưa vuông
+        int origW = bimg.getWidth();
+        int origH = bimg.getHeight();
+        BufferedImage squareImg;
+        if (origH > origW) {
+            // Ảnh dọc (portrait): Ưu tiên lấy từ 12% đỉnh xuống để không bao giờ bị cắt đầu
+            int cropY = (int) ((origH - origW) * 0.12);
+            if (cropY + origW > origH) cropY = origH - origW;
+            if (cropY < 0) cropY = 0;
+            squareImg = bimg.getSubimage(0, cropY, origW, origW);
+        } else if (origW > origH) {
+            // Ảnh ngang (landscape): Căn giữa
+            int cropX = (origW - origH) / 2;
+            squareImg = bimg.getSubimage(cropX, 0, origH, origH);
+        } else {
+            squareImg = bimg;
         }
+
+        // Chuẩn hóa kích thước tối đa 400x400 cho avatar sắc nét và nhẹ (~80KB)
+        int targetDim = Math.min(400, squareImg.getWidth());
+        BufferedImage finalAvatar;
+        if (squareImg.getWidth() > targetDim || !"png".equalsIgnoreCase(extension)) {
+            finalAvatar = new BufferedImage(targetDim, targetDim, "png".equalsIgnoreCase(extension) ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+            java.awt.Graphics2D g2d = finalAvatar.createGraphics();
+            g2d.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2d.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);
+            g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+            if (!"png".equalsIgnoreCase(extension)) {
+                g2d.setColor(java.awt.Color.WHITE);
+                g2d.fillRect(0, 0, targetDim, targetDim);
+            }
+            g2d.drawImage(squareImg, 0, 0, targetDim, targetDim, null);
+            g2d.dispose();
+        } else {
+            finalAvatar = squareImg;
+        }
+
+        // Ghi file ảnh đại diện đã tối ưu
+        String formatName = "png".equalsIgnoreCase(extension) ? "png" : "jpg";
+        ImageIO.write(finalAvatar, formatName, targetFile.toFile());
 
         // Xóa ảnh đại diện cũ nếu là ảnh nằm trong thư mục /uploads/avatars/
         deleteOldAvatar(request, oldImagePath);

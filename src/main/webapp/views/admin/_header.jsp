@@ -26,8 +26,8 @@
                             <img src="${headerUserImg}" 
                                  alt="${sessionScope.user.fullname}" 
                                  class="header-user-avatar"
-                                 style="width: 28px !important; height: 28px !important; max-width: 28px !important; max-height: 28px !important; border-radius: 50% !important; object-fit: cover !important; flex-shrink: 0 !important; display: inline-block !important; vertical-align: middle !important;"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                                 style="width: 28px !important; height: 28px !important; max-width: 28px !important; max-height: 28px !important; border-radius: 50% !important; object-fit: cover !important; object-position: center 15% !important; flex-shrink: 0 !important; display: inline-block !important; vertical-align: middle !important;"
+                                 onerror="this.style.setProperty('display', 'none', 'important'); if(this.nextElementSibling) this.nextElementSibling.style.display='inline-block';">
                             <i class="fas fa-user-circle me-1" style="display: none;"></i>
                         </c:when>
                         <c:otherwise>
