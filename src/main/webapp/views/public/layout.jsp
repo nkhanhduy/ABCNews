@@ -38,6 +38,10 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/public-style.css">
     <!-- UI Animations -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/animations.css">
+    <!-- Dark Mode CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/dark-mode.css">
+    <!-- Theme Toggle JS (Áp dụng theme ngay lập tức để tránh FOUC) -->
+    <script src="${pageContext.request.contextPath}/assets/js/theme-toggle.js"></script>
 </head>
 <body>
 
