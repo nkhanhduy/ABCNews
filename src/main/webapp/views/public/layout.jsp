@@ -31,17 +31,17 @@
     <%-- Font Awesome Icons --%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <%-- Custom CSS --%>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css?v=2026.2">
     <!-- Framework CSS chung - Dropdown, Buttons, Cards -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/framework.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/framework.css?v=2026.2">
     <!-- Public Style Framework - Hiệu ứng hover cho bài báo -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/public-style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/public-style.css?v=2026.2">
     <!-- UI Animations -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/animations.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/animations.css?v=2026.2">
     <!-- Dark Mode CSS -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/dark-mode.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/dark-mode.css?v=2026.2">
     <!-- Theme Toggle JS (Áp dụng theme ngay lập tức để tránh FOUC) -->
-    <script src="${pageContext.request.contextPath}/assets/js/theme-toggle.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/theme-toggle.js?v=2026.2"></script>
 </head>
 <body>
 
@@ -56,7 +56,7 @@
         <div class="row g-4">
             <!-- 3.1. Main Content (Nội dung thay đổi) -->
             <main class="col-lg-9 col-xl-9 col-md-12">
-                <div class="bg-white rounded shadow-sm p-4">
+                <div class="main-content-card">
                     <!-- 
                       Đây là nơi nội dung chính (view) sẽ được nạp vào.
                       Controller đã set: setAttribute("view", "/views/public/home-content.jsp")

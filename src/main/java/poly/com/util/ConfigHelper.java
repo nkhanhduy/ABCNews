@@ -138,7 +138,7 @@ public class ConfigHelper {
         String host = get("db.host", "localhost");
         String port = get("db.port", "1433");
         String name = get("db.name", "ABCNews");
-        return String.format("jdbc:sqlserver://%s:%s;databaseName=%s;encrypt=false;trustServerCertificate=true;", host, port, name);
+        return String.format("jdbc:sqlserver://%s:%s;databaseName=%s;encrypt=false;trustServerCertificate=true;sendStringParametersAsUnicode=true;characterEncoding=UTF-8;", host, port, name);
     }
 
     /**

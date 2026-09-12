@@ -12,8 +12,8 @@
     // 1. Áp dụng theme ngay lập tức để tránh chớp trắng (FOUC)
     function applySavedTheme() {
         var savedTheme = localStorage.getItem(STORAGE_KEY);
-        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var activeTheme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+        // Mặc định là 'light' trừ khi người dùng đã chủ động bấm chọn 'dark'
+        var activeTheme = savedTheme ? savedTheme : 'light';
 
         document.documentElement.setAttribute('data-theme', activeTheme);
         updateToggleIcon(activeTheme);

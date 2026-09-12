@@ -3,6 +3,7 @@ package poly.com.controller;
 import java.io.IOException;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,12 +14,18 @@ import poly.com.dao.NewsDAO;
 import poly.com.dao.UserDAO;
 import poly.com.entity.User;
 import poly.com.util.ImagePathHelper;
+import poly.com.util.SafeImageStorage;
 
 /**
- * Controller xử lý xem profile của user
+ * Controller xử lý xem profile và cập nhật ảnh đại diện thông minh của user
  * Có thể xem profile của chính mình hoặc của user khác (nếu là admin)
  */
 @WebServlet("/admin/profile")
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+    maxFileSize = 1024 * 1024 * 5,       // 5MB
+    maxRequestSize = 1024 * 1024 * 10    // 10MB
+)
 public class ProfileController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
@@ -49,6 +56,18 @@ public class ProfileController extends HttpServlet {
         }
 
         try {
+            // Lấy thông báo Flash Toast từ session nếu có
+            String toastSuccess = (String) session.getAttribute("toastSuccess");
+            if (toastSuccess != null) {
+                request.setAttribute("toastSuccess", toastSuccess);
+                session.removeAttribute("toastSuccess");
+            }
+            String toastError = (String) session.getAttribute("toastError");
+            if (toastError != null) {
+                request.setAttribute("toastError", toastError);
+                session.removeAttribute("toastError");
+            }
+
             String userId = request.getParameter("id");
             User profileUser;
             
@@ -82,7 +101,7 @@ public class ProfileController extends HttpServlet {
                 newsCount = newsDAO.findByAuthor(profileUser.getId()).size();
             }
             
-            // Kiểm tra quyền để hiển thị nút chỉnh sửa
+            // Kiểm tra quyền để hiển thị nút chỉnh sửa và đổi avatar
             boolean canEdit = false;
             if (currentUser != null && profileUser != null) {
                 boolean isCurrentUser = currentUser.getId().equals(profileUser.getId());
@@ -111,5 +130,84 @@ public class ProfileController extends HttpServlet {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/error.jsp");
         }
+    }
+
+    /**
+     * Xử lý upload ảnh đại diện thông minh tại trang Profile
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        
+        if (currentUser == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        String targetUserId = request.getParameter("targetUserId");
+        String redirectUrl = request.getContextPath() + "/admin/profile";
+
+        try {
+            User targetUser;
+            boolean isSelf = (targetUserId == null || targetUserId.trim().isEmpty() || targetUserId.equals(currentUser.getId()));
+            
+            if (isSelf) {
+                targetUser = userDAO.findById(currentUser.getId());
+            } else {
+                redirectUrl = request.getContextPath() + "/admin/profile?id=" + targetUserId;
+                // Chỉ admin mới được đổi avatar của user khác
+                if (!currentUser.isRole()) {
+                    session.setAttribute("toastError", "Bạn không có quyền thay đổi ảnh của người dùng khác.");
+                    response.sendRedirect(request.getContextPath() + "/admin/profile");
+                    return;
+                }
+                targetUser = userDAO.findById(targetUserId);
+                if (targetUser == null) {
+                    session.setAttribute("toastError", "Không tìm thấy thông tin người dùng cần cập nhật.");
+                    response.sendRedirect(request.getContextPath() + "/admin/profile");
+                    return;
+                }
+                // Admin thường không được sửa Super Admin
+                if (!currentUser.isSuperAdmin() && targetUser.isSuperAdmin()) {
+                    session.setAttribute("toastError", "Bạn không có quyền sửa tài khoản Quản trị cấp cao (Super Admin).");
+                    response.sendRedirect(redirectUrl);
+                    return;
+                }
+            }
+
+            // Xử lý upload ảnh bằng SafeImageStorage
+            String newAvatarPath = SafeImageStorage.storeAvatar(request, "avatarFile", targetUser.getImagePath());
+            
+            if (newAvatarPath != null && !newAvatarPath.isEmpty()) {
+                targetUser.setImagePath(newAvatarPath);
+                userDAO.update(targetUser);
+
+                // Cập nhật lại session nếu là chính mình
+                if (isSelf) {
+                    User refreshedUser = userDAO.findById(currentUser.getId());
+                    if (refreshedUser != null) {
+                        ImagePathHelper.normalizeUserImagePath(refreshedUser, request.getContextPath());
+                        session.setAttribute("user", refreshedUser);
+                    }
+                }
+
+                session.setAttribute("toastSuccess", "Cập nhật ảnh đại diện thành công!");
+            } else {
+                session.setAttribute("toastError", "Vui lòng chọn một tập tin ảnh để tải lên.");
+            }
+
+        } catch (IllegalArgumentException | SecurityException e) {
+            session.setAttribute("toastError", e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.setAttribute("toastError", "Đã xảy ra lỗi khi lưu ảnh đại diện. Vui lòng thử lại sau.");
+        }
+
+        // Điều hướng thông minh về đúng trang profile tương ứng
+        response.sendRedirect(redirectUrl);
     }
 }

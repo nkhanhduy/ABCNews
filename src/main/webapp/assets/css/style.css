@@ -1,95 +1,481 @@
-/* ... (Giữ nguyên các phần trước: Body, Header, Logo...) */
+/* ==========================================================================
+   ABC NEWS - EDITORIAL DESIGN SYSTEM (THEME TOÀ SOẠN XANH LÁ - EMERALD GREEN)
+   Quy chuẩn giao diện báo điện tử cao cấp, đồng bộ, không lạm dụng icon
+   ========================================================================== */
 
-/* ===================== User Menu (Dropdown CSS Thuần) ===================== */
-.user-menu {
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    /* Bảng màu nhận diện thương hiệu (Emerald Green & Deep Slate) */
+    --brand-dark: #0f172a;          /* Slate 900 - Nền Header chính */
+    --brand-nav: #064e3b;           /* Emerald 900 - Nền Menu chuyên mục xanh lá đậm uy tín */
+    --brand-nav-border: #047857;    /* Emerald 700 - Đường viền menu */
+    --brand-primary: #15803d;       /* Emerald 700 - Màu chủ đạo */
+    --brand-accent: #16a34a;        /* Emerald 600 - Điểm nhấn liên kết & nút xanh tươi */
+    --brand-accent-hover: #15803d;  /* Emerald 700 */
+    --brand-accent-light: #dcfce7;  /* Emerald 100 - Nền badge nhẹ */
+    --brand-light: #f8fafc;         /* Slate 50 - Nền toàn trang */
+    --brand-card-bg: #ffffff;
+    --brand-border: #e2e8f0;        /* Slate 200 */
+    --brand-text: #0f172a;          /* Chữ tiêu đề chính */
+    --brand-text-body: #334155;     /* Chữ nội dung */
+    --brand-text-muted: #64748b;    /* Chữ phụ chú, ngày tháng */
+    --brand-input-bg: #ffffff;
+    --brand-input-border: #cbd5e1;
+    --brand-demo-bg: #f0fdf4;       /* Nền box demo tông xanh lá nhạt */
+    --brand-demo-border: #bbf7d0;   /* Viền box demo xanh lá */
+    
+    /* Font chữ */
+    --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    
+    /* Hiệu ứng chuyển động & bóng đổ */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 28px -4px rgba(15, 23, 42, 0.12);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --transition: all 0.2s ease-in-out;
+}
+
+/* Biến màu chế độ tối (Dark Mode) */
+[data-theme="dark"] {
+    --brand-light: #0b0f19;         /* Nền tổng thể siêu tối */
+    --brand-card-bg: #1e293b;       /* Nền card Slate 800 */
+    --brand-border: #334155;        /* Viền Slate 700 */
+    --brand-text: #f8fafc;          /* Chữ sáng Slate 50 */
+    --brand-text-body: #cbd5e1;     /* Chữ nội dung Slate 300 */
+    --brand-text-muted: #94a3b8;    /* Chữ phụ chú Slate 400 */
+    --brand-input-bg: #0f172a;      /* Ô nhập nền Slate 900 */
+    --brand-input-border: #475569;  /* Viền ô nhập */
+    --brand-demo-bg: #064e3b;       /* Nền box demo tối có ánh xanh */
+    --brand-demo-border: #047857;   /* Viền box demo */
+    --brand-accent: #22c55e;        /* Xanh lá tươi sáng hơn trong nền tối */
+    --brand-accent-hover: #4ade80;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.6);
+}
+
+/* ===================== Cấu Trúc Toàn Trang ===================== */
+body {
+    font-family: var(--font-main);
+    background-color: var(--brand-light);
+    color: var(--brand-text-body);
+    line-height: 1.65;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    color: var(--brand-accent);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--brand-accent-hover);
+}
+
+/* ===================== Header & Navigation Đồng Bộ ===================== */
+/* 1. Header Chính */
+.site-header {
+    background-color: var(--brand-dark);
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 0;
+}
+
+.site-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 1.65rem;
+    letter-spacing: -0.5px;
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+/* Logo Badge màu Xanh Lá Ngọc Bích (Emerald Green) */
+.site-logo .logo-badge {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+}
+
+.site-header-actions {
     display: flex;
     align-items: center;
-    position: relative;
+    gap: 12px;
 }
 
-/* Container của dropdown */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* Nút hiển thị tên user */
-.dropbtn {
-    background-color: transparent;
-    color: white;
-    padding: 10px 15px;
-    font-size: 16px;
-    border: none;
+/* Nút Dark Mode */
+.theme-toggle-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
     cursor: pointer;
-    font-weight: bold;
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+}
+
+/* Nút Đăng nhập trên Header */
+.btn-header-login {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 6px 16px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.btn-header-login:hover {
+    background: var(--brand-accent);
+    color: #ffffff !important;
+    border-color: var(--brand-accent);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+/* Nút Về Trang Chủ (Dành cho trang Auth) */
+.btn-back-home {
+    color: #ffffff !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: var(--transition);
+}
+
+.btn-back-home:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* 2. Menu Chuyên Mục */
+.site-nav {
+    background-color: var(--brand-nav);
+    border-bottom: 1px solid var(--brand-nav-border);
+    padding: 0;
+}
+
+.site-nav .navbar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+
+.site-nav .nav-link {
+    color: #d1fae5 !important;
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 10px 16px !important;
+    transition: var(--transition);
+    border-bottom: 2px solid transparent;
+}
+
+.site-nav .nav-link:hover {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.site-nav .nav-link.active {
+    color: #ffffff !important;
+    font-weight: 700;
+    border-bottom-color: #4ade80;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ===================== Dropdown Menu Tài Khoản & Avatar ===================== */
+.user-dropdown-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 5px 12px;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.user-dropdown-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.header-user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--brand-accent, #16a34a);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* ===================== Thẻ Card & Layout ===================== */
+.main-content-card {
+    background: var(--brand-card-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--brand-border);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+}
+
+/* Tiêu đề mục báo chí */
+.section-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--brand-text);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--brand-accent);
     display: flex;
     align-items: center;
-    gap: 5px;
+    justify-content: space-between;
 }
 
-.arrow-down {
-    font-size: 10px;
+/* ===================== Chân Trang (Footer) Chuẩn Tòa Soạn ===================== */
+.site-footer {
+    background-color: var(--brand-dark);
+    color: #94a3b8;
+    padding: 40px 0 24px;
+    margin-top: 50px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.9rem;
 }
 
-/* Nội dung menu xổ xuống (Mặc định ẩn) */
-.dropdown-content {
-    display: none;
+.site-footer a {
+    color: #cbd5e1;
+}
+
+.site-footer a:hover {
+    color: #4ade80;
+}
+
+.site-footer .footer-title {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    border-left: 3px solid var(--brand-accent);
+    padding-left: 8px;
+}
+
+.site-footer .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.site-footer .footer-links li {
+    margin-bottom: 8px;
+}
+
+.site-footer .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 20px;
+    margin-top: 30px;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* ===================== Trang Xác Thực (Auth Pages: Login, Forgot, OTP) ===================== */
+.auth-wrapper {
+    min-height: calc(100vh - 70px - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 15px;
+}
+
+.auth-card {
+    background: var(--brand-card-bg);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--brand-border);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 460px;
+    padding: 36px 32px;
+    margin: auto;
+}
+
+.auth-card .auth-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.auth-card .auth-title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--brand-text);
+    margin-bottom: 6px;
+}
+
+.auth-card .auth-subtitle {
+    color: var(--brand-text-muted);
+    font-size: 0.92rem;
+    margin-bottom: 0;
+}
+
+/* Nhãn Form: Sạch sẽ, chữ rõ ràng, KHÔNG DÙNG ICON TRANG TRÍ */
+.auth-form .form-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--brand-text);
+    margin-bottom: 6px;
+    display: block;
+}
+
+.auth-form .form-control {
+    border: 1px solid var(--brand-input-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    color: var(--brand-text);
+    background-color: var(--brand-input-bg);
+    transition: var(--transition);
+}
+
+.auth-form .form-control:focus {
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.25);
+    background-color: var(--brand-input-bg);
+    color: var(--brand-text);
+    outline: none;
+}
+
+/* Nút ẩn/hiện mật khẩu */
+.password-field-wrapper {
+    position: relative;
+}
+
+.password-toggle-btn {
     position: absolute;
-    right: 0;
-    background-color: #fff;
-    min-width: 180px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 100; /* Đảm bảo nổi lên trên */
-    border-radius: 4px;
-    overflow: hidden;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--brand-text-muted);
+    cursor: pointer;
+    padding: 4px 6px;
+    font-size: 0.9rem;
+    transition: var(--transition);
 }
 
-/* Link bên trong dropdown */
-.dropdown-content a {
-    color: #333;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-    font-weight: normal;
-    transition: background-color 0.2s;
+.password-toggle-btn:hover {
+    color: var(--brand-text);
 }
 
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-    color: #28a745;
+/* Nút Đăng nhập / Xác thực chính (Tông Xanh Lá Emerald) */
+.btn-auth-submit {
+    background: linear-gradient(135deg, #15803d, #16a34a);
+    color: #ffffff !important;
+    border: none;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    width: 100%;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
 }
 
-/* HIỆU ỨNG HOVER: Khi di chuột vào .dropdown thì hiện .dropdown-content */
-.dropdown:hover .dropdown-content {
-    display: block;
+.btn-auth-submit:hover {
+    background: linear-gradient(135deg, #166534, #15803d);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(22, 163, 74, 0.35);
 }
 
-/* Đổi màu nền nút khi đang hover */
-.dropdown:hover .dropbtn {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+/* Đường phân cách Hoặc */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 24px 0 20px;
+    color: var(--brand-text-muted);
+    font-size: 0.85rem;
 }
 
-/* Style riêng cho nút Đăng xuất trong dropdown */
-.dropdown-content a.logout-item {
-    color: #dc3545;
-    border-top: 1px solid #eee;
-}
-.dropdown-content a.logout-item:hover {
-    background-color: #fff0f0;
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--brand-border);
 }
 
-/* Nút Đăng nhập (cho khách) */
-.login-btn {
-    background-color: #fff;
-    color: #28a745;
-    padding: 8px 15px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s;
+.auth-divider span {
+    padding: 0 12px;
 }
-.login-btn:hover {
-    background-color: #e9ecef;
+
+/* Box gợi ý tài khoản mẫu */
+.demo-accounts-card {
+    background-color: var(--brand-demo-bg);
+    border: 1px dashed var(--brand-demo-border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: var(--brand-text-body);
+}
+
+.demo-accounts-card .demo-title {
+    font-weight: 700;
+    color: var(--brand-primary);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.demo-account-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+}
+
+.demo-account-item span {
+    color: var(--brand-text-muted);
+}
+
+.demo-account-item strong {
+    color: var(--brand-accent) !important;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.demo-account-item strong:hover {
+    text-decoration: underline;
+    color: var(--brand-accent-hover) !important;
 }

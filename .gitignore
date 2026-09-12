@@ -79,3 +79,16 @@ logs/
 !**/app.properties.example
 local.env
 .env
+
+# ====================================
+# Scripts & Unnecessary Binaries
+# ====================================
+*.bat
+*.cmd
+*.ps1
+
+# Office documents / temporary draft files
+*.docx
+*.xlsx
+*.pptx
+*.pdf
