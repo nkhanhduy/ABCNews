@@ -126,4 +126,32 @@ public class ConfigHelper {
         }
         return Boolean.parseBoolean(value);
     }
+
+    /**
+     * Lấy URL kết nối database SQL Server
+     */
+    public static String getDbUrl() {
+        String directUrl = get("db.url", null);
+        if (directUrl != null && !directUrl.trim().isEmpty()) {
+            return directUrl.trim();
+        }
+        String host = get("db.host", "localhost");
+        String port = get("db.port", "1433");
+        String name = get("db.name", "ABCNews");
+        return String.format("jdbc:sqlserver://%s:%s;databaseName=%s;encrypt=false;trustServerCertificate=true;", host, port, name);
+    }
+
+    /**
+     * Lấy tài khoản database SQL Server
+     */
+    public static String getDbUsername() {
+        return get("db.user", get("db.username", "sa"));
+    }
+
+    /**
+     * Lấy mật khẩu database SQL Server
+     */
+    public static String getDbPassword() {
+        return get("db.password", "123456");
+    }
 }

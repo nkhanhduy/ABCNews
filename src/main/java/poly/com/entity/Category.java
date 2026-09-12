@@ -1,11 +1,22 @@
 package poly.com.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 /**
  * Entity đại diện cho loại tin (Category) trong hệ thống
  * Chứa thông tin: ID và tên loại tin
  */
+@Entity
+@Table(name = "Categories")
 public class Category {
+    @Id
+    @Column(name = "Id", length = 50, nullable = false)
     private String id;
+
+    @Column(name = "Name", length = 255, nullable = false)
     private String name;
 
     // Default constructor
