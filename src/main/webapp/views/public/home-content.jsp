@@ -27,9 +27,9 @@
                     </h3>
                     
                     <div class="news-meta" style="color: #777; font-size: 0.9em; margin-bottom: 10px;">
-                        <span><i class="date-icon">📅</i> <fmt:formatDate value="${news.postedDate}" pattern="dd/MM/yyyy HH:mm"/></span>
+                        <span><i class="fas fa-calendar-alt me-1"></i><fmt:formatDate value="${news.postedDate}" pattern="dd/MM/yyyy HH:mm"/></span>
                         <span style="margin: 0 5px;">|</span>
-                        <span><i class="author-icon">✍️</i> 
+                        <span><i class="fas fa-user-edit me-1"></i> 
                             <c:choose>
                                 <c:when test="${not empty news.author}">
                                     ${news.author}

@@ -653,14 +653,14 @@ function handleExport() {
     
     // Kiểm tra có chọn module nào không
     if (selectedTypes.length === 0) {
-        alert('⚠️ Vui lòng chọn ít nhất một module để xuất!');
+        alert('Vui lòng chọn ít nhất một module để xuất!');
         return;
     }
     
     // Lấy format được chọn
     const formatInput = document.querySelector('input[name="format"]:checked');
     if (!formatInput) {
-        alert('⚠️ Vui lòng chọn định dạng file!');
+        alert('Vui lòng chọn định dạng file!');
         return;
     }
     const format = formatInput.value;

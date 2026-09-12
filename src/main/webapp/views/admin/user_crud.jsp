@@ -146,7 +146,7 @@
 								</c:if>
 								<img src="${userImageUrl}" alt="Ảnh hiện tại" 
 								     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-								<small class="image-error" style="display:none; color:red;">⚠️ Không thể tải ảnh. Vui lòng chọn ảnh mới.</small>
+								<small class="image-error" style="display:none; color:red;"><i class="fas fa-exclamation-triangle me-1"></i> Không thể tải ảnh. Vui lòng chọn ảnh mới.</small>
 								<small class="image-label">Ảnh hiện tại</small>
 							</div>
 						</c:if>

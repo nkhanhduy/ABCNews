@@ -115,7 +115,7 @@ public class UserDAO {
      * 
      * Phương thức này thực hiện DELETE từ bảng Users theo ID.
      * 
-     * ⚠️ LƯU Ý: Nếu user này là tác giả của các bài viết (News),
+     * [LUU Y]: Nếu user này là tác giả của các bài viết (News),
      * cần xử lý foreign key constraint trước (ví dụ: set Author = NULL).
      * 
      * @param id Mã người dùng (ID) cần xóa
@@ -309,7 +309,7 @@ public class UserDAO {
      * 
      * Phương thức này thực hiện SELECT với điều kiện WHERE Email = ? AND Password = ?.
      * 
-     * ⚠️ LƯU Ý BẢO MẬT: 
+     * [LUU Y BAO MAT]: 
      * - Mật khẩu hiện tại được so sánh plain text (không an toàn)
      * - Nên hash mật khẩu và so sánh hash trong production
      * 

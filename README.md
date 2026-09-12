@@ -1,4 +1,4 @@
-# 📰 ABCNews - Báo Điện Tử Trực Tuyến & Cổng Quản Trị Nội Dung Đa Tầng (Enterprise CMS)
+# ABCNews - Báo Điện Tử Trực Tuyến & Cổng Quản Trị Nội Dung Đa Tầng (Enterprise CMS)
 
 [![Java CI with Maven](https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg)](https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml)
 ![Java 17](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white)
@@ -17,7 +17,7 @@
 
 ---
 
-## 📸 Giao Diện & Hình Ảnh Trực Quan (Screenshots & Demo)
+## Giao Diện & Trực Quan Hóa Hệ Thống (Screenshots & Demo)
 
 ### 1. Dashboard Admin Phân Tích Dữ Liệu Với Chart.js
 Trực quan hóa xu hướng tương tác độc giả với Biểu đồ đường (Line Chart dải màu Gradient) và cơ cấu bài viết theo chuyên mục (Doughnut Chart):
@@ -33,7 +33,7 @@ Hỗ trợ phóng viên và ban biên tập soạn thảo bài viết phong phú
 
 ---
 
-## 🌟 Điểm Nhấn Công Nghệ & Tính Năng Nổi Bật
+## Kiến Trúc Công Nghệ & Tính Năng Cốt Lõi
 
 ### 1. Kiến Trúc & Hiệu Năng (Architecture & Performance)
 * **Hibernate 6 / Jakarta JPA ORM (Tự Động Sinh Bảng)**: Tích hợp Hibernate Core 6.4 với chế độ `hbm2ddl.auto = update`. Hệ thống tự động phân tích 6 Entity Java để khởi tạo và đồng bộ schema CSDL trong SQL Server ngay khi khởi động, giảm thiểu rủi ro sai lệch cấu trúc dữ liệu.
@@ -48,7 +48,7 @@ Hỗ trợ phóng viên và ban biên tập soạn thảo bài viết phong phú
   * *Biểu đồ tròn (Doughnut Chart)*: Trực quan hóa tỷ lệ cơ cấu phân bổ bài viết theo từng danh mục tin tức.
 * **Bộ Soạn Thảo Tin Tức WYSIWYG (CKEditor 5)**: Hỗ trợ phóng viên và biên tập viên soạn bài chuyên nghiệp: in đậm, nghiêng, gạch chân, tiêu đề H1-H3, danh sách, khối trích dẫn, bảng biểu và chèn ảnh minh họa.
 * **Chế Độ Giao Diện Sáng / Tối (Dark / Light Mode Toggle)**: Chuyển đổi mượt mà 1-click, bảng màu tối dịu mắt (`#0f172a` Slate), tự động ghi nhớ trạng thái người dùng qua `localStorage` và xử lý chống giật màn hình (FOUC).
-* **Ước Tính Thời Gian Đọc Bài Viết**: Tự động tính toán dung lượng từ ngữ bài viết theo thuật toán đọc trung bình (~200 từ/phút), hiển thị trực quan `⏱️ X phút đọc`.
+* **Ước Tính Thời Gian Đọc Bài Viết**: Tự động tính toán dung lượng từ ngữ bài viết theo thuật toán đọc trung bình (~200 từ/phút), hiển thị trực quan thời lượng đọc ước tính.
 * **Thanh Chia Sẻ Mạng Xã Hội Nhanh (1-Click Social Share)**: Tích hợp nút chia sẻ bài viết nhanh lên Facebook, X (Twitter), Telegram và sao chép liên kết vào bộ nhớ tạm kèm hiệu ứng Toast phản hồi tức thì.
 
 ### 3. Bảo Mật & Quản Trị Tòa Soạn (Security & Administration)
@@ -64,7 +64,7 @@ Hỗ trợ phóng viên và ban biên tập soạn thảo bài viết phong phú
 
 ---
 
-## 🏗️ Sơ Đồ Kiến Trúc Hệ Thống (Architecture Diagram)
+## Sơ Đồ Kiến Trúc Hệ Thống (Architecture Diagram)
 
 ```mermaid
 graph TD
@@ -106,9 +106,9 @@ graph TD
 
 ---
 
-## ⚡ Hướng Dẫn Cài Đặt & Khởi Chạy (Quickstart Guide)
+## Hướng Dẫn Cài Đặt & Khởi Chạy (Quickstart Guide)
 
-### 🐳 Cách 1: Khởi chạy siêu tốc bằng Docker 1-Click (Khuyên dùng)
+### Phương án 1: Triển khai tự động bằng Docker & Docker Compose (Khuyên dùng)
 Dự án đã được cấu hình sẵn môi trường đầy đủ gồm **Apache Tomcat 10.1 (Java 17)** và **Microsoft SQL Server 2022**. Bạn chỉ cần 1 câu lệnh duy nhất:
 
 ```bash
@@ -124,7 +124,7 @@ docker compose up -d
 
 ---
 
-### 💻 Cách 2: Cài đặt thủ công (Local Development)
+### Phương án 2: Cài đặt và phát triển cục bộ (Local Development)
 
 #### Bước 1: Khởi tạo Cơ sở dữ liệu SQL Server
 * **Cách tự động (Hibernate JPA)**: Bạn chỉ cần tạo một database rỗng tên `ABCNews` trong SQL Server. Hibernate 6 sẽ tự động kiểm tra và sinh toàn bộ bảng (`Users`, `News`, `Categories`, `Newsletters`, `ActivityLogs`, `OtpTokens`) ngay khi ứng dụng khởi chạy (`hbm2ddl.auto = update`).
@@ -162,7 +162,7 @@ google.client.id=your_google_client_id.apps.googleusercontent.com
 
 ---
 
-## 🔑 Tài Khoản Trải Nghiệm Mặc Định (Demo Accounts)
+## Tài Khoản Trải Nghiệm Mặc Định (Demo Accounts)
 
 | Vai trò (Role) | Tài khoản (Email) | Mật khẩu mặc định | Quyền hạn chính |
 | :--- | :--- | :--- | :--- |
@@ -172,7 +172,7 @@ google.client.id=your_google_client_id.apps.googleusercontent.com
 
 ---
 
-## 🛠️ Ngăn Xếp Công Nghệ (Tech Stack)
+## Danh Mục Công Nghệ Sử Dụng (Tech Stack)
 
 * **Backend Core**: Java 17, Jakarta EE 10 (Servlet 6.0, JSP 3.1, JSTL 3.0).
 * **Database & Pooling**: Microsoft SQL Server, HikariCP 5.1.0, JDBC.
@@ -184,7 +184,7 @@ google.client.id=your_google_client_id.apps.googleusercontent.com
 
 ---
 
-## 👨‍💻 Tác Giả & Liên Hệ (Author)
+## Thông Tin Tác Giả & Liên Hệ
 
 * **Họ và tên**: **Nguyễn Khánh Duy**
 * **GitHub**: [@nkhanhduy](https://github.com/nkhanhduy)

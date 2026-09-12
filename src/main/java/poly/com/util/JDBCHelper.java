@@ -145,7 +145,7 @@ public class JDBCHelper {
      * 3. Tự động đóng PreparedStatement và Connection trong finally block
      * 4. Trả về số hàng bị ảnh hưởng
      * 
-     * ✅ ĐÃ FIX: Connection và PreparedStatement được đóng đúng cách trong mọi trường hợp
+     * ĐÃ FIX: Connection và PreparedStatement được đóng đúng cách trong mọi trường hợp
      * 
      * @param sql Câu lệnh SQL có chứa các placeholder (dấu ?)
      *            Ví dụ: "UPDATE Users SET Fullname = ? WHERE Id = ?"
@@ -179,14 +179,14 @@ public class JDBCHelper {
     /**
      * Thực thi câu lệnh SQL để truy vấn dữ liệu (SELECT) và trả về ResultSet
      * 
-     * ⚠️ DEPRECATED - KHÔNG NÊN SỬ DỤNG!
+     * [DEPRECATED] - KHONG NEN SU DUNG!
      * 
      * Phương thức này có vấn đề nghiêm trọng về quản lý tài nguyên:
      * - Tạo Connection và PreparedStatement nhưng không đóng chúng
      * - Connection được tạo bên trong getPreparedStatement(), không thể truy cập từ bên ngoài
      * - Gây memory leak và connection pool exhaustion
      * 
-     * ✅ GIẢI PHÁP: Sử dụng pattern trong các DAO:
+     * [GIAI PHAP]: Sử dụng pattern trong các DAO:
      * ```java
      * Connection conn = null;
      * PreparedStatement pstmt = null;
@@ -205,7 +205,7 @@ public class JDBCHelper {
      *            Ví dụ: "SELECT * FROM Users WHERE Email = ?"
      * @param args Danh sách các giá trị để thay thế vào các placeholder
      * @return Đối tượng ResultSet chứa kết quả truy vấn
-     *         ⚠️ LƯU Ý: Connection và PreparedStatement KHÔNG được đóng tự động!
+     *         [LUU Y]: Connection và PreparedStatement KHÔNG được đóng tự động!
      * @throws RuntimeException nếu có lỗi SQL khi thực thi
      * @deprecated Phương thức này có bug memory leak. 
      *             Sử dụng pattern tự quản lý Connection/PreparedStatement trong DAO thay thế.
