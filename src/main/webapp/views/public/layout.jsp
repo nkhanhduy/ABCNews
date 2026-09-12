@@ -156,5 +156,7 @@
     <script src="${pageContext.request.contextPath}/assets/js/ajax-navigation.js"></script>
     <%-- Public UX Enhancements - Framework JS cho trang công khai --%>
     <script src="${pageContext.request.contextPath}/assets/js/public-ux.js"></script>
+    <%-- Quản lý bài viết đã lưu (Bookmarks / Read Later) --%>
+    <script src="${pageContext.request.contextPath}/assets/js/bookmarks.js?v=2026.2"></script>
 </body>
 </html>

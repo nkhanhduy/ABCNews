@@ -10,7 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import poly.com.dao.CommentDAO;
 import poly.com.entity.Category;
+import poly.com.entity.Comment;
 import poly.com.entity.News;
 import poly.com.service.CategoryService;
 import poly.com.service.NewsService;
@@ -28,6 +30,7 @@ public class DetailController extends BaseController {
        
     private CategoryService categoryService;
     private NewsService newsService;
+    private CommentDAO commentDAO;
 
     /**
      * Khởi tạo các Service khi servlet được load
@@ -36,6 +39,7 @@ public class DetailController extends BaseController {
     public void init() throws ServletException {
         categoryService = new CategoryServiceImpl();
         newsService = new NewsServiceImpl();
+        commentDAO = new CommentDAO();
     }
 
     /**
@@ -92,12 +96,16 @@ public class DetailController extends BaseController {
             ImagePathHelper.normalizeImagePaths(listTop5NewestNews, contextPath);
             ImagePathHelper.normalizeImagePaths(listRelatedNews, contextPath);
 
+            List<Comment> approvedComments = commentDAO.findByNewsIdApproved(newsId);
+
             request.setAttribute("categories", listCategories);
             request.setAttribute("top5HotNews", listTop5HotNews);
             request.setAttribute("top5NewestNews", listTop5NewestNews);
             request.setAttribute("viewedNews", listViewedNews);
             request.setAttribute("news", newsDetail);
             request.setAttribute("relatedNews", listRelatedNews);
+            request.setAttribute("comments", approvedComments);
+            request.setAttribute("commentCount", approvedComments.size());
             
             forwardToPublicView(request, response, newsDetail.getTitle(), "/views/public/detail-content.jsp");
 

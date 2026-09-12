@@ -176,6 +176,38 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  Table [dbo].[Comments]    Script Date: 2025-09-12 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Comments](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[NewsId] [varchar](50) NOT NULL,
+	[AuthorName] [nvarchar](100) NOT NULL,
+	[AuthorEmail] [varchar](150) NULL,
+	[Content] [nvarchar](1000) NOT NULL,
+	[CreatedDate] [datetime] NOT NULL DEFAULT GETDATE(),
+	[Status] [int] NOT NULL DEFAULT 0,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Comments] WITH CHECK ADD CONSTRAINT [FK_Comments_News] FOREIGN KEY([NewsId])
+REFERENCES [dbo].[News] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Comments] CHECK CONSTRAINT [FK_Comments_News]
+GO
+CREATE NONCLUSTERED INDEX [IX_Comments_NewsId_Status] ON [dbo].[Comments]
+(
+	[NewsId] ASC,
+	[Status] ASC,
+	[CreatedDate] DESC
+)
+GO
 SET ANSI_PADDING ON
 GO
 /****** Object:  Index [IX_ActivityLogs_ActionType]    Script Date: 23/03/26 7:37:51 CH ******/

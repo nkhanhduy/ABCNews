@@ -160,10 +160,10 @@
         </div>
     </div>
     
-    <!-- Card: Tin mới nhất của tôi (7 ngày qua) -->
+    <!-- Card: Tin mới nhất của tôi -->
     <div class="activity-card card">
         <div class="card-header">
-            <h3><i class="fas fa-clock me-2"></i>Tin Mới Nhất của Tôi (7 ngày qua)</h3>
+            <h3><i class="fas fa-clock me-2"></i>Tin Mới Xuất Bản Của Tôi</h3>
         </div>
         <div class="card-body">
             <c:choose>

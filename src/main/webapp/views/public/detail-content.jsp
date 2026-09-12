@@ -49,6 +49,18 @@
                 <a href="javascript:void(0)" class="btn btn-sm btn-outline-info rounded-pill share-btn" id="shareTelegram" title="Chia sẻ qua Telegram">
                     <i class="fab fa-telegram-plane me-1"></i>Telegram
                 </a>
+
+                <!-- Bookmark / Lưu bài viết -->
+                <button type="button" class="btn btn-sm btn-outline-success rounded-pill bookmark-btn ms-1" id="bookmarkBtn" 
+                        data-id="${news.id}" 
+                        data-title="<c:out value='${news.title}' />" 
+                        data-image="${news.image}" 
+                        data-category="${news.categoryId}"
+                        data-date="<fmt:formatDate value='${news.postedDate}' pattern='dd/MM/yyyy' />" 
+                        title="Lưu bài viết vào danh sách đọc sau">
+                    <i class="far fa-bookmark me-1" id="bookmarkIcon"></i>
+                    <span id="bookmarkText">Lưu bài viết</span>
+                </button>
                 
                 <!-- Sao chép link -->
                 <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill ms-auto" id="copyLinkBtn" title="Sao chép liên kết bài viết">
@@ -82,8 +94,106 @@
                 ${news.content}
             </div>
             
+            <!-- KHU VỰC BÌNH LUẬN & Ý KIẾN ĐỘC GIẢ (MODERATED COMMENTS) -->
+            <div class="comments-section mt-5 pt-4 border-top" id="comments-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold mb-0 text-dark">
+                        <i class="fas fa-comments text-success me-2"></i>Ý Kiến Độc Giả 
+                        <span class="badge bg-success bg-opacity-10 text-success fs-6 rounded-pill ms-2">${commentCount}</span>
+                    </h4>
+                    <small class="text-muted"><i class="fas fa-shield-alt text-success me-1"></i>Kiểm duyệt văn minh</small>
+                </div>
+
+                <%-- Thông báo gửi bình luận --%>
+                <c:if test="${not empty sessionScope.commentSuccess}">
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm d-flex align-items-center mb-4" role="alert">
+                        <i class="fas fa-check-circle fs-5 me-2 flex-shrink-0"></i>
+                        <div>${sessionScope.commentSuccess}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <c:remove var="commentSuccess" scope="session"/>
+                </c:if>
+                <c:if test="${not empty sessionScope.commentError}">
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm d-flex align-items-center mb-4" role="alert">
+                        <i class="fas fa-exclamation-circle fs-5 me-2 flex-shrink-0"></i>
+                        <div>${sessionScope.commentError}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <c:remove var="commentError" scope="session"/>
+                </c:if>
+
+                <!-- Form Gửi Bình Luận -->
+                <div class="card border-0 shadow-sm rounded-3 mb-4 bg-light">
+                    <div class="card-body p-4">
+                        <form action="${pageContext.request.contextPath}/comment" method="post" id="commentSubmitForm">
+                            <input type="hidden" name="newsId" value="${news.id}">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold text-dark mb-1">
+                                        <i class="fas fa-user text-muted me-1"></i>Họ và tên <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="authorName" class="form-control" placeholder="Họ và tên của bạn" required maxlength="100">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-semibold text-dark mb-1">
+                                        <i class="fas fa-envelope text-muted me-1"></i>Email
+                                    </label>
+                                    <input type="email" name="authorEmail" class="form-control" placeholder="name@example.com (tùy chọn)" maxlength="150">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold text-dark mb-1">
+                                    <i class="fas fa-pen text-muted me-1"></i>Nội dung bình luận <span class="text-danger">*</span>
+                                </label>
+                                <textarea name="content" class="form-control" rows="3" placeholder="Viết bình luận của bạn..." required maxlength="1000"></textarea>
+                            </div>
+                            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-shield-halved me-1 text-success"></i>Bình luận sẽ được kiểm duyệt trước khi hiển thị.
+                                </small>
+                                <button type="submit" class="btn btn-success px-4 fw-semibold">
+                                    <i class="fas fa-paper-plane me-1"></i> Gửi bình luận
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Danh Sách Bình Luận Đã Duyệt -->
+                <div class="approved-comments-wrapper mb-5">
+                    <c:forEach var="c" items="${comments}">
+                        <div class="comment-item p-3 mb-3 bg-white rounded-3 border shadow-sm">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-success bg-opacity-10 text-success fw-bold d-flex align-items-center justify-content-center me-2"
+                                         style="width: 36px; height: 36px; font-size: 0.9rem;">
+                                        ${c.avatarInitial}
+                                    </div>
+                                    <div>
+                                        <span class="fw-bold text-dark">${c.authorName}</span>
+                                        <span class="badge bg-light text-muted border ms-2" style="font-size: 0.75rem;">Độc giả</span>
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    <i class="far fa-clock me-1"></i><fmt:formatDate value="${c.createdDate}" pattern="dd/MM/yyyy HH:mm"/>
+                                </small>
+                            </div>
+                            <div class="comment-body ps-5 text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
+                                <c:out value="${c.content}"/>
+                            </div>
+                        </div>
+                    </c:forEach>
+                    <c:if test="${empty comments}">
+                        <div class="text-center py-4 bg-light rounded-3 border text-muted">
+                            <i class="far fa-comment-dots fa-2x mb-2 text-secondary opacity-50"></i>
+                            <p class="mb-0 small">Chưa có bình luận nào cho bài viết này. Hãy là người đầu tiên chia sẻ góc nhìn!</p>
+                        </div>
+                    </c:if>
+                </div>
+            </div>
+            
             <!-- BÀI VIẾT CÙNG CHUYÊN MỤC -->
-            <div class="section-title mt-5">
+            <div class="section-title mt-4">
                 <span>Bài viết cùng chuyên mục</span>
             </div>
             <div class="list-group list-group-flush border rounded-3 overflow-hidden shadow-sm">

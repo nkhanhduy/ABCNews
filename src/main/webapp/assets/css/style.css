@@ -126,6 +126,58 @@ a:hover {
     gap: 12px;
 }
 
+/* Nút Bài viết đã lưu (Bookmarks Header - Căn chuẩn Icon & Chữ) */
+.btn-bookmarks-header {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-bookmarks-header:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.45);
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
+.btn-bookmarks-header .bookmark-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.92rem;
+    color: #f59e0b;
+    line-height: 1;
+}
+
+.btn-bookmarks-header .bookmark-text {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.btn-bookmarks-header .badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 6px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Nút Dark Mode */
 .theme-toggle-btn {
     width: 36px;

@@ -215,10 +215,10 @@
         </div>
     </div>
     
-    <!-- Card: Tin mới nhất (7 ngày qua) -->
+    <!-- Card: Tin mới nhất -->
     <div class="activity-card card">
         <div class="card-header">
-            <h3><i class="fas fa-clock me-2"></i>Tin Mới Nhất (7 ngày qua)</h3>
+            <h3><i class="fas fa-clock me-2"></i>Tin Mới Xuất Bản</h3>
         </div>
         <div class="card-body">
             <c:choose>

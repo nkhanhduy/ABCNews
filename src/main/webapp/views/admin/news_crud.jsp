@@ -27,10 +27,37 @@
     
     <!-- Card 1: Quản lý Bản tin -->
     <div class="news-form-card card">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h3><i class="fas fa-newspaper me-2"></i>${not empty newsItem ? 'Cập nhật Bản tin' : 'Thêm Bản tin mới'}</h3>
+            <c:if test="${empty newsItem}">
+                <div class="d-flex align-items-center gap-2">
+                    <span id="autoSaveIndicator" class="badge bg-light text-muted border py-1.5 px-2.5" style="font-size: 0.8rem; font-weight: 500;">
+                        <i class="fas fa-cloud me-1 text-secondary" id="autoSaveIcon"></i><span id="autoSaveText">Tự động lưu nháp: Đang bật</span>
+                    </span>
+                </div>
+            </c:if>
         </div>
         <div class="card-body">
+            <c:if test="${empty newsItem}">
+                <!-- Thông báo phát hiện bản nháp chưa lưu -->
+                <div id="draftAlert" class="alert alert-info border-info d-none align-items-center justify-content-between p-2.5 mb-3" style="border-radius: 8px;">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-history text-info fs-5"></i>
+                        <div>
+                            <strong>Phát hiện bản nháp chưa lưu:</strong> 
+                            <span id="draftTimeText" class="text-muted small ms-1"></span>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-primary rounded-pill px-3" id="restoreDraftBtn">
+                            <i class="fas fa-undo me-1"></i>Khôi phục
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2.5" id="discardDraftBtn">
+                            Bỏ qua
+                        </button>
+                    </div>
+                </div>
+            </c:if>
     <!-- === FORM (Thêm/Sửa) === -->
         <c:set var="isEdit" value="${not empty newsItem}" />
         
@@ -50,12 +77,12 @@
                 <!-- Cột trái: 3 trường -->
                 <div class="form-col-left">
                     <div class="form-group">
-                <label for="id"><i class="fas fa-fingerprint me-1"></i> Mã bản tin (UUID v4)</label>
+                <label for="id"><i class="fas fa-barcode me-1"></i> Mã bài viết</label>
                 <input type="text" name="id" id="newsId" value="${newsItem.id}" readonly required
-                       placeholder="Hệ thống tự động cấp UUID..."
+                       placeholder="Hệ thống tự động tạo mã..."
                        style="background-color: #f8f9fa; color: #2d3748; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.9rem; font-weight: 600; cursor: not-allowed; border: 1px solid #ced4da;">
                 <small class="text-muted" style="display: block; margin-top: 5px; font-size: 0.85rem;">
-                    <i class="fas fa-shield-alt text-success"></i> Định danh bảo mật chuẩn UUID v4 (RFC 4122) chống đoán ID bài viết
+                    <i class="fas fa-check-circle text-success me-1"></i>Mã định danh duy nhất được tạo tự động
                 </small>
             </div>
 
@@ -84,10 +111,10 @@
                         <div class="form-group-checkbox">
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <input type="checkbox" id="sendNewsletter" name="sendNewsletter" value="true">
-                                <label for="sendNewsletter" style="margin: 0;">Gửi email newsletter cho subscribers</label>
+                                <label for="sendNewsletter" style="margin: 0;">Gửi email thông báo cho độc giả đăng ký</label>
                             </div>
                             <small class="text-muted" style="display: block; margin-top: 5px; font-size: 0.875rem;">
-                                <i class="fas fa-info-circle"></i> Chỉ gửi email nếu bạn muốn thông báo tin này cho tất cả subscribers
+                                <i class="fas fa-info-circle"></i> Gửi thông báo bài viết mới đến danh sách bạn đọc đã đăng ký nhận tin
                             </small>
                         </div>
                     </div>
@@ -101,7 +128,7 @@
                     <option value="">-- Chọn loại tin --</option>
                     <c:forEach var="cat" items="${categoriesList}">
                         <option value="${cat.id}" ${cat.id == newsItem.categoryId ? 'selected' : ''}>
-                            ${cat.name} (${cat.id})
+                            ${cat.name}
                         </option>
                     </c:forEach>
                 </select>
@@ -111,7 +138,7 @@
             </div>
 
                     <div class="form-group">
-                        <label for="newsContentEditor"><i class="fas fa-edit me-1"></i>Nội dung bài viết (CKEditor WYSIWYG)</label>
+                        <label for="newsContentEditor"><i class="fas fa-pen-nib me-1"></i>Nội dung bài viết <span class="text-danger">*</span></label>
                         <textarea name="content" id="newsContentEditor" rows="6" spellcheck="false">${newsItem.content}</textarea>
                     </div>
             
@@ -665,7 +692,7 @@ input[name="title"][id="title"] {
     }
 })();
 
-// Tự động cấp phát mã UUID v4 khi tạo bài viết mới
+// Tự động cấp phát mã bài viết khi tạo mới
 (function() {
     const newsIdInput = document.getElementById('newsId');
     const form = newsIdInput ? newsIdInput.closest('form') : null;
@@ -684,7 +711,7 @@ input[name="title"][id="title"] {
         });
     }
     
-    // Nếu tạo mới và chưa có ID, tự động gán UUID v4 ngay khi tải trang
+    // Nếu tạo mới và chưa có ID, tự động gán mã ngay khi tải trang
     if (!isEdit && (!newsIdInput.value || newsIdInput.value.trim() === '')) {
         newsIdInput.value = generateUUID();
     }
@@ -859,11 +886,16 @@ input[name="title"][id="title"] {
                 placeholder: 'Nhập nội dung bài viết chi tiết tại đây...'
             })
             .then(function(editor) {
+                window.newsCKEditorInstance = editor;
                 var form = editorElem.closest('form');
                 if (form) {
                     form.addEventListener('submit', function() {
                         editorElem.value = editor.getData();
                     });
+                }
+                // Khởi động auto-save sau khi CKEditor đã sẵn sàng
+                if (typeof window.initAutoSaveDraft === 'function') {
+                    window.initAutoSaveDraft();
                 }
             })
             .catch(function(error) {
@@ -877,6 +909,126 @@ input[name="title"][id="title"] {
         initCKEditor();
     }
 })();
+
+// Logic Tự Động Lưu Nháp (Auto-save Draft) Mỗi 30 Giây
+window.initAutoSaveDraft = function() {
+    // Chỉ áp dụng khi thêm mới bản tin (không phải chế độ sửa)
+    const isEditMode = ${not empty newsItem};
+    if (isEditMode) return;
+
+    const DRAFT_KEY = 'abcnews_news_draft_v1';
+    const titleInput = document.getElementById('title');
+    const summaryInput = document.querySelector('textarea[name="summary"]');
+    const categorySelect = document.getElementById('categoryId');
+    const homeCheckbox = document.getElementById('home');
+    const draftAlert = document.getElementById('draftAlert');
+    const draftTimeText = document.getElementById('draftTimeText');
+    const restoreDraftBtn = document.getElementById('restoreDraftBtn');
+    const discardDraftBtn = document.getElementById('discardDraftBtn');
+    const autoSaveText = document.getElementById('autoSaveText');
+    const autoSaveIcon = document.getElementById('autoSaveIcon');
+    const form = document.querySelector('.news-form-card form');
+
+    // 1. Kiểm tra và hiển thị banner khôi phục nếu có bản nháp từ trước
+    try {
+        const savedDraftJson = localStorage.getItem(DRAFT_KEY);
+        if (savedDraftJson) {
+            const draft = JSON.parse(savedDraftJson);
+            if (draft && (draft.title || draft.content || draft.summary)) {
+                if (draftAlert && draftTimeText) {
+                    const timeStr = draft.savedAt ? new Date(draft.savedAt).toLocaleTimeString('vi-VN') : 'vừa xong';
+                    draftTimeText.textContent = 'Lưu lúc ' + timeStr + ' (' + (draft.title || 'Chưa đặt tiêu đề') + ')';
+                    draftAlert.classList.remove('d-none');
+                    draftAlert.classList.add('d-flex');
+                }
+            }
+        }
+    } catch (e) {
+        console.warn('Lỗi đọc bản nháp:', e);
+    }
+
+    // 2. Nút Khôi phục bản nháp
+    if (restoreDraftBtn) {
+        restoreDraftBtn.addEventListener('click', function() {
+            try {
+                const draft = JSON.parse(localStorage.getItem(DRAFT_KEY));
+                if (draft) {
+                    if (titleInput && draft.title) titleInput.value = draft.title;
+                    if (summaryInput && draft.summary) summaryInput.value = draft.summary;
+                    if (categorySelect && draft.categoryId) categorySelect.value = draft.categoryId;
+                    if (homeCheckbox && typeof draft.home !== 'undefined') homeCheckbox.checked = draft.home;
+                    if (window.newsCKEditorInstance && draft.content) {
+                        window.newsCKEditorInstance.setData(draft.content);
+                    }
+                    if (draftAlert) {
+                        draftAlert.classList.add('d-none');
+                        draftAlert.classList.remove('d-flex');
+                    }
+                    if (autoSaveText) {
+                        autoSaveText.textContent = 'Đã khôi phục bản nháp';
+                    }
+                }
+            } catch (e) {
+                alert('Không thể khôi phục bản nháp: ' + e.message);
+            }
+        });
+    }
+
+    // 3. Nút Bỏ qua bản nháp
+    if (discardDraftBtn) {
+        discardDraftBtn.addEventListener('click', function() {
+            localStorage.removeItem(DRAFT_KEY);
+            if (draftAlert) {
+                draftAlert.classList.add('d-none');
+                draftAlert.classList.remove('d-flex');
+            }
+        });
+    }
+
+    // 4. Hàm thực hiện lưu nháp
+    function performAutoSave() {
+        const title = titleInput ? titleInput.value.trim() : '';
+        const summary = summaryInput ? summaryInput.value.trim() : '';
+        const categoryId = categorySelect ? categorySelect.value : '';
+        const home = homeCheckbox ? homeCheckbox.checked : false;
+        let content = '';
+        if (window.newsCKEditorInstance) {
+            content = window.newsCKEditorInstance.getData().trim();
+        }
+
+        // Chỉ lưu khi có ít nhất một trường có dữ liệu
+        if (title || summary || content) {
+            const draftObj = {
+                title: title,
+                summary: summary,
+                categoryId: categoryId,
+                home: home,
+                content: content,
+                savedAt: Date.now()
+            };
+            localStorage.setItem(DRAFT_KEY, JSON.stringify(draftObj));
+
+            if (autoSaveText && autoSaveIcon) {
+                const timeStr = new Date().toLocaleTimeString('vi-VN');
+                autoSaveText.textContent = 'Đã lưu nháp lúc ' + timeStr;
+                autoSaveIcon.className = 'fas fa-check-circle me-1 text-success';
+                setTimeout(function() {
+                    if (autoSaveIcon) autoSaveIcon.className = 'fas fa-cloud me-1 text-secondary';
+                }, 3000);
+            }
+        }
+    }
+
+    // Thiết lập chu kỳ tự động lưu nháp mỗi 30 giây
+    setInterval(performAutoSave, 30000);
+
+    // 5. Khi submit thành công -> Tự động xóa nháp để không hỏi lại
+    if (form) {
+        form.addEventListener('submit', function() {
+            localStorage.removeItem(DRAFT_KEY);
+        });
+    }
+};
 </script>
 
 <style>

@@ -4,6 +4,7 @@ GO
 SET NOCOUNT ON;
 
 -- 1. DỌN DẸP DỮ LIỆU CŨ ĐỂ NẠP BỘ DỮ LIỆU MẪU MỚI CHUẨN UNICODE UTF-8
+DELETE FROM [dbo].[Comments];
 DELETE FROM [dbo].[ActivityLogs];
 DELETE FROM [dbo].[OtpTokens];
 DELETE FROM [dbo].[News];
@@ -252,4 +253,14 @@ VALUES
 ('rep001', N'Nhà Báo - Trần Khánh Duy', 'CREATE', 'News', 'b3cc6eb9-74ff-49a3-8875-ba00e050a146', N'Tạo mới bài viết: Tối Ưu Hóa Hạ Tầng Dữ Liệu HikariCP', DATEADD(MINUTE, -90, GETDATE())),
 ('rep002', N'Biên Tập Viên - Lê Minh Tú', 'CREATE', 'News', 'b3cd69a0-1662-4ab4-98dc-f36eb0fbd99d', N'Xuất bản bài viết: Kinh Tế Số Việt Nam 2025', DATEADD(MINUTE, -60, GETDATE())),
 ('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'UPDATE', 'Category', 'TECH', N'Cập nhật tên danh mục thành Công nghệ & AI', DATEADD(MINUTE, -30, GETDATE()));
+GO
+
+-- 7. BÌNH LUẬN ĐỘC GIẢ MẪU (COMMENTS)
+-- Status: 0 (Chờ duyệt), 1 (Đã duyệt), 2 (Từ chối)
+INSERT INTO [dbo].[Comments] ([NewsId], [AuthorName], [AuthorEmail], [Content], [CreatedDate], [Status])
+VALUES 
+('4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Lê Hoàng Nam', 'hoangnam.dev@gmail.com', N'Bài viết rất sâu sắc và đón đầu xu hướng công nghệ Agentic AI năm 2025. Cảm ơn tòa soạn!', DATEADD(HOUR, -2, GETDATE()), 1),
+('4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Nguyễn Thu Thảo', 'thuthao.tech@outlook.com', N'Hệ thống tác tử thông minh thực sự sẽ giải phóng sức lao động cho các lập trình viên.', DATEADD(MINUTE, -45, GETDATE()), 1),
+('4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Đặng Quốc Bảo', 'baodang@yahoo.com', N'Liệu trong tương lai Agentic AI có khả năng tự sửa lỗi production mà không cần con người review không?', DATEADD(MINUTE, -10, GETDATE()), 0),
+('b3cd69a0-1662-4ab4-98dc-f36eb0fbd99d', N'Phạm Quang Huy', 'quanghuy@fpt.com', N'Số liệu thống kê về kinh tế số rất chi tiết và đáng tin cậy. Chúc tòa soạn phát triển mạnh mẽ!', DATEADD(MINUTE, -5, GETDATE()), 0);
 GO

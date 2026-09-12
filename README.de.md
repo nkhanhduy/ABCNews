@@ -1,6 +1,6 @@
 [🇻🇳 Tiếng Việt](README.md) | [🇬🇧 English](README.en.md) | [🇩🇪 Deutsch](README.de.md)
 
-# ABC News — Online-Nachrichtenportal & Redaktionssystem (CMS)
+# ABC News — Online-Nachrichtenportal & Redaktionssystem
 
 <p align="left">
   <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
@@ -12,82 +12,88 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2ea44f?style=flat-square" alt="License MIT"></a>
 </p>
 
-Ein Java-Webprojekt auf Basis von Jakarta EE (Servlet & JSP), das ein Online-Nachrichtenportal für Leser und ein Content-Management-System (CMS) für Redaktionsmitglieder bereitstellt. Das Projekt entstand im Jahr 2025 und wurde mit responsivem Design, Dunkelmodus (Dark Mode) sowie sicherer Dateiverwaltung optimiert.
+Ein Java-Webprojekt auf Basis von Jakarta EE (Servlet & JSP), das ein modernes Online-Nachrichtenportal für Leser und ein Redaktionssystem bereitstellt. Entwickelt im Jahr 2025 mit responsivem Design, Dunkelmodus sowie sicherer Dateiverwaltung.
 
 **Autor:** Nguyen Khanh Duy  
 **Fachbereich:** Softwareentwicklung — FPT Polytechnic College Ho-Chi-Minh-Stadt  
-**Jahr:** 2025 (Optimierte Version)
+**Jahr:** 2025
 
 ---
 
 ## Bildschirmfotos
 
-### 1. Leser-Oberfläche (Öffentlicher Bereich)
+### 1. Leser-Oberfläche
 
-| Helles Design (Smaragdgrün) | Dunkles Design (Augenkomfort) |
+| Helles Design | Dunkles Design |
 |:---:|:---:|
 | ![Startseite Light Mode](.github/images/home_light.png) | ![Startseite Dark Mode](.github/images/home_dark.png) |
 
-| Kategoriefilter-Ansicht (Tech & KI) | Artikel-Detailansicht & Teilen |
+| Kategoriefilter-Ansicht | Artikel-Detailansicht |
 |:---:|:---:|
 | ![Kategorie Tech](.github/images/category_tech.png) | ![Artikel-Detailansicht](.github/images/article_detail.png) |
 
+| Lesermeinungen & Kommentarbereich |
+|:---:|
+| ![Leserkommentare](.github/images/feature_comments_public.png) |
+
 ### 2. Authentifizierungsbereich
 
-| Universelle Anmeldeseite (Admin & Reporter) |
+| Universelle Anmeldeseite |
 |:---:|
 | ![Anmeldeseite](.github/images/login_page.png) |
 
-### 3. Redaktionsverwaltung (Admin CMS)
+### 3. Redaktionsverwaltung
 
-| Analyse-Dashboard & Redaktionsübersicht (Vollansicht) |
+| Analyse-Dashboard & Redaktionsübersicht |
 |:---:|
 | ![Admin Dashboard](.github/images/admin_dashboard.png) |
 
-| Artikelverwaltung & Verfassen (CKEditor) | Benutzer- & Rollenverwaltung |
+| Artikelverwaltung & Verfassen | Benutzer- & Rollenverwaltung |
 |:---:|:---:|
 | ![Artikelverwaltung](.github/images/admin_news.png) | ![Benutzerverwaltung](.github/images/admin_users.png) |
 
-| Journalistenprofil & Intelligenter Avatar-Upload |
-|:---:|
-| ![Admin Profile](.github/images/admin_profile.png) |
-
-
+| Journalistenprofil & Avatar-Upload | Moderation der Leserkommentare |
+|:---:|:---:|
+| ![Admin Profile](.github/images/admin_profile.png) | ![Kommentarmoderation](.github/images/feature_comments_admin.png) |
 
 ---
 
 ## Hauptfunktionen
 
-### Leserbereich (Public)
+### Leserbereich
 - **Nachrichten lesen:** Startseite mit Top-Nachrichten, aktuellen Beiträgen und meistgelesenen Artikeln.
-- **Kategorien:** Strukturierung nach 5 Themenbereichen (Wirtschaft & Finanzen, Technologie & KI, Sport, Leben & Wissenschaft, Bildung).
-- **Artikel-Detailansicht:** Vollständiger Inhalt, Autor, Veröffentlichungsdatum, Aufrufzähler, geschätzte Lesezeit und Social-Sharing-Buttons (Facebook, X, Telegram).
-- **Theme-Umschalter:** Nahtloser Wechsel zwischen hellem Modus (Smaragdgrün) und dunklem Modus (Dark Mode).
+- **Kategorien:** Strukturierung nach 5 Themenbereichen: Wirtschaft & Finanzen, Technologie & KI, Sport, Leben & Wissenschaft, Bildung.
+- **Artikel-Detailansicht:** Vollständiger Inhalt, Autor, Veröffentlichungsdatum, Aufrufzähler, geschätzte Lesezeit und Social-Sharing-Buttons.
+- **Lesezeichen & Später lesen:** Ermöglicht Lesern das Speichern interessanter Artikel direkt im Browser-`localStorage` und die komfortable Verwaltung über eine Offcanvas-Seitenleiste ohne vorherige Anmeldung.
+- **Leserkommentare & Diskussionen:** Interaktives Einsenden von Meinungen zu Artikeln mit moderiertem Freigabeprozess und Spam-Schutz.
+- **Theme-Umschalter:** Nahtloser Wechsel zwischen hellem und dunklem Modus direkt in der Menüleiste.
 - **Newsletter:** E-Mail-Registrierung für aktuelle Nachrichtenbenachrichtigungen.
 
 ### Authentifizierung & Sicherheit
 - **An- und Abmeldung:** Lokale Authentifizierung mit BCrypt-Passwortverschlüsselung; optionale Google-Anmeldung über OAuth2.
-- **Passwortwiederherstellung (OTP):** Anforderung eines 6-stelligen OTP-Codes per E-Mail (5 Minuten gültig) zur sicheren Passwort-Rücksetzung.
+- **Passwortwiederherstellung & OTP:** Anforderung eines 6-stelligen OTP-Codes per E-Mail (5 Minuten gültig) zur sicheren Passwort-Rücksetzung.
+- **Anti-Spam Rate Limiting:** 60-Sekunden-Abklingzeit für OTP-Anfragen über Gmail SMTP sowie Frequenzbegrenzung bei Kommentaren.
+- **XSS-Bereinigung:** Filterung aller Eingaben mit der Jsoup-Bibliothek zum Eliminieren von schädlichen Skripten und Injektionen.
 - **Sicherheitsfilter (AuthFilter):** Rollenbasierte Zugriffskontrolle für alle `/admin/*`-Pfade.
 
-### Administrationsbereich (Admin CMS)
-- **Dashboard:** Statistische Übersicht über Artikel, Benutzer, Kategorien und Newsletter-Abonnenten mit Chart.js-Diagrammen.
-- **Artikelverwaltung:** Neue Artikel mit Rich-Text-Editor erstellen, bestehende Beiträge bearbeiten, löschen, nach Kategorie/Autor filtern und Top-Artikel auf der Startseite anpinnen.
-- **Kategorienverwaltung:** Verwaltung der Themenkategorien (Kategorie-ID, Name).
-- **Benutzerverwaltung:** Übersicht der Benutzerkonten, Rollenvergabe (Admin / Reporter) und Kontosperrung/-aktivierung.
-- **Benutzerprofil:** Einsehen der Profildaten und Aktualisieren des Avatars mit Sofortvorschau (Instant Preview) und sicherer Ordnerpartitionierung (`SafeImageStorage`).
+### Administrationsbereich
+- **Dashboard:** Statistische Übersicht über Artikel, Benutzer, Kategorien, ausstehende Kommentare und Newsletter-Abonnenten mit Chart.js-Diagrammen.
+- **Artikelverwaltung:** Neue Artikel mit Rich-Text-Editor erstellen, bestehende Beiträge bearbeiten, löschen, filtern und Top-Artikel auf der Startseite anpinnen.
+- **Automatische Entwurfsspeicherung:** Alle 30 Sekunden automatisches Sichern des Artikelentwurfs im `localStorage` inklusive Wiederherstellungsdialog.
+- **Kommentar-Moderation:** Zentrale Verwaltung von Leserkommentaren (Ausstehend, Genehmigt, Abgelehnt) mit Audit-Protokollierung.
+- **Kategorienverwaltung:** Verwaltung der Themenkategorien und Bezeichner.
+- **Benutzerverwaltung:** Übersicht der Benutzerkonten, Rollenvergabe und Kontosperrung/-aktivierung.
+- **Benutzerprofil:** Einsehen der Profildaten und Aktualisieren des Avatars mit Sofortvorschau und sicherer Ordnerpartitionierung.
 - **Datenexport:** Export von Berichten in den Formaten Excel, CSV und PDF.
 
 ---
 
-## Testkonten
-
-In der Datenbank sind vorbereitete Testkonten vorhanden:
+## Schnelle Test-Zugänge
 
 | Rolle | E-Mail | Passwort | Berechtigungen |
 |---|---|:---:|---|
-| **Administrator (Admin)** | `admin@abcnews.com` | `123456` | Vollzugriff auf Artikel, Kategorien, Benutzer und Profil |
-| **Reporter** | `reporter1@abcnews.com` | `123456` | Verfassen von Artikeln, Verwaltung eigener Beiträge und Profilaktualisierung |
+| **Chefredakteur** | `admin@abcnews.com` | `123456` | Vollzugriff: Inhalte, Kommentarmoderation, Benutzerverwaltung |
+| **Reporter** | `reporter1@abcnews.com` | `123456` | Verfassen von Artikeln, eigene Beiträge, Leserkommentare |
 
 ---
 
@@ -96,8 +102,8 @@ In der Datenbank sind vorbereitete Testkonten vorhanden:
 - **Plattform:** Java 17 LTS, Jakarta EE 10 (Servlet 6.0, JSP 3.1, JSTL)
 - **Anwendungsserver:** Apache Tomcat 10.1
 - **Datenbank:** Microsoft SQL Server 2022 (HikariCP Connection-Pool, Hibernate ORM JPA)
-- **Sicherheit:** BCrypt-Passwort-Hashing (OWASP-Standard), Google Identity Services, Jakarta Mail (SMTP TLS für OTP)
-- **Frontend:** HTML5, CSS3, Bootstrap 5.3, FontAwesome 6, Chart.js, CKEditor
+- **Sicherheit & Sanitization:** BCrypt-Passwort-Hashing, Google Identity Services, Jakarta Mail (SMTP TLS für OTP), Jsoup 1.17.2 (HTML Whitelist Sanitization)
+- **Frontend:** HTML5, CSS3, Bootstrap 5.3, FontAwesome 6, Chart.js, CKEditor 5
 - **Bereitstellung:** Docker & Docker Compose
 
 ---
@@ -105,26 +111,25 @@ In der Datenbank sind vorbereitete Testkonten vorhanden:
 ## Architektur & Technische Highlights
 
 - **Standardisiertes Model-2-MVC-Muster:** Saubere Trennung von Controller (Jakarta Servlets), Präsentationsschicht (modulare JSP/JSTL-Komponenten) und Datenzugriffsschicht (DAO & JPA Hibernate).
-- **Hochleistungsfähige Persistenz:** **HikariCP Connection-Pool** minimiert Latenzzeiten bei Datenbankverbindungen; Hibernate ORM gewährleistet typsichere Entitätsabbildungen; Indexoptimierungen auf der Newstabelle beschleunigen das Filtern nach Kategorien und Lesezahlen.
+- **Hochleistungsfähige Persistenz:** **HikariCP Connection-Pool** minimiert Latenzzeiten bei Datenbankverbindungen; Hibernate ORM gewährleistet typsichere Entitätsabbildungen; Indexoptimierungen auf der Newstabelle beschleunigen das Filtern.
 - **Mehrschichtige Sicherheit:**
   - Einweg-Passwort-Hashing mit **BCrypt** verhindert Rainbow-Table- und Brute-Force-Angriffe.
   - **AuthFilter** setzt rollenbasierte Zugriffskontrolle (RBAC) für alle `/admin/*`-Routen durch.
-  - **UUID-v4-Standardisierung (RFC 4122):** Implementierung kryptographisch sicherer 128-Bit-UUID-v4-Bezeichner (36 Zeichen) für alle Nachrichtenartikel in der Datenbank und auf öffentlichen URLs (`/detail?id=...`). Dies eliminiert vorhersehbare fortlaufende IDs und schützt das System wirksam vor ID-Enumeration und Insecure Direct Object References (IDOR).
-  - Das Modul **SafeImageStorage** validiert MIME-Typen, begrenzt Dateigrößen, schützt vor Path-Traversal-Angriffen (`../`) und bereinigt veraltete Avatar-Dateien bei Updates.
-  - Sichere Passwortwiederherstellung über zeitlich begrenzte 6-stellige **OTP-Token** per Gmail SMTP TLS (5 Minuten Gültigkeit).
-- **Benutzererlebnis & Barrierefreiheit (UX/UI):**
+  - **Kryptographisch sichere Bezeichner:** Implementierung von 128-Bit-UUID-v4-Bezeichnern für alle Nachrichtenartikel in der Datenbank und auf öffentlichen URLs, wodurch vorhersehbare IDs eliminiert werden.
+  - Das Modul **SafeImageStorage** validiert MIME-Typen, begrenzt Dateigrößen, schützt vor Path-Traversal-Angriffen und bereinigt veraltete Avatar-Dateien.
+  - Sichere Passwortwiederherstellung über zeitlich begrenzte 6-stellige **OTP-Token** per Gmail SMTP TLS.
+- **Benutzererlebnis & Barrierefreiheit:**
   - Modernes Design-Token-System auf Basis von CSS Custom Properties im smaragdgrünen Look.
-  - Kontrastreicher Dark Mode nach WCAG-AAA-Standard für ermüdungsfreies Lesen.
-  - Interaktives **Chart.js** Telemetrie-Dashboard und integrierter **CKEditor 5** WYSIWYG-Editor.
-  - **SEO- & Open-Graph-Protokoll-Integration:** Vollständige Open-Graph-Metadaten (`og:title`, `og:image`, `og:description`, `og:url`) und Twitter Cards (`summary_large_image`) für alle Artikeldetailseiten zur optimierten Vorschau mit Titel und Beitragsbild beim Teilen auf Facebook, X, Telegram und Messenger-Apps.
+  - Kontrastreicher Dark Mode nach Barrierefreiheitsstandards für ermüdungsfreies Lesen.
+  - Interaktives **Chart.js** Telemetrie-Dashboard und integrierter Rich-Text-Editor.
+  - **SEO- & Open-Graph-Protokoll-Integration:** Vollständige Open-Graph-Metadaten (`og:title`, `og:image`, `og:description`, `og:url`) und Twitter Cards (`summary_large_image`) für alle Artikeldetailseiten.
 - **Produktionsreife Containerisierung:** Vollständige **Docker-Compose**-Orchestrierung (Tomcat + SQL Server) mit automatisierten Healthchecks, Schema-Initialisierung und Testdatenbereitstellung mit nur einem Befehl: `docker compose up -d`.
-
 
 ---
 
 ## Installation & Start
 
-### Option 1: Start mit Docker Compose (Empfohlen)
+### Option 1: Start mit Docker Compose
 
 Voraussetzung: Installiertes [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 

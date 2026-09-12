@@ -312,7 +312,21 @@
         });
         
         function resendOtp() {
-            window.location.href = '${pageContext.request.contextPath}/forgot-password?email=${sessionScope.resetUserEmail}';
+            const resendBtn = document.getElementById('resendBtn');
+            if (resendBtn) {
+                resendBtn.disabled = true;
+                resendBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang gửi lại...';
+            }
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '${pageContext.request.contextPath}/forgot-password';
+            const emailInput = document.createElement('input');
+            emailInput.type = 'hidden';
+            emailInput.name = 'email';
+            emailInput.value = '${sessionScope.resetUserEmail}';
+            form.appendChild(emailInput);
+            document.body.appendChild(form);
+            form.submit();
         }
     </script>
 </body>

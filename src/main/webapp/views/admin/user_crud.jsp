@@ -48,13 +48,13 @@
 				<div class="form-col-left">
 					<div class="form-group">
 						<label for="userId">
-							<i class="fas fa-user-tag me-1"></i>Username (ID)
+							<i class="fas fa-user-tag me-1"></i>Tên đăng nhập
 						</label>
 						<input type="text" name="id" id="userId" 
 						       value="${userItem.id}" readonly required
 						       class="form-input-readonly">
 						<small class="form-hint">
-							<i class="fas fa-info-circle"></i> Username sẽ tự động tạo khi bạn chọn vai trò
+							<i class="fas fa-info-circle"></i> Tên đăng nhập sẽ được tạo tự động khi chọn vai trò
 						</small>
 					</div>
 
@@ -181,7 +181,7 @@
 						       name="searchKeyword" 
 						       id="searchKeyword" 
 						       value="${searchKeyword}" 
-						       placeholder="Nhập ID, tên hoặc email...">
+						       placeholder="Nhập tên đăng nhập, họ tên hoặc email...">
 					</div>
 					
 					<!-- Lọc theo vai trò -->
@@ -326,7 +326,7 @@
 									<c:when test="${canDelete}">
 										<a href="${pageContext.request.contextPath}/admin/users?action=delete&id=${u.id}"
 										   class="btn btn-sm btn-delete" 
-										   onclick="return confirm('Xóa user này?')"
+										   onclick="return confirm('Xóa tài khoản này?')"
 										   style="min-width: 70px; margin: 0 3px;">Xóa</a>
 									</c:when>
 									<c:otherwise>
