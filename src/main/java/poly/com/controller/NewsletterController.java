@@ -10,8 +10,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import poly.com.dao.NewsletterDAO;
-import poly.com.entity.Newsletter;
+import poly.com.service.NewsletterService;
+import poly.com.service.impl.NewsletterServiceImpl;
 
 /**
  * Servlet implementation class NewsletterController
@@ -21,18 +21,15 @@ import poly.com.entity.Newsletter;
 public class NewsletterController extends HttpServlet {
     private static final long serialVersionUID = 1L;
        
-    private NewsletterDAO newsletterDAO;
+    private NewsletterService newsletterService;
 
     @Override
     public void init() throws ServletException {
-        newsletterDAO = new NewsletterDAO();
+        newsletterService = new NewsletterServiceImpl();
     }
 
     /**
      * Xử lý khi người dùng gửi form (method="post")
-     * Kiểm tra email đã tồn tại:
-     * - Nếu có: cập nhật enabled = true và SubscribedDate mới
-     * - Nếu chưa: insert mới
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -43,26 +40,11 @@ public class NewsletterController extends HttpServlet {
             String email = request.getParameter("email");
 
             if (email != null && !email.trim().isEmpty()) {
-                email = email.trim();
-                
-                // Kiểm tra email đã tồn tại chưa
-                Newsletter existing = newsletterDAO.findById(email);
-                
-                if (existing != null) {
-                    // Email đã tồn tại → cập nhật enabled = true và SubscribedDate mới
-                    existing.setEnabled(true);
-                    existing.setSubscribedDate(new Date());
-                    newsletterDAO.update(existing);
-                    
-                    // Thông báo: Email đã được kích hoạt lại
-                    request.getSession().setAttribute("newsletterMessage", "Email của bạn đã được kích hoạt lại nhận bản tin!");
-                } else {
-                    // Email mới → insert
-                    Newsletter entity = new Newsletter(email, true, new Date());
-                    newsletterDAO.insert(entity);
-                    
-                    // Thông báo: Đăng ký thành công
+                boolean isNew = newsletterService.subscribe(email.trim());
+                if (isNew) {
                     request.getSession().setAttribute("newsletterMessage", "Đăng ký nhận bản tin thành công! Cảm ơn bạn đã quan tâm.");
+                } else {
+                    request.getSession().setAttribute("newsletterMessage", "Email của bạn đã được kích hoạt lại nhận bản tin!");
                 }
             }
             

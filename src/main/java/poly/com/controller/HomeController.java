@@ -12,31 +12,32 @@ import poly.com.dao.CategoryDAO;
 import poly.com.dao.NewsDAO;
 import poly.com.entity.Category;
 import poly.com.entity.News;
+import poly.com.service.CategoryService;
+import poly.com.service.NewsService;
+import poly.com.service.impl.CategoryServiceImpl;
+import poly.com.service.impl.NewsServiceImpl;
 import poly.com.util.ImagePathHelper;
 import poly.com.util.NewsHelper;
 
 /**
  * Controller xử lý trang chủ - hiển thị tin tức trang nhất và các widget sidebar
+ * Sử dụng tầng Service theo chuẩn 3-Tier Layered Architecture
  */
 @WebServlet("/home")
 public class HomeController extends BaseController {
     private static final long serialVersionUID = 1L;
     
-    private CategoryDAO categoryDAO;
+    private CategoryService categoryService;
+    private NewsService newsService;
     private NewsDAO newsDAO;
 
-    /**
-     * Khởi tạo các DAO khi servlet được load
-     */
     @Override
     public void init() throws ServletException {
-        categoryDAO = new CategoryDAO();
+        categoryService = new CategoryServiceImpl();
+        newsService = new NewsServiceImpl();
         newsDAO = new NewsDAO();
     }
 
-    /**
-     * Hiển thị trang chủ với danh sách tin trang nhất và các widget sidebar
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -44,10 +45,10 @@ public class HomeController extends BaseController {
         try {
             String contextPath = getContextPath(request);
             
-            List<Category> listCategories = categoryDAO.findAll();
-            List<News> listTop5HotNews = newsDAO.findTop5HotNews();
-            List<News> listTop5NewestNews = newsDAO.findTop5Newest();
-            List<News> listHomeNews = newsDAO.findHomeNews();
+            List<Category> listCategories = categoryService.getAllCategories();
+            List<News> listTop5HotNews = newsService.getTop5HotNews();
+            List<News> listTop5NewestNews = newsService.getTop5Newest();
+            List<News> listHomeNews = newsService.getHomeNews();
             
             // Chuẩn hóa đường dẫn ảnh cho tất cả danh sách
             ImagePathHelper.normalizeImagePaths(listTop5HotNews, contextPath);

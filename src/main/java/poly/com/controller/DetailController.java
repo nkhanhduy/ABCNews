@@ -10,10 +10,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import poly.com.dao.CategoryDAO;
-import poly.com.dao.NewsDAO;
 import poly.com.entity.Category;
 import poly.com.entity.News;
+import poly.com.service.CategoryService;
+import poly.com.service.NewsService;
+import poly.com.service.impl.CategoryServiceImpl;
+import poly.com.service.impl.NewsServiceImpl;
 import poly.com.util.ImagePathHelper;
 import poly.com.util.NewsHelper;
 
@@ -24,16 +26,16 @@ import poly.com.util.NewsHelper;
 public class DetailController extends BaseController {
     private static final long serialVersionUID = 1L;
        
-    private CategoryDAO categoryDAO;
-    private NewsDAO newsDAO;
+    private CategoryService categoryService;
+    private NewsService newsService;
 
     /**
-     * Khởi tạo các DAO khi servlet được load
+     * Khởi tạo các Service khi servlet được load
      */
     @Override
     public void init() throws ServletException {
-        categoryDAO = new CategoryDAO();
-        newsDAO = new NewsDAO();
+        categoryService = new CategoryServiceImpl();
+        newsService = new NewsServiceImpl();
     }
 
     /**
@@ -52,7 +54,7 @@ public class DetailController extends BaseController {
                 return;
             }
 
-            News newsDetail = newsDAO.findById(newsId);
+            News newsDetail = newsService.findById(newsId);
             
             if (newsDetail == null) {
                 response.sendRedirect(contextPath + "/home");
@@ -62,7 +64,7 @@ public class DetailController extends BaseController {
             // Chuẩn hóa đường dẫn ảnh cho tin chi tiết
             ImagePathHelper.normalizeImagePath(newsDetail, contextPath);
             
-            newsDAO.incrementViewCount(newsId);
+            newsService.incrementViewCount(newsId);
             
             // Cập nhật danh sách đã xem trong session
             HttpSession session = request.getSession();
@@ -79,11 +81,11 @@ public class DetailController extends BaseController {
             }
             session.setAttribute("viewedNewsIds", viewedNewsIds);
             
-            List<Category> listCategories = categoryDAO.findAll();
-            List<News> listTop5HotNews = newsDAO.findTop5HotNews();
-            List<News> listTop5NewestNews = newsDAO.findTop5Newest();
-            List<News> listViewedNews = NewsHelper.getViewedNews(session, newsDAO, contextPath);
-            List<News> listRelatedNews = newsDAO.findRelatedNews(newsDetail.getCategoryId(), newsId);
+            List<Category> listCategories = categoryService.getAllCategories();
+            List<News> listTop5HotNews = newsService.getTop5HotNews();
+            List<News> listTop5NewestNews = newsService.getTop5Newest();
+            List<News> listViewedNews = NewsHelper.getViewedNews(session, newsService, contextPath);
+            List<News> listRelatedNews = newsService.getRelatedNews(newsDetail.getCategoryId(), newsId);
             
             // Chuẩn hóa đường dẫn ảnh cho tất cả danh sách
             ImagePathHelper.normalizeImagePaths(listTop5HotNews, contextPath);

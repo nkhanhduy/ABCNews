@@ -11,26 +11,28 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import poly.com.dao.UserDAO;
 import poly.com.entity.User;
 import poly.com.service.ActivityLogService;
+import poly.com.service.UserService;
+import poly.com.service.impl.UserServiceImpl;
 
 /**
  * Controller xử lý đăng nhập - hiển thị form và xác thực thông tin đăng nhập
+ * Sử dụng tầng Service theo chuẩn 3-Tier Clean Architecture
  */
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
     private static final long serialVersionUID = 1L;
        
-    private UserDAO userDAO;
+    private UserService userService;
     private ActivityLogService activityLogService;
 
     /**
-     * Khởi tạo UserDAO và ActivityLogService khi servlet được load
+     * Khởi tạo UserService và ActivityLogService khi servlet được load
      */
     @Override
     public void init() throws ServletException {
-        userDAO = new UserDAO();
+        userService = new UserServiceImpl();
         activityLogService = new ActivityLogService();
     }
 
@@ -52,7 +54,7 @@ public class LoginController extends HttpServlet {
                         try {
                             // Giải mã: chỉ có userId
                             String userId = new String(Base64.getDecoder().decode(rememberValue));
-                            User user = userDAO.findById(userId);
+                            User user = userService.findById(userId);
                             if (user != null) {
                                 // Kiểm tra tài khoản có bị khóa không
                                 if (!user.isEnabled()) {
@@ -105,7 +107,7 @@ public class LoginController extends HttpServlet {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 
-            User user = userDAO.findByEmailAndPassword(email, password);
+            User user = userService.login(email, password);
             
             if (user != null) {
                 // Kiểm tra tài khoản có bị khóa không
