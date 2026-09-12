@@ -76,7 +76,7 @@
         <div class="alert alert-light border p-5 text-center rounded-3">
             <h5 class="fw-bold mb-2">Chưa có bài viết nào trong chuyên mục này.</h5>
             <p class="text-muted mb-3">Nội dung đang được ban biên tập tổng hợp và cập nhật trong thời gian sớm nhất.</p>
-            <a href="${pageContext.request.contextPath}/home" class="btn btn-outline-primary btn-sm">
+            <a href="${pageContext.request.contextPath}/home" class="btn btn-outline-success btn-sm">
                 Quay lại Trang chủ
             </a>
         </div>

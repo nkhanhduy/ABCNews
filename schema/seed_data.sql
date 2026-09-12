@@ -14,11 +14,11 @@ GO
 
 -- 2. TÀI KHOẢN NGƯỜI DÙNG (USERS)
 -- Mật khẩu mặc định: 123456 (Hệ thống tự động nâng cấp mã hóa BCrypt khi đăng nhập)
-INSERT INTO [dbo].[Users] ([Id], [Password], [Fullname], [Birthday], [Gender], [Mobile], [Email], [Role], [AuthProvider], [Enabled])
+INSERT INTO [dbo].[Users] ([Id], [Password], [Fullname], [Birthday], [Gender], [Mobile], [Email], [Role], [AuthProvider], [Enabled], [ImagePath])
 VALUES 
-('admin001', '123456', N'Tổng Biên Tập - Nguyễn Khánh Duy', '2004-05-15', 1, '0912345678', 'admin@abcnews.com', 1, 'local', 1),
-('rep001', '123456', N'Nhà Báo - Trần Khánh Duy', '1998-08-20', 1, '0987654321', 'reporter1@abcnews.com', 0, 'local', 1),
-('rep002', '123456', N'Biên Tập Viên - Lê Minh Tú', '1999-11-05', 0, '0908123456', 'reporter2@abcnews.com', 0, 'local', 1);
+('admin001', '123456', N'Tổng Biên Tập - Nguyễn Khánh Duy', '2004-05-15', 1, '0912345678', 'admin@abcnews.com', 1, 'local', 1, '/uploads/avatars/a0abfecd-d31a-41bd-b209-258fee975d1c.png'),
+('rep001', '123456', N'Nhà Báo - Trần Khánh Duy', '1998-08-20', 1, '0987654321', 'reporter1@abcnews.com', 0, 'local', 1, NULL),
+('rep002', '123456', N'Biên Tập Viên - Lê Minh Tú', '1999-11-05', 0, '0908123456', 'reporter2@abcnews.com', 0, 'local', 1, NULL);
 GO
 
 -- 3. CHUYÊN MỤC TIN TỨC (CATEGORIES)
@@ -36,9 +36,9 @@ GO
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
 ('NEWS001', 
-N'Kỷ Nguyên Agentic AI: Bước Chuyển Mình Vượt Bậc Của Trí Tuệ Nhân Tạo Năm 2026',
-N'Không dừng lại ở mô hình ngôn ngữ lớn (LLM) phản hồi thụ động, thế giới công nghệ năm 2026 chứng kiến làn sóng bùng nổ của Agentic AI - hệ thống tác tử thông minh có khả năng tự lập kế hoạch, phối hợp công cụ và giải quyết bài toán phức tạp độc lập.',
-N'<p class="lead">Năm 2026 đánh dấu cột mốc lịch sử khi trí tuệ nhân tạo chính thức chuyển mình từ các mô hình hội thoại thụ động (Chatbot) sang kỷ nguyên <strong>Agentic AI (Tác tử Trí tuệ Nhân tạo)</strong>. Thay vì chỉ đưa ra câu trả lời dựa trên gợi ý từ người dùng, các hệ thống AI tác tử ngày nay đã có thể tự động lập trình kế hoạch hành động, phân rã công việc phức tạp thành các chuỗi hành động con và tương tác trực tiếp với các API, cơ sở dữ liệu để đạt được mục tiêu kinh doanh.</p>
+N'Kỷ Nguyên Agentic AI: Bước Chuyển Mình Vượt Bậc Của Trí Tuệ Nhân Tạo Năm 2025',
+N'Không dừng lại ở mô hình ngôn ngữ lớn (LLM) phản hồi thụ động, thế giới công nghệ năm 2025 chứng kiến làn sóng bùng nổ của Agentic AI - hệ thống tác tử thông minh có khả năng tự lập kế hoạch, phối hợp công cụ và giải quyết bài toán phức tạp độc lập.',
+N'<p class="lead">Năm 2025 đánh dấu cột mốc lịch sử khi trí tuệ nhân tạo chính thức chuyển mình từ các mô hình hội thoại thụ động (Chatbot) sang kỷ nguyên <strong>Agentic AI (Tác tử Trí tuệ Nhân tạo)</strong>. Thay vì chỉ đưa ra câu trả lời dựa trên gợi ý từ người dùng, các hệ thống AI tác tử ngày nay đã có thể tự động lập trình kế hoạch hành động, phân rã công việc phức tạp thành các chuỗi hành động con và tương tác trực tiếp với các API, cơ sở dữ liệu để đạt được mục tiêu kinh doanh.</p>
 
 <h3>1. Sự Khác Biệt Giữa Generative AI Truyền Thống Và Agentic AI</h3>
 <p>Nếu như thế hệ Generative AI đầu tiên (2022 - 2024) tập trung chủ yếu vào việc sáng tạo văn bản và hình ảnh dựa trên câu lệnh đơn lẻ, thì Agentic AI sở hữu ba năng lực cốt lõi vượt trội:</p>
@@ -91,7 +91,7 @@ DATEADD(HOUR, -8, GETDATE()), 'rep001', 5690, 'TECH', 1);
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
 ('NEWS003', 
-N'Chiến Lược Bảo Mật Zero-Trust: Phòng Thủ Toàn Diện Trước Các Cuộc Tấn Công Số 2026',
+N'Chiến Lược Bảo Mật Zero-Trust: Phòng Thủ Toàn Diện Trước Các Cuộc Tấn Công Số 2025',
 N'Trước các hiểm họa mã độc tống tiền và tấn công mạng sử dụng AI ngày càng tinh vi, mô hình bảo mật Zero-Trust không còn là một lựa chọn xa xỉ mà đã trở thành tiêu chuẩn bắt buộc cho mọi nền tảng số.',
 N'<p class="lead">Triết lý căn bản của Zero-Trust rất ngắn gọn nhưng kỷ luật: <em>"Không bao giờ tin tưởng, luôn luôn xác minh" (Never Trust, Always Verify)</em>. Mọi thực thể, dù ở trong hay ngoài mạng nội bộ, đều phải trải qua quy trình xác thực định danh và phân quyền nghiêm ngặt trước khi truy cập tài nguyên dữ liệu.</p>
 
@@ -112,8 +112,8 @@ DATEADD(DAY, -1, GETDATE()), 'admin001', 4210, 'TECH', 1);
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
 ('NEWS004', 
-N'Kinh Tế Số Việt Nam 2026: Động Lực Tăng Trưởng Đột Phá Đóng Góp Lớn Cho GDP Quốc Gia',
-N'Báo cáo kinh tế quý 1/2026 cho thấy lĩnh vực thương mại điện tử, thanh toán không dùng tiền mặt và công nghệ số tiếp tục duy trì mức tăng trưởng ấn tượng trên 22%/năm, khẳng định vị thế trung tâm đổi mới sáng tạo khu vực.',
+N'Kinh Tế Số Việt Nam 2025: Động Lực Tăng Trưởng Đột Phá Đóng Góp Lớn Cho GDP Quốc Gia',
+N'Báo cáo kinh tế quý 1/2025 cho thấy lĩnh vực thương mại điện tử, thanh toán không dùng tiền mặt và công nghệ số tiếp tục duy trì mức tăng trưởng ấn tượng trên 22%/năm, khẳng định vị thế trung tâm đổi mới sáng tạo khu vực.',
 N'<p class="lead">Nền kinh tế số Việt Nam đang bước vào giai đoạn tăng tốc mạnh mẽ với quy mô dự kiến vượt mốc 50 tỷ USD trong năm nay. Sự hội tụ giữa cơ sở hạ tầng mạng 5G phủ sóng toàn quốc, tỷ lệ dân số sở hữu smartphone trên 85% và hệ sinh thái thanh toán số đa dạng đã tạo bệ phóng vững chắc cho hàng nghìn doanh nghiệp khởi nghiệp.</p>
 
 <h3>1. Bức Tranh Tăng Trưởng Của Các Ngành Tiên Phong</h3>
@@ -134,7 +134,7 @@ VALUES
 ('NEWS005', 
 N'Thị Trường Vốn Toàn Cầu Dịch Chuyển Mạnh Sang Các Dự Án Năng Lượng Xanh & Net Zero',
 N'Các quỹ đầu tư mạo hiểm và ngân hàng thương mại quốc tế đang ưu tiên rót vốn vào các doanh nghiệp tuân thủ nghiêm ngặt tiêu chuẩn ESG, mở ra làn sóng phát hành trái phiếu xanh kỷ lục.',
-N'<p class="lead">Tính bền vững và trách nhiệm môi trường đã trở thành thước đo hàng đầu trong việc định giá doanh nghiệp. Trong năm 2026, lượng phát hành trái phiếu xanh (Green Bonds) trên toàn cầu đã tăng trưởng 35%, thu hút sự quan tâm đặc biệt từ các nhà đầu tư tổ chức.</p>
+N'<p class="lead">Tính bền vững và trách nhiệm môi trường đã trở thành thước đo hàng đầu trong việc định giá doanh nghiệp. Trong năm 2025, lượng phát hành trái phiếu xanh (Green Bonds) trên toàn cầu đã tăng trưởng 35%, thu hút sự quan tâm đặc biệt từ các nhà đầu tư tổ chức.</p>
 
 <h3>1. Tiêu Chuẩn ESG Không Còn Là Khẩu Hiệu</h3>
 <p>Các doanh nghiệp áp dụng công nghệ chuyển đổi năng lượng mặt trời áp mái, tối ưu hóa chuỗi cung ứng giảm thiểu phát thải carbon đang được hưởng ưu đãi thuế suất và lãi suất vay vốn đặc biệt từ các định chế tài chính quốc tế.</p>
@@ -148,7 +148,7 @@ DATEADD(DAY, -2, GETDATE()), 'rep001', 3120, 'ECONOMY', 1);
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
 ('NEWS006', 
-N'Đêm Chung Kết UEFA Champions League 2026: Đại Chiến Đỉnh Cao Và Cơn Mưa Bàn Thắng',
+N'Đêm Chung Kết UEFA Champions League 2025: Đại Chiến Đỉnh Cao Và Cơn Mưa Bàn Thắng',
 N'Trận chung kết Cúp C1 châu Âu đã cống hiến cho hàng trăm triệu khán giả toàn cầu 90 phút thi đấu kịch tính với chất lượng chuyên môn đỉnh cao, khẳng định sức hấp dẫn số một của bóng đá đương đại.',
 N'<p class="lead">Sân vận động chật kín hơn 75.000 khán giả đã được chứng kiến một trong những trận cầu kinh điển nhất lịch sử bóng đá hiện đại. Cả hai đội bóng hàng đầu châu Âu đã cống hiến lối chơi tấn công rực lửa với tốc độ luân chuyển bóng chóng mặt.</p>
 
@@ -248,8 +248,8 @@ GO
 INSERT INTO [dbo].[ActivityLogs] ([user_id], [username], [action_type], [entity_type], [entity_id], [description], [created_at])
 VALUES 
 ('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'LOGIN', 'Auth', 'admin001', N'Đăng nhập hệ thống quản trị thành công', DATEADD(MINUTE, -120, GETDATE())),
-('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'CREATE', 'News', 'NEWS001', N'Xuất bản bài viết tiêu điểm: Kỷ Nguyên Agentic AI 2026', DATEADD(MINUTE, -115, GETDATE())),
+('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'CREATE', 'News', 'NEWS001', N'Xuất bản bài viết tiêu điểm: Kỷ Nguyên Agentic AI 2025', DATEADD(MINUTE, -115, GETDATE())),
 ('rep001', N'Nhà Báo - Trần Khánh Duy', 'CREATE', 'News', 'NEWS002', N'Tạo mới bài viết: Tối Ưu Hóa Hạ Tầng Dữ Liệu HikariCP', DATEADD(MINUTE, -90, GETDATE())),
-('rep002', N'Biên Tập Viên - Lê Minh Tú', 'CREATE', 'News', 'NEWS004', N'Xuất bản bài viết: Kinh Tế Số Việt Nam 2026', DATEADD(MINUTE, -60, GETDATE())),
+('rep002', N'Biên Tập Viên - Lê Minh Tú', 'CREATE', 'News', 'NEWS004', N'Xuất bản bài viết: Kinh Tế Số Việt Nam 2025', DATEADD(MINUTE, -60, GETDATE())),
 ('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'UPDATE', 'Category', 'TECH', N'Cập nhật tên danh mục thành Công nghệ & AI', DATEADD(MINUTE, -30, GETDATE()));
 GO

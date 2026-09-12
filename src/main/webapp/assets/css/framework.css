@@ -128,7 +128,7 @@
 /* Active State */
 .dropdown-menu .dropdown-item.active,
 .dropdown-menu .dropdown-item:active {
-    background: linear-gradient(135deg, #007bff, #0056b3) !important;
+    background: linear-gradient(135deg, #15803d, #16a34a) !important;
     color: #fff !important;
 }
 
@@ -160,12 +160,12 @@
 
 .btn-primary:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4) !important;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4) !important;
 }
 
 .btn-success:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4) !important;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4) !important;
 }
 
 .btn-danger:hover {
@@ -182,7 +182,7 @@
 .card:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
-    border-color: var(--brand-accent, #2563eb) !important;
+    border-color: var(--brand-accent, #16a34a) !important;
 }
 
 /* ========== Link Enhancements ========== */
@@ -197,8 +197,8 @@ a:hover {
 /* ========== Form Enhancements ========== */
 .form-control:focus,
 .form-select:focus {
-    border-color: #007bff !important;
-    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25) !important;
+    border-color: #16a34a !important;
+    box-shadow: 0 0 0 0.25rem rgba(22, 163, 74, 0.25) !important;
     transform: translateY(-1px) !important;
 }
 
@@ -208,7 +208,7 @@ a:hover {
 }
 
 .table tbody tr:hover {
-    background-color: rgba(0, 123, 255, 0.05) !important;
+    background-color: rgba(22, 163, 74, 0.05) !important;
     transform: scale(1.01) !important;
 }
 

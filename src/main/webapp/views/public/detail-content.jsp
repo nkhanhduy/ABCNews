@@ -26,7 +26,7 @@
                 <span class="mx-1">•</span>
                 <span>${news.viewCount} lượt xem</span>
                 <span class="mx-1">•</span>
-                <span class="badge bg-light text-secondary border px-2 py-1" id="readingTimeBadge" title="Thời gian đọc ước tính">
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" id="readingTimeBadge" title="Thời gian đọc ước tính">
                     <span id="readingTimeText">1 phút đọc</span>
                 </span>
             </div>
@@ -72,7 +72,7 @@
 
             <!-- Tóm tắt Sapo -->
             <c:if test="${not empty news.summary}">
-                <div class="alert alert-light border-start border-4 border-primary mb-4 p-3 rounded-2">
+                <div class="alert alert-light border-start border-4 border-success mb-4 p-3 rounded-2">
                     <p class="mb-0 fst-italic fw-semibold text-secondary" style="line-height: 1.7;">${news.summary}</p>
                 </div>
             </c:if>
@@ -110,7 +110,7 @@
             <i class="fas fa-exclamation-triangle fa-3x mb-3 text-warning"></i>
             <h2>Không tìm thấy bản tin</h2>
             <p>Bản tin bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.</p>
-            <a href="${pageContext.request.contextPath}/home" class="btn btn-primary">
+            <a href="${pageContext.request.contextPath}/home" class="btn btn-success">
                 <i class="fas fa-home me-1"></i>Quay về trang chủ
             </a>
         </div>

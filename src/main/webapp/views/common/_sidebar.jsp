@@ -1,6 +1,6 @@
 <%-- 
   File: _sidebar.jsp
-  Description: Sidebar tiện ích phong cách báo chí thanh lịch, thống nhất theme Deep Slate
+  Description: Sidebar tiện ích tin tức - Chuẩn theme Xanh lá sáng đồng bộ
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c"%>
@@ -10,15 +10,17 @@
 <div class="d-flex flex-column gap-4">
     <!-- 1. Tin xem nhiều nhất -->
     <div class="card border rounded-3 overflow-hidden shadow-sm">
-        <div class="card-header bg-dark text-white py-3 border-0">
-            <h6 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">Tin xem nhiều nhất</h6>
+        <div class="card-header bg-success text-white py-2.5 px-3 border-0">
+            <h6 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px; font-size: 0.88rem;">
+                <i class="fas fa-fire me-2"></i>Tin xem nhiều nhất
+            </h6>
         </div>
         <div class="list-group list-group-flush">
             <c:forEach var="news" items="${top5HotNews}" varStatus="status">
                 <a href="${pageContext.request.contextPath}/detail?id=${news.id}"
                     class="list-group-item list-group-item-action p-3">
                     <div class="d-flex align-items-start gap-2">
-                        <span class="badge bg-light text-primary border rounded-circle flex-shrink-0" style="width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700;">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-circle flex-shrink-0" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem;">
                             ${status.count}
                         </span>
                         <div class="flex-grow-1">
@@ -38,8 +40,10 @@
 
     <!-- 2. Tin mới nhất -->
     <div class="card border rounded-3 overflow-hidden shadow-sm">
-        <div class="card-header bg-dark text-white py-3 border-0">
-            <h6 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">Tin mới nhất</h6>
+        <div class="card-header bg-success text-white py-2.5 px-3 border-0">
+            <h6 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px; font-size: 0.88rem;">
+                <i class="fas fa-bolt me-2"></i>Tin mới nhất
+            </h6>
         </div>
         <div class="list-group list-group-flush">
             <c:forEach var="news" items="${top5NewestNews}">
@@ -61,8 +65,10 @@
 
     <!-- 3. Tin bạn đã xem gần đây -->
     <div class="card border rounded-3 overflow-hidden shadow-sm">
-        <div class="card-header bg-dark text-white py-3 border-0">
-            <h6 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">Đã xem gần đây</h6>
+        <div class="card-header bg-success text-white py-2.5 px-3 border-0">
+            <h6 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px; font-size: 0.88rem;">
+                <i class="fas fa-history me-2"></i>Đã xem gần đây
+            </h6>
         </div>
         <div class="list-group list-group-flush">
             <c:forEach var="news" items="${viewedNews}">
@@ -84,8 +90,10 @@
 
     <!-- 4. Đăng ký nhận bản tin -->
     <div class="card border rounded-3 overflow-hidden shadow-sm">
-        <div class="card-header bg-dark text-white py-3 border-0">
-            <h6 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px;">Bản tin Email</h6>
+        <div class="card-header bg-success text-white py-2.5 px-3 border-0">
+            <h6 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 0.5px; font-size: 0.88rem;">
+                <i class="fas fa-envelope me-2"></i>Bản tin Email
+            </h6>
         </div>
         <div class="card-body p-3">
             <p class="small text-secondary mb-3">
@@ -105,7 +113,7 @@
                     <input type="email" name="email" class="form-control"
                         placeholder="Nhập email của bạn..." required autocomplete="email">
                 </div>
-                <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                <button type="submit" class="btn btn-success w-100 fw-semibold">
                     Đăng ký ngay
                 </button>
             </form>

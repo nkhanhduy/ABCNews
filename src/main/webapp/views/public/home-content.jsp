@@ -75,7 +75,7 @@
             <p class="mb-0 text-muted">Hiện tại chưa có bản tin nổi bật nào được xuất bản trên trang nhất.</p>
             <c:if test="${not empty sessionScope.user}">
                 <div class="mt-3">
-                    <a href="${pageContext.request.contextPath}/admin/news" class="btn btn-primary btn-sm">
+                    <a href="${pageContext.request.contextPath}/admin/news" class="btn btn-success btn-sm">
                         Quản lý và xuất bản tin ngay
                     </a>
                 </div>
