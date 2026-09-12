@@ -55,7 +55,7 @@
                 <!-- Footer -->
                 <footer class="admin-footer">
                     <p class="mb-0">
-                        &copy; 2025 ABC News CMS | Đồ án Web Java — Tác giả: <strong>Nguyễn Khánh Duy</strong> (FPT Polytechnic TP. Hồ Chí Minh).
+                        &copy; 2025 ABC News CMS | Dự án Web Java — Tác giả: <strong>Nguyễn Khánh Duy</strong> (FPT Polytechnic TP. Hồ Chí Minh).
                     </p>
                 </footer>
             </main>
