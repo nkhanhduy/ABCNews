@@ -8,7 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
  * BCrypt tự động thêm salt và sử dụng adaptive hashing (slow by design)
  * để chống brute-force attacks.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class PasswordUtil {
     

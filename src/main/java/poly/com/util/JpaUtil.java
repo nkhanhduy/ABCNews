@@ -11,7 +11,7 @@ import jakarta.persistence.Persistence;
  * Quản lý EntityManagerFactory singleton và kết nối Hibernate ORM.
  * Tự động đồng bộ cấu hình với ConfigHelper (12-Factor App).
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class JpaUtil {
 

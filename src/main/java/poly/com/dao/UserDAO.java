@@ -27,7 +27,7 @@ import poly.com.util.PasswordUtil;
  * 
  * Tất cả các phương thức sử dụng PreparedStatement để tránh SQL Injection.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  * @version 1.0
  */
 public class UserDAO {

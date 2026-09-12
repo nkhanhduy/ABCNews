@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
   <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
-  <img src="https://img.shields.io/badge/Tests-82%20passed-success?style=flat-square&logo=junit5&logoColor=white" alt="Tests 82 passed">
+  <img src="https://img.shields.io/badge/Tests-97%20passed-success?style=flat-square&logo=junit5&logoColor=white" alt="Tests 97 passed">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2ea44f?style=flat-square" alt="License MIT"></a>
 </p>
 
@@ -32,7 +32,7 @@ ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành
 | Cơ sở dữ liệu | Microsoft SQL Server 2022 | Lưu trữ dữ liệu quan hệ và kịch bản cập nhật |
 | Xác thực và mã hóa | BCrypt, SecureRandom, Google API Client | Băm mật khẩu, token Remember-Me 256-bit, xác minh Google ID token |
 | Bảo mật ứng dụng | CsrfFilter, Jsoup 1.17.2, SafeImageStorage | Kiểm tra CSRF trên POST, làm sạch HTML và kiểm tra tệp tải lên |
-| Kiểm thử tự động | JUnit 5, Mockito | 82 kiểm thử tự động cho các luồng nghiệp vụ cốt lõi |
+| Kiểm thử tự động | JUnit 5, Mockito | 97 kiểm thử tự động cho các luồng nghiệp vụ cốt lõi |
 | Xây dựng và CI | Apache Maven, GitHub Actions | Đóng gói WAR và kiểm thử tự động trên mỗi push hoặc pull request |
 | Môi trường vận hành | Docker, Docker Compose | Chuẩn hóa môi trường chạy ứng dụng cùng SQL Server |
 
@@ -112,15 +112,20 @@ ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành
 |:---:|:---:|
 | ![Trang đăng nhập](.github/images/login_page.png) | ![Admin Dashboard](.github/images/admin_dashboard.png) |
 
-#### Quản lý bài viết và người dùng
-| Quản lý bài viết và soạn thảo | Quản lý người dùng và vai trò |
+#### Quản lý bài viết và chuyên mục
+| Quản lý bài viết và soạn thảo | Quản lý loại tin và slug |
 |:---:|:---:|
-| ![Quản lý bài viết](.github/images/admin_news.png) | ![Quản lý người dùng](.github/images/admin_users.png) |
+| ![Quản lý bài viết](.github/images/admin_news.png) | ![Quản lý loại tin](.github/images/admin_categories.png) |
 
-#### Kiểm duyệt bình luận và hồ sơ cá nhân
-| Kiểm duyệt bình luận độc giả | Hồ sơ tác giả và tải ảnh đại diện |
+#### Quản lý người dùng và kiểm duyệt bình luận
+| Quản lý người dùng và vai trò | Kiểm duyệt bình luận độc giả |
 |:---:|:---:|
-| ![Kiểm duyệt bình luận](.github/images/feature_comments_admin.png) | ![Admin Profile](.github/images/admin_profile.png) |
+| ![Quản lý người dùng](.github/images/admin_users.png) | ![Kiểm duyệt bình luận](.github/images/admin_comments.png) |
+
+#### Hồ sơ quản trị viên
+| Hồ sơ cá nhân và đổi mật khẩu |
+|:---:|
+| ![Hồ sơ quản trị viên](.github/images/admin_profile.png) |
 
 ---
 
@@ -250,13 +255,16 @@ Yêu cầu môi trường: Đã cài đặt Docker Desktop.
 git clone https://github.com/nkhanhduy/ABCNews.git
 cd ABCNews
 
-# 2. Khởi chạy toàn bộ hệ thống gồm Tomcat và SQL Server 2022
-docker compose up -d
+# 2. Tạo tệp cấu hình môi trường từ mẫu (.env.example)
+cp .env.example .env
 
-# 3. Kiểm tra trạng thái container
+# 3. Khởi chạy toàn bộ hệ thống gồm Tomcat và SQL Server 2022
+docker compose up --build -d
+
+# 4. Kiểm tra trạng thái container
 docker compose ps
 
-# 4. Truy cập ứng dụng qua trình duyệt:
+# 5. Truy cập ứng dụng qua trình duyệt:
 # - Trang chủ độc giả: http://localhost:8088/home
 # - Trang đăng nhập:   http://localhost:8088/login
 ```
@@ -271,12 +279,10 @@ docker compose down
 Yêu cầu môi trường: JDK 17, Maven 3.8 trở lên, Microsoft SQL Server 2019 trở lên và Apache Tomcat 10.1.
 
 Các bước thực hiện:
-1. Tạo cơ sở dữ liệu `ABCNews` trong SQL Server và chạy lần lượt các kịch bản:
-   - `schema/ABCNews.sql`
-   - `schema/seed_data.sql`
-   - `schema/migrations/001_security_refactor.sql`
-   - `schema/migrations/002_category_slug.sql`
-2. Tạo tệp `src/main/resources/app.properties` từ tệp mẫu và cập nhật thông tin kết nối cơ sở dữ liệu.
+1. Tạo cơ sở dữ liệu và nạp dữ liệu mẫu vào SQL Server:
+   - Cài đặt mới: Chạy lần lượt `schema/ABCNews.sql` (tạo bảng và khóa) rồi đến `schema/seed_data.sql` (nạp dữ liệu demo).
+   - *Ghi chú: Thư mục `schema/migrations/` chỉ dùng khi nâng cấp từ các phiên bản cơ sở dữ liệu cũ hơn.*
+2. Tạo tệp `src/main/resources/app.properties` từ tệp mẫu `app.properties.example` và cập nhật thông tin kết nối cơ sở dữ liệu.
 3. Chạy kiểm thử tự động và đóng gói tệp WAR:
    ```bash
    mvn clean test
@@ -300,7 +306,7 @@ Lệnh thực thi toàn bộ kiểm thử:
 mvn clean test
 ```
 
-Kết quả kiểm thử thực tế trên mã nguồn: **82/82 tests passed** không có lỗi và không có cảnh báo bỏ qua.
+Kết quả kiểm thử thực tế trên mã nguồn: **97/97 tests passed** không có lỗi và không có cảnh báo bỏ qua.
 
 ---
 
@@ -317,9 +323,12 @@ Dự án thiết lập quy trình Continuous Integration tự động qua GitHub
 
 Hệ thống có sẵn các tài khoản mẫu trong kịch bản `schema/seed_data.sql` để phục vụ trải nghiệm:
 
+> [!NOTE]
+> Các tài khoản này chỉ phục vụ môi trường demo và phát triển local.
+
 | Vai trò | Email đăng nhập | Mật khẩu mặc định | Phạm vi quyền hạn |
 |---|---|:---:|---|
-| Quản trị tối cao | `superadmin@abcnews.com` | `123456` | Toàn quyền hệ thống, quản lý và phân quyền các tài khoản quản trị khác |
+| Quản trị tối cao (Super Admin) | `superadmin@abcnews.com` | `123456` | Toàn quyền hệ thống, quản trị tài khoản admin và phân bổ vai trò |
 | Quản trị viên | `admin@abcnews.com` | `123456` | Quản trị bài viết, chuyên mục, kiểm duyệt bình luận và quản lý phóng viên |
 | Phóng viên | `reporter1@abcnews.com` | `123456` | Soạn thảo và quản lý bài viết do chính mình xuất bản |
 
@@ -346,4 +355,4 @@ Thông qua việc xây dựng dự án cá nhân này, tôi đã thực hành c�
 - Vai trò: Sinh viên ngành Phát triển phần mềm — Cao đẳng FPT Polytechnic
 - GitHub: [github.com/nkhanhduy](https://github.com/nkhanhduy)
 - Email: [khanhndts02168@gmail.com](mailto:khanhndts02168@gmail.com)
-- Năm thực hiện: 2025
+- Năm thực hiện: 2025 - 2026

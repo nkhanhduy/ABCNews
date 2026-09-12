@@ -9,7 +9,7 @@ import poly.com.service.CategoryService;
 /**
  * Service Implementation quản lý danh mục (CategoryServiceImpl)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class CategoryServiceImpl implements CategoryService {
 

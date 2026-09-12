@@ -18,7 +18,7 @@ import poly.com.util.XssSanitizer;
  * Controller xử lý gửi bình luận từ độc giả ở trang chi tiết bài viết
  * Tích hợp XSS Sanitization và Cooldown chống spam
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 @WebServlet("/comment")
 public class CommentController extends BaseController {

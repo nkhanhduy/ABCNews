@@ -17,7 +17,7 @@ import com.itextpdf.kernel.font.PdfFontFactory;
  * - DejaVuSans.ttf (Regular)
  * - DejaVuSans-Bold.ttf (Bold)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class FontHelper {
     

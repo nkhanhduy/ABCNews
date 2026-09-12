@@ -6,7 +6,7 @@ import poly.com.entity.Newsletter;
 /**
  * Service Interface quản lý đăng ký bản tin (NewsletterService)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public interface NewsletterService {
 

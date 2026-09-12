@@ -5,7 +5,7 @@ package poly.com.exception;
  * Được chuyển đổi từ SQLException / Unique Constraint Violation (UX_Categories_Slug)
  * trong tầng DAO/JDBC mà không phụ thuộc vào Spring Framework.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class DuplicateSlugException extends RuntimeException {
 

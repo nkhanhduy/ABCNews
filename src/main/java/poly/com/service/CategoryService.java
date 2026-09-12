@@ -6,7 +6,7 @@ import poly.com.entity.Category;
 /**
  * Service Interface quản lý danh mục loại tin (CategoryService)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public interface CategoryService {
 

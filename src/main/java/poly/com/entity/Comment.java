@@ -15,7 +15,7 @@ import jakarta.persistence.Transient;
  * Entity đại diện cho bình luận của độc giả dưới mỗi bài viết
  * Hỗ trợ quy trình kiểm duyệt (Moderated Comments)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 @Entity
 @Table(name = "Comments")

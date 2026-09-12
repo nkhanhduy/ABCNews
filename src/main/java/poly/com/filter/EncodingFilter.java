@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * Đảm bảo dữ liệu tiếng Việt có dấu luôn được truyền và hiển thị chính xác 100%,
  * chống lỗi font (mojibake) trên toàn bộ hệ sinh thái Tomcat / Jakarta EE.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 @WebFilter("/*")
 public class EncodingFilter extends HttpFilter {

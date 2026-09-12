@@ -5,16 +5,16 @@ services:
     container_name: abcnews-sqlserver
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=ABCNews@2026!
+      - MSSQL_SA_PASSWORD=${DB_PASSWORD:?DB_PASSWORD is required in .env file}
       - MSSQL_PID=Developer
     ports:
-      - "1433:1433"
+      - "${DB_PORT:-1433}:1433"
     volumes:
       - mssql_data:/var/opt/mssql
     healthcheck:
       test: >
-        /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "ABCNews@2026!" -C -Q "SELECT 1" ||
-        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "ABCNews@2026!" -Q "SELECT 1"
+        /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${DB_PASSWORD:?DB_PASSWORD is required in .env file}" -C -Q "SELECT 1" ||
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${DB_PASSWORD:?DB_PASSWORD is required in .env file}" -Q "SELECT 1"
       interval: 10s
       timeout: 5s
       retries: 5
@@ -29,11 +29,13 @@ services:
       sqlserver:
         condition: service_healthy
     volumes:
-      - ./schema/ABCNews.sql:/init.sql
+      - ./schema:/schema
     entrypoint: >
       bash -c "
-      echo '>> Đang khởi tạo CSDL ABCNews từ kịch bản schema...'
-      /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P 'ABCNews@2026!' -C -f 65001 -i /init.sql || /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'ABCNews@2026!' -f 65001 -i /init.sql
+      echo '>> Đang nạp cấu trúc CSDL ABCNews...'
+      /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P '${DB_PASSWORD:?DB_PASSWORD is required in .env file}' -C -f 65001 -i /schema/ABCNews.sql || /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P '${DB_PASSWORD:?DB_PASSWORD is required in .env file}' -f 65001 -i /schema/ABCNews.sql
+      echo '>> Đang nạp dữ liệu mẫu seed data...'
+      /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P '${DB_PASSWORD:?DB_PASSWORD is required in .env file}' -C -f 65001 -i /schema/seed_data.sql || /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P '${DB_PASSWORD:?DB_PASSWORD is required in .env file}' -f 65001 -i /schema/seed_data.sql
       echo '>> Hoàn tất nạp CSDL ABCNews!'
       "
     restart: "no"
@@ -45,15 +47,15 @@ services:
       dockerfile: Dockerfile
     container_name: abcnews-app
     ports:
-      - "8088:8080"
+      - "${APP_PORT:-8088}:8080"
     environment:
       - DB_HOST=sqlserver
       - DB_PORT=1433
-      - DB_NAME=ABCNews
-      - DB_USER=sa
-      - DB_PASSWORD=ABCNews@2026!
-      - DB_URL=jdbc:sqlserver://sqlserver:1433;databaseName=ABCNews;encrypt=false;trustServerCertificate=true;sendStringParametersAsUnicode=true;characterEncoding=UTF-8;
-      - APP_BASE_URL=http://localhost:8088
+      - DB_NAME=${DB_NAME:-ABCNews}
+      - DB_USER=${DB_USER:-sa}
+      - DB_PASSWORD=${DB_PASSWORD:?DB_PASSWORD is required in .env file}
+      - DB_URL=jdbc:sqlserver://sqlserver:1433;databaseName=${DB_NAME:-ABCNews};encrypt=false;trustServerCertificate=true;sendStringParametersAsUnicode=true;characterEncoding=UTF-8;
+      - APP_BASE_URL=${APP_BASE_URL:-http://localhost:8088}
     depends_on:
       sqlserver:
         condition: service_healthy

@@ -19,7 +19,7 @@ import poly.com.util.ConfigHelper;
 
 /**
  * Controller xử lý đăng nhập - hiển thị form và xác thực thông tin đăng nhập
- * Sử dụng tầng Service theo chuẩn 3-Tier Clean Architecture
+ * Sử dụng tầng Service cho xử lý nghiệp vụ cốt lõi theo mô hình Layered MVC
  */
 @WebServlet("/login")
 public class LoginController extends HttpServlet {

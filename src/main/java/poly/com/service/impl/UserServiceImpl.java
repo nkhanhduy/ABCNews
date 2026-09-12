@@ -15,7 +15,7 @@ import poly.com.util.PasswordUtil;
  * 
  * Thực thi các quy tắc nghiệp vụ, kiểm tra ràng buộc phân quyền và gọi DAO.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class UserServiceImpl implements UserService {
 

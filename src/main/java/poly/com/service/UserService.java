@@ -7,9 +7,9 @@ import poly.com.entity.User;
  * Service Interface quản lý người dùng (UserService)
  * 
  * Đóng gói toàn bộ nghiệp vụ tài khoản, xác thực, phân quyền và kiểm toán
- * theo mô hình 3-Tier Clean Architecture.
+ * theo mô hình phân tầng Layered MVC.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public interface UserService {
 

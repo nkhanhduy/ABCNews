@@ -73,12 +73,24 @@ desktop.ini
 logs/
 
 # ====================================
-# Local Configuration / Secrets (Recommended)
+# Local Configuration / Secrets
 # ====================================
 **/app.properties
 !**/app.properties.example
 local.env
 .env
+.env.*
+!.env.example
+
+# ====================================
+# Runtime User Uploads (Avatars & Attachments)
+# ====================================
+src/main/webapp/uploads/*
+!src/main/webapp/uploads/.gitkeep
+!src/main/webapp/uploads/avatars/
+src/main/webapp/uploads/avatars/*
+!src/main/webapp/uploads/avatars/.gitkeep
+!src/main/webapp/uploads/avatars/a0abfecd-d31a-41bd-b209-258fee975d1c.png
 
 # ====================================
 # Scripts & Unnecessary Binaries

@@ -14,7 +14,7 @@ import poly.com.util.EmailService;
 /**
  * Service Implementation quản lý tin tức (NewsServiceImpl)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class NewsServiceImpl implements NewsService {
 

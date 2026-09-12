@@ -13,14 +13,14 @@ DELETE FROM [dbo].[Users];
 DELETE FROM [dbo].[Newsletters];
 GO
 
--- 2. TÀI KHOẢN NGƯỜI DÙNG (USERS)
--- Mật khẩu mặc định: 123456 (Hệ thống tự động nâng cấp mã hóa BCrypt khi đăng nhập)
-INSERT INTO [dbo].[Users] ([Id], [Password], [Fullname], [Birthday], [Gender], [Mobile], [Email], [Role], [AuthProvider], [Enabled], [ImagePath])
+-- 2. TÀI KHOẢN NGƯỜI DÙNG DEMO (USERS)
+-- Mật khẩu mặc định: 123456 (Chỉ phục vụ môi trường demo/local, hệ thống tự động nâng cấp mã hóa BCrypt khi đăng nhập)
+INSERT INTO [dbo].[Users] ([Id], [Password], [Fullname], [Birthday], [Gender], [Mobile], [Email], [Role], [IsSuperAdmin], [AuthProvider], [Enabled], [ImagePath])
 VALUES 
-('superadmin001', '123456', N'Quản Trị Tối Cao - Nguyễn Duy Khánh', '2004-05-15', 1, '0912345678', 'superadmin@abcnews.com', 1, 'local', 1, '/uploads/avatars/a0abfecd-d31a-41bd-b209-258fee975d1c.png'),
-('admin001', '123456', N'Quản Trị Viên - Nguyễn Khánh Duy', '2000-01-10', 1, '0911223344', 'admin@abcnews.com', 1, 'local', 1, NULL),
-('rep001', '123456', N'Nhà Báo - Trần Khánh Duy', '1998-08-20', 1, '0987654321', 'reporter1@abcnews.com', 0, 'local', 1, NULL),
-('rep002', '123456', N'Biên Tập Viên - Lê Minh Tú', '1999-11-05', 0, '0908123456', 'reporter2@abcnews.com', 0, 'local', 1, NULL);
+('superadmin001', '123456', N'Quản Trị Tối Cao - Nguyễn Duy Khánh', '1995-01-01', 1, '0900000000', 'superadmin@abcnews.com', 1, 1, 'local', 1, '/uploads/avatars/a0abfecd-d31a-41bd-b209-258fee975d1c.png'),
+('admin001', '123456', N'Quản Trị Viên (Demo)', '1996-02-02', 1, '0900000001', 'admin@abcnews.com', 1, 0, 'local', 1, NULL),
+('rep001', '123456', N'Phóng Viên 1 (Demo)', '1998-03-03', 1, '0900000002', 'reporter1@abcnews.com', 0, 0, 'local', 1, NULL),
+('rep002', '123456', N'Biên Tập Viên (Demo)', '1999-04-04', 0, '0900000003', 'reporter2@abcnews.com', 0, 0, 'local', 1, NULL);
 GO
 
 -- 3. CHUYÊN MỤC TIN TỨC (CATEGORIES)
@@ -65,27 +65,26 @@ DATEADD(HOUR, -3, GETDATE()), 'admin001', 8420, 'TECH', 1);
 INSERT INTO [dbo].[News] ([Id], [Title], [Summary], [Content], [Image], [PostedDate], [Author], [ViewCount], [CategoryId], [Home])
 VALUES 
 ('b3cc6eb9-74ff-49a3-8875-ba00e050a146', 
-N'Tối Ưu Hóa Hạ Tầng Dữ Liệu Doanh Nghiệp Với HikariCP & Clean Architecture',
-N'Việc áp dụng giải pháp Connection Pool hiện đại như HikariCP kết hợp chuẩn thiết kế 3 tầng (3-Tier Architecture) giúp các hệ thống báo điện tử và thương mại điện tử duy trì thời gian phản hồi dưới 50ms ngay cả trong các khung giờ cao điểm.',
-N'<p class="lead">Trong các hệ thống báo điện tử và dịch vụ trực tuyến quy mô lớn, việc nghẽn cổ chai tại tầng truy xuất dữ liệu (Data Access Layer) luôn là cơn ác mộng của các kỹ sư hạ tầng. Bài viết này phân tích sâu cách thức ABCNews triển khai kiến trúc hồ kết nối HikariCP cùng Hibernate JPA để đạt thông lượng hàng chục nghìn yêu cầu mỗi giây.</p>
+N'Tối Ưu Hóa Truy Vấn Cơ Sở Dữ Liệu Với Kỹ Thuật Đánh Chỉ Mục (Indexing)',
+N'Thiết kế và áp dụng các chỉ mục (Clustered và Nonclustered Index) hợp lý giúp giảm thiểu chi phí quét toàn bộ bảng (Table Scan), nâng cao tốc độ phản hồi cho các câu truy vấn phức tạp.',
+N'<p class="lead">Trong các hệ thống tin tức và ứng dụng web có lưu lượng truy cập lớn, tối ưu hóa cơ sở dữ liệu quan hệ luôn là một trong những ưu tiên hàng đầu của đội ngũ kỹ thuật. Việc hiểu rõ cấu trúc chỉ mục (Index) giúp hệ thống duy trì hiệu năng ổn định ngay cả khi lượng bản ghi tăng lên nhanh chóng.</p>
 
-<h3>1. Tại Sao HikariCP Được Mệnh Danh Là Connection Pool Nhanh Nhất?</h3>
-<p>HikariCP đạt được hiệu năng vượt trội so với các đối thủ lâu đời như Apache DBCP hay C3P0 nhờ vào hàng loạt tinh hoa tối ưu hóa cấp độ bytecode:</p>
+<h3>1. Phân Biệt Clustered Index Và Nonclustered Index</h3>
+<p>Một bảng trong SQL Server chỉ có thể có tối đa một Clustered Index nhưng có thể có nhiều Nonclustered Index:</p>
 <ul>
-    <li><strong>FastList thay thế cho ArrayList:</strong> Loại bỏ các bước kiểm tra biên không cần thiết khi giải phóng Statement và ResultSet.</li>
-    <li><strong>Sử dụng Javassist để sinh mã trực tiếp:</strong> Giảm thiểu tối đa overhead của Java Reflection trong lúc khởi tạo kết nối vật lý.</li>
-    <li><strong>Thuật toán lock-free thông minh:</strong> Tối đa hóa khả năng xử lý đa luồng đồng thời của CPU hiện đại mà không gặp tình trạng tranh chấp tài nguyên (thread contention).</li>
+    <li><strong>Clustered Index:</strong> Sắp xếp và lưu trữ vật lý các dòng dữ liệu trong bảng dựa trên khóa chỉ mục (thường là Primary Key).</li>
+    <li><strong>Nonclustered Index:</strong> Tạo cấu trúc cây B-tree riêng biệt chứa con trỏ trỏ đến vị trí dữ liệu thực tế trong bảng.</li>
 </ul>
 
-<h3>2. Mô Hình Phân Tầng Clean Architecture Tại ABCNews</h3>
-<p>Toàn bộ mã nguồn backend được tổ chức chặt chẽ theo nguyên lý Clean Architecture:</p>
+<h3>2. Chiến Lược Đánh Chỉ Mục Hiệu Quả</h3>
+<p>Để tối ưu hóa hiệu năng truy vấn, các kỹ sư cơ sở dữ liệu thường áp dụng các nguyên tắc sau:</p>
 <ol>
-    <li><strong>Presentation Layer:</strong> Jakarta Servlets và Bộ lọc mã hóa EncodingFilter xử lý routing, bảo vệ phân quyền AuthFilter.</li>
-    <li><strong>Service & Business Layer:</strong> Đảm bảo toàn vẹn nghiệp vụ, tích hợp hashing BCrypt chuẩn OWASP và gửi thông báo OTP bất đồng bộ.</li>
-    <li><strong>Data Persistence Layer:</strong> Sự kết hợp linh hoạt giữa JDBC Template thuần cho các báo cáo thống kê phức tạp và JPA Hibernate ORM cho các tác vụ CRUD an toàn.</li>
+    <li>Đánh chỉ mục trên các cột thường xuyên dùng để lọc (mệnh đề WHERE), kết nối (JOIN) và sắp xếp (ORDER BY).</li>
+    <li>Sử dụng Composite Index cho các truy vấn lọc đồng thời nhiều điều kiện.</li>
+    <li>Thường xuyên theo dõi Execution Plan để phát hiện các truy vấn chậm và thiếu chỉ mục (Missing Index Warnings).</li>
 </ol>
 
-<p>Nhờ cấu trúc này, thời gian xử lý trung bình cho mỗi lượt đọc tin tức chỉ dao động từ 12ms đến 25ms, mang lại trải nghiệm mượt mà tuyệt đối cho bạn đọc toàn cầu.</p>',
+<p>Việc cân bằng giữa số lượng chỉ mục và chi phí ghi dữ liệu là chìa khóa để duy trì một hệ thống cơ sở dữ liệu khỏe mạnh và phản hồi nhanh chóng.</p>',
 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80',
 DATEADD(HOUR, -8, GETDATE()), 'rep001', 5690, 'TECH', 1);
 
@@ -240,28 +239,28 @@ GO
 -- 5. DANH SÁCH NEWSLETTER ĐĂNG KÝ MẪU
 INSERT INTO [dbo].[Newsletters] ([Email], [Enabled], [SubscribedDate])
 VALUES 
-('contact@vietnamtech.org', 1, DATEADD(DAY, -10, GETDATE())),
-('lead.developer@fpt.edu.vn', 1, DATEADD(DAY, -7, GETDATE())),
-('recruiter.talent@vng.com.vn', 1, DATEADD(DAY, -3, GETDATE())),
+('subscriber1@example.com', 1, DATEADD(DAY, -10, GETDATE())),
+('subscriber2@example.com', 1, DATEADD(DAY, -7, GETDATE())),
+('subscriber3@example.com', 1, DATEADD(DAY, -3, GETDATE())),
 ('subscriber.digest@abcnews.com', 1, DATEADD(DAY, -1, GETDATE()));
 GO
 
 -- 6. NHẬT KÝ HOẠT ĐỘNG QUẢN TRỊ MẪU (ACTIVITY LOGS)
 INSERT INTO [dbo].[ActivityLogs] ([user_id], [username], [action_type], [entity_type], [entity_id], [description], [created_at])
 VALUES 
-('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'LOGIN', 'Auth', 'admin001', N'Đăng nhập hệ thống quản trị thành công', DATEADD(MINUTE, -120, GETDATE())),
-('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'CREATE', 'News', '4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Xuất bản bài viết tiêu điểm: Kỷ Nguyên Agentic AI 2025', DATEADD(MINUTE, -115, GETDATE())),
-('rep001', N'Nhà Báo - Trần Khánh Duy', 'CREATE', 'News', 'b3cc6eb9-74ff-49a3-8875-ba00e050a146', N'Tạo mới bài viết: Tối Ưu Hóa Hạ Tầng Dữ Liệu HikariCP', DATEADD(MINUTE, -90, GETDATE())),
-('rep002', N'Biên Tập Viên - Lê Minh Tú', 'CREATE', 'News', 'b3cd69a0-1662-4ab4-98dc-f36eb0fbd99d', N'Xuất bản bài viết: Kinh Tế Số Việt Nam 2025', DATEADD(MINUTE, -60, GETDATE())),
-('admin001', N'Tổng Biên Tập - Nguyễn Khánh Duy', 'UPDATE', 'Category', 'TECH', N'Cập nhật tên danh mục thành Công nghệ & AI', DATEADD(MINUTE, -30, GETDATE()));
+('admin001', N'Quản Trị Viên (Demo)', 'LOGIN', 'Auth', 'admin001', N'Đăng nhập hệ thống quản trị thành công', DATEADD(MINUTE, -120, GETDATE())),
+('admin001', N'Quản Trị Viên (Demo)', 'CREATE', 'News', '4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Xuất bản bài viết tiêu điểm: Kỷ Nguyên Agentic AI 2026', DATEADD(MINUTE, -115, GETDATE())),
+('rep001', N'Phóng Viên 1 (Demo)', 'CREATE', 'News', 'b3cc6eb9-74ff-49a3-8875-ba00e050a146', N'Tạo mới bài viết: Tối Ưu Hóa Truy Vấn Database Indexing', DATEADD(MINUTE, -90, GETDATE())),
+('rep002', N'Biên Tập Viên (Demo)', 'CREATE', 'News', 'b3cd69a0-1662-4ab4-98dc-f36eb0fbd99d', N'Xuất bản bài viết: Kinh Tế Số Việt Nam 2026', DATEADD(MINUTE, -60, GETDATE())),
+('admin001', N'Quản Trị Viên (Demo)', 'UPDATE', 'Category', 'TECH', N'Cập nhật tên danh mục thành Công nghệ & AI', DATEADD(MINUTE, -30, GETDATE()));
 GO
 
 -- 7. BÌNH LUẬN ĐỘC GIẢ MẪU (COMMENTS)
 -- Status: 0 (Chờ duyệt), 1 (Đã duyệt), 2 (Từ chối)
 INSERT INTO [dbo].[Comments] ([NewsId], [AuthorName], [AuthorEmail], [Content], [CreatedDate], [Status])
 VALUES 
-('4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Lê Hoàng Nam', 'hoangnam.dev@gmail.com', N'Bài viết rất sâu sắc và đón đầu xu hướng công nghệ Agentic AI năm 2025. Cảm ơn tòa soạn!', DATEADD(HOUR, -2, GETDATE()), 1),
-('4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Nguyễn Thu Thảo', 'thuthao.tech@outlook.com', N'Hệ thống tác tử thông minh thực sự sẽ giải phóng sức lao động cho các lập trình viên.', DATEADD(MINUTE, -45, GETDATE()), 1),
-('4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Đặng Quốc Bảo', 'baodang@yahoo.com', N'Liệu trong tương lai Agentic AI có khả năng tự sửa lỗi production mà không cần con người review không?', DATEADD(MINUTE, -10, GETDATE()), 0),
-('b3cd69a0-1662-4ab4-98dc-f36eb0fbd99d', N'Phạm Quang Huy', 'quanghuy@fpt.com', N'Số liệu thống kê về kinh tế số rất chi tiết và đáng tin cậy. Chúc tòa soạn phát triển mạnh mẽ!', DATEADD(MINUTE, -5, GETDATE()), 0);
+('4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Độc Giả 1 (Demo)', 'reader1@example.com', N'Bài viết rất sâu sắc và đón đầu xu hướng công nghệ Agentic AI năm 2026. Cảm ơn tòa soạn!', DATEADD(HOUR, -2, GETDATE()), 1),
+('4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Độc Giả 2 (Demo)', 'reader2@example.com', N'Hệ thống tác tử thông minh thực sự sẽ mở rộng khả năng tự động hóa cho các kỹ sư phần mềm.', DATEADD(MINUTE, -45, GETDATE()), 1),
+('4594fcf6-c827-4ace-bc20-9bff52d424d8', N'Độc Giả 3 (Demo)', 'reader3@example.com', N'Các giải pháp đánh chỉ mục và tối ưu hóa truy vấn được phân tích rất trực quan và dễ áp dụng.', DATEADD(MINUTE, -10, GETDATE()), 0),
+('b3cd69a0-1662-4ab4-98dc-f36eb0fbd99d', N'Độc Giả 4 (Demo)', 'reader4@example.com', N'Số liệu thống kê về kinh tế số rất chi tiết và đáng tin cậy. Chúc tòa soạn phát triển mạnh mẽ!', DATEADD(MINUTE, -5, GETDATE()), 0);
 GO

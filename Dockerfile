@@ -16,8 +16,8 @@ RUN mvn clean package -DskipTests -B
 
 # STAGE 2: Runtime Image với Apache Tomcat 10.1 (Jakarta EE 10)
 FROM tomcat:10.1-jdk17-temurin-jammy
-LABEL maintainer="Nguyen Khanh Duy <khanhndts02168@gmail.com>"
-LABEL description="ABCNews Enterprise CMS Web Application"
+LABEL maintainer="Nguyen Duy Khanh <khanhndts02168@gmail.com>"
+LABEL description="ABCNews news website and editorial content management project"
 
 # Dọn dẹp ứng dụng mặc định của Tomcat
 RUN rm -rf /usr/local/tomcat/webapps/*
