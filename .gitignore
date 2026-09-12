@@ -75,6 +75,7 @@ logs/
 # ====================================
 # Local Configuration / Secrets (Recommended)
 # ====================================
-app.properties
+**/app.properties
+!**/app.properties.example
 local.env
 .env
