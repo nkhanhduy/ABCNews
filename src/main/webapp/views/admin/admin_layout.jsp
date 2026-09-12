@@ -73,7 +73,7 @@
                 <!-- Footer -->
                 <footer class="admin-footer">
                     <p class="mb-0">
-                        &copy; 2025 ABC News CMS | Phát triển bởi <strong>Nguyễn Khánh Duy</strong> — FPT Polytechnic TP. Hồ Chí Minh
+                        &copy; 2025 - 2026 ABC News CMS | Dự án học tập của sinh viên <strong>Nguyễn Duy Khánh</strong> — Cao đẳng FPT Polytechnic
                     </p>
                 </footer>
             </main>

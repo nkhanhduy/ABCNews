@@ -18,7 +18,7 @@ import jakarta.servlet.http.Part;
  * 
  * Tất cả file ảnh được lưu vào thư mục /uploads trong webapp directory.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  * @version 1.0
  */
 public class FileUploadHelper {

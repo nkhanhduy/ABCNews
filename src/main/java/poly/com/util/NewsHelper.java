@@ -18,7 +18,7 @@ import poly.com.service.NewsService;
  * 
  * Giúp giảm code trùng lặp trong các Controller liên quan đến News.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  * @version 1.0
  */
 public class NewsHelper {

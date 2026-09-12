@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
   <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
-  <img src="https://img.shields.io/badge/Tests-82%20passed-success?style=flat-square&logo=junit5&logoColor=white" alt="Tests 82 passed">
+  <img src="https://img.shields.io/badge/Tests-97%20passed-success?style=flat-square&logo=junit5&logoColor=white" alt="Tests 97 passed">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2ea44f?style=flat-square" alt="License MIT"></a>
 </p>
 
@@ -32,7 +32,7 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 | Datenbank | Microsoft SQL Server 2022 | Relationale Datenhaltung mit versionierten Migrationen |
 | Authentifizierung und Hashing | BCrypt, SecureRandom, Google API Client | Passwort-Hashing, 256-Bit Remember-Me Token, Google ID-Token Überprüfung |
 | Web-Sicherheit | CsrfFilter, Jsoup 1.17.2, SafeImageStorage | CSRF-Prüfung für POST, HTML-Bereinigung und Datei-Validierung |
-| Automatisierte Tests | JUnit 5, Mockito | 82 automatisierte Tests für zentrale Geschäfts- und Sicherheitsabläufe |
+| Automatisierte Tests | JUnit 5, Mockito | 97 automatisierte Tests für zentrale Geschäfts- und Sicherheitsabläufe |
 | Build und CI | Apache Maven, GitHub Actions | WAR-Paketierung und automatisierte Testausführung bei Push oder Pull Request |
 | Betriebsumgebung | Docker, Docker Compose | Standardisierte lokale Container-Umgebung mit Tomcat und SQL Server |
 
@@ -112,15 +112,20 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 |:---:|:---:|
 | ![Anmeldeseite](.github/images/login_page.png) | ![Admin Dashboard](.github/images/admin_dashboard.png) |
 
-#### Artikel- und Benutzerverwaltung
-| Artikelverwaltung und Editor | Benutzerkonten und Rollen |
+#### Artikel- und Kategorieverwaltung
+| Artikelverwaltung und Editor | Kategorien und Slugs |
 |:---:|:---:|
-| ![Artikelverwaltung](.github/images/admin_news.png) | ![Benutzerverwaltung](.github/images/admin_users.png) |
+| ![Artikelverwaltung](.github/images/admin_news.png) | ![Kategorieverwaltung](.github/images/admin_categories.png) |
 
-#### Kommentarmoderation und Autorenprofil
-| Kommentarmoderation | Autorenprofil und Bild-Upload |
+#### Benutzerverwaltung und Kommentarmoderation
+| Benutzerkonten und Rollen | Kommentarmoderation |
 |:---:|:---:|
-| ![Kommentarmoderation](.github/images/feature_comments_admin.png) | ![Admin Profile](.github/images/admin_profile.png) |
+| ![Benutzerverwaltung](.github/images/admin_users.png) | ![Kommentarmoderation](.github/images/admin_comments.png) |
+
+#### Administratorprofil
+| Profileinstellungen und Passwortänderung |
+|:---:|
+| ![Admin Profile](.github/images/admin_profile.png) |
 
 ---
 
@@ -250,13 +255,16 @@ Voraussetzung: Docker Desktop ist installiert.
 git clone https://github.com/nkhanhduy/ABCNews.git
 cd ABCNews
 
-# 2. Gesamtsystem aus Tomcat und SQL Server 2022 starten
-docker compose up -d
+# 2. Umgebungsdatei aus der Vorlage erstellen (.env.example)
+cp .env.example .env
 
-# 3. Status der Container prüfen
+# 3. Gesamtsystem aus Tomcat und SQL Server 2022 starten
+docker compose up --build -d
+
+# 4. Status der Container prüfen
 docker compose ps
 
-# 4. Im Webbrowser aufrufen:
+# 5. Im Webbrowser aufrufen:
 # - Leserseite: http://localhost:8088/home
 # - Anmeldung:  http://localhost:8088/login
 ```
@@ -271,12 +279,10 @@ docker compose down
 Voraussetzungen: JDK 17, Maven 3.8 oder höher, Microsoft SQL Server 2019 oder höher und Apache Tomcat 10.1.
 
 Schritte zur Einrichtung:
-1. Datenbank `ABCNews` in SQL Server erstellen und folgende Skripte nacheinander ausführen:
-   - `schema/ABCNews.sql`
-   - `schema/seed_data.sql`
-   - `schema/migrations/001_security_refactor.sql`
-   - `schema/migrations/002_category_slug.sql`
-2. Datei `src/main/resources/app.properties` anhand der Vorlage erstellen und Zugangsdaten eintragen.
+1. Datenbank erstellen und Beispieldaten in SQL Server importieren:
+   - Neuinstallation: Skripte nacheinander ausführen: `schema/ABCNews.sql` (Schema und Tabellen) und anschließend `schema/seed_data.sql` (Demodaten).
+   - *Hinweis: Das Verzeichnis `schema/migrations/` wird nur für inkrementelle Aktualisierungen älterer Datenbankversionen verwendet.*
+2. Datei `src/main/resources/app.properties` anhand der Vorlage `app.properties.example` erstellen und Zugangsdaten eintragen.
 3. Tests ausführen und das WAR-Paket bauen:
    ```bash
    mvn clean test
@@ -300,7 +306,7 @@ Befehl zum Ausführen aller Tests:
 mvn clean test
 ```
 
-Bestätigtes Testergebnis auf dem aktuellen Quellcode: **82/82 tests passed** ohne Fehler und ohne übersprungene Tests.
+Bestätigtes Testergebnis auf dem aktuellen Quellcode: **97/97 tests passed** mit 0 Fehlern und 0 übersprungenen Tests.
 
 ---
 
@@ -316,6 +322,9 @@ Das Projekt verfügt über einen automatisierten Continuous-Integration-Workflow
 ## Testkonten
 
 In `schema/seed_data.sql` sind vordefinierte Testkonten für Evaluierungszwecke enthalten:
+
+> [!NOTE]
+> Diese Konten sind ausschließlich für lokale Demo- und Entwicklungsumgebungen bestimmt.
 
 | Rolle | Anmelde-E-Mail | Standardpasswort | Berechtigungsumfang |
 |---|---|:---:|---|
@@ -346,4 +355,4 @@ Durch die Entwicklung dieses persönlichen Lernprojekts habe ich folgende Kenntn
 - Rolle: Student im Bereich Softwareentwicklung — FPT Polytechnic College
 - GitHub: [github.com/nkhanhduy](https://github.com/nkhanhduy)
 - E-Mail: [khanhndts02168@gmail.com](mailto:khanhndts02168@gmail.com)
-- Jahr: 2025
+- Zeitraum: 2025 – 2026

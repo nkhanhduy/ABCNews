@@ -21,7 +21,7 @@ import poly.com.entity.Newsletter;
  * ExportService.exportUsers(usersList, ExportFormat.PDF, response);
  * </pre>
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  * @version 1.0
  */
 public class ExportService {

@@ -10,7 +10,7 @@ import poly.com.service.NewsletterService;
 /**
  * Service Implementation quản lý Newsletter (NewsletterServiceImpl)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class NewsletterServiceImpl implements NewsletterService {
 

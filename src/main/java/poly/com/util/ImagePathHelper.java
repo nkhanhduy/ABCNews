@@ -21,7 +21,7 @@ import poly.com.entity.User;
  * - News entity (field: Image)
  * - User entity (field: ImagePath)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  * @version 1.0
  */
 public class ImagePathHelper {

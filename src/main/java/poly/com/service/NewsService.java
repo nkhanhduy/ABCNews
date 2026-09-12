@@ -7,7 +7,7 @@ import poly.com.entity.User;
 /**
  * Service Interface quản lý tin tức (NewsService)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public interface NewsService {
 

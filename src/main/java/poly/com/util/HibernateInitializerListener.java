@@ -8,7 +8,7 @@ import jakarta.servlet.annotation.WebListener;
  * ServletContextListener tự động khởi tạo Hibernate JPA và kiểm tra tự sinh bảng
  * khi ứng dụng web được triển khai (deploy) trên server Tomcat.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 @WebListener
 public class HibernateInitializerListener implements ServletContextListener {

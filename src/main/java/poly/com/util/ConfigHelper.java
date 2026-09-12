@@ -6,12 +6,10 @@ import java.util.Properties;
 /**
  * Lớp tiện ích quản lý cấu hình hệ thống (ConfigHelper)
  * 
- * Áp dụng nguyên tắc Zero Hardcoded Secrets & chuẩn 12-Factor App:
- * 1. Ưu tiên đọc từ biến môi trường hệ điều hành (Environment Variables)
- * 2. Nếu không có biến môi trường, đọc từ file classpath: "app.properties"
- * 3. Nếu không tìm thấy, sử dụng giá trị mặc định an toàn (fallback)
+ * Nạp cấu hình từ biến môi trường hệ thống (Environment Variables),
+ * thuộc tính hệ thống (System Properties) và file cấu hình classpath "app.properties".
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class ConfigHelper {
 
@@ -191,6 +189,10 @@ public class ConfigHelper {
      * Lấy mật khẩu database SQL Server
      */
     public static String getDbPassword() {
-        return get("db.password", "123456");
+        String pass = get("db.password", null);
+        if (pass == null) {
+            pass = get("DB_PASSWORD", "");
+        }
+        return pass;
     }
 }

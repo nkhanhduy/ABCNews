@@ -10,7 +10,7 @@ import poly.com.entity.User;
 /**
  * Service để log các hoạt động trong hệ thống
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class ActivityLogService {
     

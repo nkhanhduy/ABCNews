@@ -86,7 +86,7 @@
     color: #ffffff;
 }
 
-/* 2. Dải 4 Thẻ Thống Kê Nhanh - Thiết kế Metric Cards chuẩn Enterprise (Không hộp vuông thô) */
+/* 2. Dải 4 Thẻ Thống Kê Nhanh - Thiết kế Metric Cards chuyên nghiệp (Không hộp vuông thô) */
 .comments-stats-strip {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

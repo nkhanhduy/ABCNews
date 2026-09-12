@@ -1,6 +1,6 @@
 <%-- 
   File: _footer.jsp
-  Description: Footer tinh gọn dự án ABC News - Tác giả: Nguyễn Khánh Duy (FPT Polytechnic TP. HCM)
+  Description: Footer tinh gọn dự án ABC News - Tác giả: Nguyễn Duy Khánh (Cao đẳng FPT Polytechnic)
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
@@ -9,7 +9,7 @@
         <div class="d-flex align-items-center flex-wrap gap-2 text-white small">
             <span class="fw-bold fs-6">ABC<span class="badge bg-white text-success ms-1 px-1.5 py-0.5 rounded-1" style="font-size: 0.72rem;">NEWS</span></span>
             <span class="text-white-50">|</span>
-            <span>&copy; 2025 ABC News — Phát triển bởi <strong>Nguyễn Khánh Duy</strong> — FPT Polytechnic TP. Hồ Chí Minh</span>
+            <span>&copy; 2025 - 2026 ABC News — Dự án học tập của sinh viên <strong>Nguyễn Duy Khánh</strong> — Cao đẳng FPT Polytechnic</span>
         </div>
         <div class="d-flex align-items-center gap-3">
             <a href="https://github.com/nkhanhduy/ABCNews" target="_blank" class="text-white small text-decoration-none" title="GitHub">

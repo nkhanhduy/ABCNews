@@ -17,7 +17,7 @@ import com.zaxxer.hikari.HikariDataSource;
  * - Tái sử dụng các kết nối đã mở thay vì tạo mới liên tục, giảm thiểu độ trễ kết nối
  * - Cơ chế Fallback an toàn sang DriverManager nếu HikariCP gặp sự cố cấu hình
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  * @version 2.0 (HikariCP Integrated)
  */
 public class JDBCHelper {

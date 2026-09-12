@@ -17,7 +17,7 @@ import poly.com.util.JDBCHelper;
  * DAO quản lý thao tác cơ sở dữ liệu cho bình luận độc giả (Comments)
  * Hỗ trợ các chức năng hiển thị bài viết và kiểm duyệt trong trang Admin
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class CommentDAO {
 

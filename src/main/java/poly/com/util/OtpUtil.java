@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Utility class để generate và validate OTP (One-Time Password)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class OtpUtil {
     

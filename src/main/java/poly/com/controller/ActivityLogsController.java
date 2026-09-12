@@ -23,7 +23,7 @@ import poly.com.entity.User;
  * 
  * Chỉ Admin mới có quyền xem (được bảo vệ bởi AuthFilter)
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 @WebServlet("/admin/activity-logs")
 public class ActivityLogsController extends BaseController {

@@ -9,7 +9,7 @@ package poly.com.util;
  * 
  * Các phương thức này giúp giảm code trùng lặp và tăng tính nhất quán trong validation.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  * @version 1.0
  */
 public class ValidationHelper {

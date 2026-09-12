@@ -7,7 +7,7 @@ import org.jsoup.safety.Safelist;
  * Tiện ích làm sạch dữ liệu đầu vào và chống tấn công Cross-Site Scripting (XSS).
  * Áp dụng nguyên lý Defense-in-Depth để bảo vệ toàn diện nội dung bài viết CKEditor.
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class XssSanitizer {
 

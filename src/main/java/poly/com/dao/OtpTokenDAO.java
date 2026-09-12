@@ -14,7 +14,7 @@ import poly.com.util.JDBCHelper;
 /**
  * DAO class để thao tác với bảng OtpTokens qua JDBC
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class OtpTokenDAO {
     

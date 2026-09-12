@@ -16,7 +16,7 @@ import poly.com.util.JDBCHelper;
 /**
  * DAO để quản lý ActivityLogs
  * 
- * @author ABCNews Development Team
+ * @author Nguyen Duy Khanh
  */
 public class ActivityLogDAO {
     
