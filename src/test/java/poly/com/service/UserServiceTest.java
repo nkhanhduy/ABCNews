@@ -53,6 +53,7 @@ public class UserServiceTest {
         superAdmin.setId("super001");
         superAdmin.setEmail("super@abcnews.vn");
         superAdmin.setRole(true);
+        superAdmin.setSuperAdmin(true);
         superAdmin.setEnabled(true);
     }
 

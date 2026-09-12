@@ -28,3 +28,8 @@ mail.smtp.starttls.enable=true
 mail.smtp.user=your_email@gmail.com
 # Mật khẩu ứng dụng 16 ký tự tạo từ Google Account (App Password):
 mail.smtp.password=your_gmail_app_password_here
+
+# -------------------------------------------------------------------
+# 3. Cấu hình Google OAuth (Google Sign-In)
+# -------------------------------------------------------------------
+google.client.id=your_google_client_id_here

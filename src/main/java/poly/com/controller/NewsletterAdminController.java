@@ -30,11 +30,34 @@ public class NewsletterAdminController extends BaseController {
         activityLogService = new ActivityLogService();
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
         if (!checkAdminRole(request, response)) return;
 
+        String action = request.getParameter("action");
+        try {
+            if (action != null) {
+                switch (action) {
+                    case "searchAjax":
+                        searchNewslettersAjax(request, response);
+                        return;
+                }
+            }
+            showList(request, response);
+        } catch (Exception e) {
+            handleException(request, response, e);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        if (!checkAdminRole(request, response)) return;
+
+        request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         try {
             if (action != null) {
@@ -72,12 +95,9 @@ public class NewsletterAdminController extends BaseController {
                             }
                         }
                         break;
-                    case "searchAjax":
-                        searchNewslettersAjax(request, response);
-                        return;
                 }
             }
-            showList(request, response);
+            response.sendRedirect(getContextPath(request) + "/admin/newsletters");
         } catch (Exception e) {
             handleException(request, response, e);
         }

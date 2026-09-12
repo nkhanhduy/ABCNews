@@ -64,6 +64,10 @@ public class User {
     @Column(name = "Enabled")
     private boolean enabled;
 
+    /** Vai trò Super Admin: true = Super Admin, false = Admin thường / Phóng viên */
+    @Column(name = "IsSuperAdmin", nullable = false)
+    private boolean superAdmin = false;
+
     /**
      * Constructor mặc định - tạo đối tượng User rỗng
      * Dùng khi cần tạo object trước rồi set giá trị sau (ví dụ: từ form hoặc database)
@@ -314,24 +318,22 @@ public class User {
     }
     
     /**
-     * Kiểm tra xem người dùng có phải là Super Admin không
+     * Kiểm tra xem người dùng có phải là Super Admin không.
+     * Xác thực dựa trên thuộc tính superAdmin lưu trữ trong DB (IsSuperAdmin = 1),
+     * tuyệt đối KHÔNG dựa vào tiền tố username/id hay so khớp chuỗi.
      * 
-     * Super Admin được xác định dựa trên ID:
-     * - ID bắt đầu bằng "super" (không phân biệt hoa thường)
-     * - Hoặc ID chính xác là "superadmin" (không phân biệt hoa thường)
-     * 
-     * Super Admin có quyền cao nhất trong hệ thống, có thể:
+     * Super Admin có quyền cao nhất trong hệ thống:
      * - Quản lý tất cả Admin và Reporter
-     * - Xóa Admin khác
-     * - Tạo Super Admin mới
+     * - Xóa/khóa Admin khác
+     * - Phân quyền Super Admin
      * 
      * @return true nếu là Super Admin, false nếu không
      */
     public boolean isSuperAdmin() {
-        if (id == null || id.trim().isEmpty()) {
-            return false;
-        }
-        String lowerId = id.trim().toLowerCase();
-        return lowerId.startsWith("super") || lowerId.equals("superadmin");
+        return this.superAdmin;
+    }
+
+    public void setSuperAdmin(boolean superAdmin) {
+        this.superAdmin = superAdmin;
     }
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import poly.com.entity.OtpToken;
 import poly.com.util.JDBCHelper;
 
 /**
- * DAO class để thao tác với OtpTokens table
+ * DAO class để thao tác với bảng OtpTokens qua JDBC
  * 
  * @author ABCNews Development Team
  */
@@ -28,30 +29,47 @@ public class OtpTokenDAO {
                      "VALUES (?, ?, ?, ?, ?, ?)";
         
         try {
+            Timestamp expiry = otpToken.getExpiryTime() != null ? new Timestamp(otpToken.getExpiryTime().getTime()) : null;
+            Timestamp created = otpToken.getCreatedAt() != null ? new Timestamp(otpToken.getCreatedAt().getTime()) : new Timestamp(System.currentTimeMillis());
+            
             JDBCHelper.executeUpdate(sql, 
                 otpToken.getUserId(),
                 otpToken.getOtpCode(),
-                otpToken.getExpiryTime(),
-                otpToken.getCreatedAt(),
-                otpToken.isUsed(),
+                expiry,
+                created,
+                otpToken.isUsed() ? 1 : 0,
                 otpToken.getAttempts()
             );
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] OtpTokenDAO.createOtp: " + e.getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Tìm bản ghi OTP mới nhất (latest active) của user dựa theo userId
+     * Không tìm theo OTP code để đảm bảo có thể kiểm tra attempts và lock khi nhập sai
+     */
+    public OtpToken findLatestByUserId(String userId) {
+        String sql = "SELECT TOP 1 id, user_id, otp_code, expiry_time, created_at, is_used, attempts " +
+                     "FROM OtpTokens " +
+                     "WHERE user_id = ? " +
+                     "ORDER BY created_at DESC, id DESC";
+        try {
+            List<OtpToken> list = selectBySql(sql, userId);
+            return list.isEmpty() ? null : list.get(0);
+        } catch (Exception e) {
+            System.err.println("[ERROR] OtpTokenDAO.findLatestByUserId: " + e.getMessage());
+            return null;
         }
     }
     
     /**
      * Tìm OTP hợp lệ (chưa dùng, chưa hết hạn) của user
-     * 
-     * @param userId User ID
-     * @param otpCode Mã OTP cần tìm
-     * @return OtpToken nếu tìm thấy, null nếu không
      */
     public OtpToken findValidOtp(String userId, String otpCode) {
-        String sql = "SELECT * FROM OtpTokens " +
+        String sql = "SELECT id, user_id, otp_code, expiry_time, created_at, is_used, attempts FROM OtpTokens " +
                      "WHERE user_id = ? AND otp_code = ? " +
                      "AND is_used = 0 AND expiry_time > GETDATE() " +
                      "ORDER BY created_at DESC";
@@ -60,104 +78,94 @@ public class OtpTokenDAO {
             List<OtpToken> list = selectBySql(sql, userId, otpCode);
             return list.isEmpty() ? null : list.get(0);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    
-    /**
-     * Tìm OTP của user (bất kể đã dùng hay hết hạn)
-     * 
-     * @param userId User ID
-     * @param otpCode Mã OTP
-     * @return OtpToken nếu tìm thấy, null nếu không
-     */
-    public OtpToken findOtpByCode(String userId, String otpCode) {
-        String sql = "SELECT * FROM OtpTokens WHERE user_id = ? AND otp_code = ? " +
-                     "ORDER BY created_at DESC";
-        
-        try {
-            List<OtpToken> list = selectBySql(sql, userId, otpCode);
-            return list.isEmpty() ? null : list.get(0);
-        } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] OtpTokenDAO.findValidOtp: " + e.getMessage());
             return null;
         }
     }
     
     /**
      * Đánh dấu OTP đã được sử dụng
-     * 
-     * @param id ID của OTP token
-     * @return true nếu thành công
      */
     public boolean markOtpAsUsed(int id) {
         String sql = "UPDATE OtpTokens SET is_used = 1 WHERE id = ?";
-        
         try {
-            JDBCHelper.executeUpdate(sql, id);
-            return true;
+            return JDBCHelper.executeUpdate(sql, id) > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] OtpTokenDAO.markOtpAsUsed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Consume OTP nguyên tử (atomic): Chỉ cập nhật is_used=1 nếu OTP chưa được dùng và attempts < 3.
+     * Ngăn chặn race condition khi có 2 request đồng thời.
+     * 
+     * @param id ID của OTP token
+     * @return true nếu consume thành công (1 dòng bị ảnh hưởng), false nếu bị xung đột hoặc đã bị dùng/khóa
+     */
+    public boolean consumeOtp(int id) {
+        String sql = "UPDATE OtpTokens SET is_used = 1 WHERE id = ? AND is_used = 0 AND attempts < 3";
+        try {
+            return JDBCHelper.executeUpdate(sql, id) > 0;
+        } catch (Exception e) {
+            System.err.println("[ERROR] OtpTokenDAO.consumeOtp: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Khóa/vô hiệu hóa OTP khi nhập sai quá số lần quy định
+     */
+    public boolean lockOtp(int id) {
+        String sql = "UPDATE OtpTokens SET is_used = 1, attempts = 3 WHERE id = ?";
+        try {
+            return JDBCHelper.executeUpdate(sql, id) > 0;
+        } catch (Exception e) {
+            System.err.println("[ERROR] OtpTokenDAO.lockOtp: " + e.getMessage());
             return false;
         }
     }
     
     /**
      * Tăng số lần thử sai
-     * 
-     * @param id ID của OTP token
-     * @return true nếu thành công
      */
     public boolean incrementAttempts(int id) {
         String sql = "UPDATE OtpTokens SET attempts = attempts + 1 WHERE id = ?";
-        
         try {
-            JDBCHelper.executeUpdate(sql, id);
-            return true;
+            return JDBCHelper.executeUpdate(sql, id) > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] OtpTokenDAO.incrementAttempts: " + e.getMessage());
             return false;
         }
     }
     
     /**
      * Xóa tất cả OTP cũ của user (khi tạo OTP mới)
-     * 
-     * @param userId User ID
-     * @return true nếu thành công
      */
     public boolean deleteUserOtps(String userId) {
         String sql = "DELETE FROM OtpTokens WHERE user_id = ?";
-        
         try {
             JDBCHelper.executeUpdate(sql, userId);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] OtpTokenDAO.deleteUserOtps: " + e.getMessage());
             return false;
         }
     }
     
     /**
      * Xóa các OTP đã hết hạn (cleanup job)
-     * 
-     * @return Số lượng OTP đã xóa
      */
     public int deleteExpiredOtps() {
         String sql = "DELETE FROM OtpTokens WHERE expiry_time < GETDATE()";
-        
         try {
             return JDBCHelper.executeUpdate(sql);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] OtpTokenDAO.deleteExpiredOtps: " + e.getMessage());
             return 0;
         }
     }
     
-    /**
-     * Helper method để select và map ResultSet thành List<OtpToken>
-     */
     private List<OtpToken> selectBySql(String sql, Object... args) {
         List<OtpToken> list = new ArrayList<>();
         Connection conn = null;
@@ -181,7 +189,7 @@ public class OtpTokenDAO {
                 list.add(token);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] OtpTokenDAO.selectBySql: " + e.getMessage());
             throw new RuntimeException("Lỗi khi query OtpTokens", e);
         } finally {
             JDBCHelper.close(rs, pstmt, conn);
@@ -190,4 +198,3 @@ public class OtpTokenDAO {
         return list;
     }
 }
-

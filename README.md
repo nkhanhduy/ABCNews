@@ -99,37 +99,103 @@
 
 ## Công nghệ Sử dụng
 
-- **Ngôn ngữ & Nền tảng:** Java 17 LTS, Jakarta EE 10 (Servlet 6.0, JSP 3.1, JSTL)
+- **Ngôn ngữ & Nền tảng:** Java 17 LTS, Jakarta EE 10 (Servlet 6.0, JSP 3.1, JSTL 3.0)
+- **Data Access chính:** JDBC kết hợp **HikariCP Connection Pool** hiệu năng cao
+- **ORM / Entity Mapping:** Hibernate ORM 6 (Jakarta Persistence) dùng cho định nghĩa cấu trúc Entity và validation schema
 - **Máy chủ ứng dụng:** Apache Tomcat 10.1
-- **Cơ sở dữ liệu:** Microsoft SQL Server 2022 (kết nối qua HikariCP connection pool và Hibernate ORM JPA)
-- **Bảo mật & Sanitization:** BCrypt (OWASP password hashing), Google Sign-In API, Jakarta Mail (SMTP TLS gửi OTP), Jsoup 1.17.2 (HTML Whitelist Sanitization)
+- **Cơ sở dữ liệu:** Microsoft SQL Server 2022
+- **Xác thực & Mã hóa:** BCrypt (OWASP password hashing), 256-bit SecureRandom Remember-Me Token (SHA-256 hashed in DB), Google OAuth2 Client API, Jakarta Mail (Gmail SMTP TLS gửi OTP)
+- **Bảo mật Web:** CSRF Filter (token-based), Jsoup 1.17.2 (HTML Whitelist Sanitization chống XSS), SafeImageStorage chống Path Traversal
+- **Testing:** JUnit 5 (Jupiter), Mockito (In-memory Mocking & Verification)
 - **Giao diện:** HTML5, CSS3, Bootstrap 5.3, FontAwesome 6, Chart.js, CKEditor 5
 - **Môi trường triển khai:** Docker & Docker Compose
 
 ---
 
-## Điểm Nhấn Kiến Trúc & Kỹ Thuật
+## Kiến Trúc & Thiết Kế Bảo Mật (Security Design)
 
-- **Kiến trúc MVC Chuẩn mực:** Phân chia rõ ràng giữa Controller (Jakarta Servlet), View (JSP & JSTL components tái sử dụng) và Tầng truy xuất dữ liệu (DAO & JPA Hibernate).
-- **Tối ưu Cơ sở dữ liệu & Hiệu năng:** Ứng dụng **HikariCP Connection Pool** tốc độ cao giúp giảm thiểu thời gian tạo kết nối; cấu hình Hibernate ORM ánh xạ thực thể chặt chẽ; đánh chỉ mục Index cho bảng tin tức nhằm tăng tốc độ truy vấn theo chuyên mục và lượt đọc.
-- **Bảo mật Đa tầng:**
-  - Mật khẩu người dùng được băm một chiều an toàn bằng thuật toán **BCrypt** chống tấn công Rainbow Table.
-  - Bộ lọc **AuthFilter** kiểm soát phân quyền chặt chẽ (RBAC) cho các endpoint `/admin/*`, ngăn chặn triệt để nguy cơ leo thang đặc quyền.
-  - **Chuẩn Hóa Định Danh An Toàn:** Sử dụng chuỗi định danh ngẫu nhiên mã hóa 128-bit chuẩn quốc tế UUID v4 cho toàn bộ bài viết tin tức thay vì mã số tuần tự, triệt tiêu nguy cơ dò đoán ID bài viết.
-  - Cơ chế **SafeImageStorage** xử lý upload ảnh an toàn: xác thực định dạng MIME, giới hạn dung lượng, chống tấn công Path Traversal (`../`) và tự động dọn dẹp ảnh cũ khi thay đổi ảnh đại diện.
-  - Khôi phục mật khẩu bảo mật qua mã xác thực **OTP 6 số** gửi qua Gmail SMTP với thời hạn 5 phút.
-- **Trải nghiệm Người dùng:**
-  - Hệ thống Design Tokens bằng biến CSS đồng bộ tone màu Xanh lá hiện đại.
-  - Chế độ Dark Mode hoàn thiện với tỷ lệ tương phản cao, bảo vệ mắt và không gây lóa nền.
-  - Tích hợp biểu đồ thống kê trực quan **Chart.js** và trình biên tập nội dung phong phú.
-  - **Tối Ưu Hóa SEO & Open Graph Protocol:** Tích hợp đầy đủ thẻ Open Graph (`og:title`, `og:image`, `og:description`, `og:url`) và Twitter Card (`summary_large_image`) cho toàn bộ bài viết, đảm bảo hiển thị hình ảnh thumbnail khổ lớn bắt mắt khi chia sẻ qua Facebook, X, Telegram hoặc Zalo.
-- **Khởi Chạy Nhanh Với Docker:** Đóng gói trọn vẹn toàn bộ hệ thống bằng **Docker Compose** (Tomcat + SQL Server), tích hợp cơ chế Healthcheck và tự động khởi tạo cơ sở dữ liệu cùng bộ dữ liệu mẫu chỉ với duy nhất một câu lệnh `docker compose up -d`.
+Hệ thống được thiết kế và tái cấu trúc theo các tiêu chuẩn bảo mật phòng thủ chiều sâu (Defense-in-Depth):
+
+### 1. Cơ Chế Remember-Me An Toàn (Persistent Login Token)
+- **Sinh token ngẫu nhiên:** Sử dụng `SecureRandom` sinh chuỗi định danh 256-bit an toàn mật mã học, mã hóa Base64 URL-safe.
+- **Bảo vệ phía Database:** Tuyệt đối không lưu plaintext token hoặc Base64(userId). Database chỉ lưu hàm băm **SHA-256** của token.
+- **Bảo vệ phía Client:** Token thật chỉ được gửi về trình duyệt qua Cookie có cờ `HttpOnly` (chống XSS đánh cắp), `SameSite=Lax` (giảm thiểu CSRF), `Path=/` và `Secure` khi chạy HTTPS.
+- **Token Rotation:** Mỗi lần tự động đăng nhập thành công bằng token hợp lệ, hệ thống tự động thu hồi token cũ và phát hành token mới, triệt tiêu nguy cơ Replay Attack.
+- **Thu hồi (Revocation):** Thu hồi server-side ngay khi người dùng bấm Đăng xuất hoặc khi tài khoản bị khóa (`enabled = false`).
+
+### 2. Luồng Xác Thực Email OTP Bảo Mật
+- **Tra cứu an toàn:** Tìm bản ghi OTP mới nhất của user theo `userId`, không tìm kiếm trực tiếp bằng cặp `(userId, otpCode)` để đảm bảo luôn kiểm tra trạng thái trước.
+- **Kiểm tra đa tầng trước khi so khớp:** Kiểm tra OTP đã hết hạn chưa, đã được sử dụng chưa, và số lần thử (`attempts`) có vượt quá 3 lần hay không.
+- **Chống Brute-force & Khóa tự động:** So sánh OTP bằng thuật toán constant-time (`MessageDigest.isEqual`) chống Timing Attack. Nếu nhập sai, tăng `attempts`; khi chạm ngưỡng 3 lần sai, tự động khóa vĩnh viễn mã OTP đó.
+- **Chống Race Condition & Chống Tái Sử Dụng:** Tiêu thụ mã OTP nguyên tử (`consumeOtp`) với điều kiện `WHERE is_used = 0 AND attempts < 3`. Một mã OTP không thể được sử dụng lại lần thứ hai.
+
+### 3. Phân Quyền Vai Trò & Phân Biệt Super Admin Minh Bạch (RBAC)
+- **Dựa trên dữ liệu chuẩn trong DB:** Bổ sung cột `IsSuperAdmin BIT` trong SQL Server và trường `superAdmin` trong User entity. Tuyệt đối không kiểm tra quyền dựa trên chuỗi username/id (như `startsWith("super")`).
+- **Chặn leo thang đặc quyền (Privilege Escalation):** Chỉ Super Admin mới có quyền quản trị, sửa đổi hoặc xóa tài khoản Quản trị viên khác. Admin thường không thể tự phong quyền hoặc can thiệp tài khoản Super Admin.
+- **Cô lập tài nguyên phóng viên:** Phóng viên chỉ được xem, chỉnh sửa và xóa các bài viết do chính mình xuất bản (`SecurityHelper.canEditNews`, `canDeleteNews`). Không thể can thiệp bài viết của phóng viên khác.
+- **Kiểm duyệt bình luận:** Chỉ Quản trị viên mới có quyền duyệt hoặc xóa bình luận của độc giả.
+
+### 4. Phòng Chống CSRF (Cross-Site Request Forgery)
+- **Chuyển đổi toàn diện Method:** Toàn bộ các thao tác thay đổi dữ liệu (tạo mới, cập nhật, xóa tin, xóa danh mục, xóa newsletter, duyệt bình luận, khóa tài khoản) đều được chuyển sang phương thức **POST**. Không dùng GET cho hành động làm biến đổi dữ liệu.
+- **CsrfFilter & CsrfUtil:** Sinh token ngẫu nhiên và lưu trữ trong `HttpSession`. Bắt buộc kiểm tra token qua form parameter `_csrf` hoặc HTTP header `X-CSRF-TOKEN` đối với mọi request POST/PUT/DELETE trong khu vực quản trị `/admin/*`.
+- **Miễn trừ hợp lý:** Bỏ qua kiểm tra CSRF session token cho các public callback như Google OAuth Sign-in.
+
+### 5. Quản Lý Cấu Hình & Zero Hardcoded Secrets
+- **Ưu tiên cấu hình:** `ConfigHelper` nạp cấu hình theo thứ tự ưu tiên: `Biến môi trường hệ điều hành (Environment Variables)` → `System Properties` → `app.properties` → `Safe Fallback`.
+- **Bảo vệ Secret:** Không lưu mật khẩu database hay email SMTP thật trong mã nguồn hoặc git. Hỗ trợ file mẫu `app.properties.example`.
+- **Google Client ID động:** Nạp động từ cấu hình hệ thống truyền xuống JSP, không hard-code trong mã HTML.
+
+### 6. Xử Lý Lỗi & Phòng Chống Rò Rỉ Thông Tin (Error Leakage)
+- Không dùng `e.printStackTrace()` hoặc trả về `e.getMessage()` ra màn hình người dùng.
+- Ghi log lỗi có kiểm soát trên console server; người dùng chỉ nhận thông báo lỗi chung thân thiện, ngăn ngừa lộ cấu trúc SQL, đường dẫn file hệ thống hay tên bảng.
 
 ---
 
-## Hướng dẫn Cài đặt & Khởi chạy
+## Cấu Hình Hệ Thống (Configuration)
 
-### Cách 1: Khởi chạy bằng Docker Compose
+Sao chép file mẫu `app.properties.example` thành `app.properties`:
+
+```properties
+# 1. Cơ sở dữ liệu SQL Server
+db.host=localhost
+db.port=1433
+db.name=ABCNews
+db.user=sa
+db.password=your_database_password_here
+
+# 2. Email SMTP (Gmail App Password)
+mail.smtp.host=smtp.gmail.com
+mail.smtp.port=587
+mail.smtp.auth=true
+mail.smtp.starttls.enable=true
+mail.smtp.user=your_email@gmail.com
+mail.smtp.password=your_gmail_app_password_here
+
+# 3. Google OAuth 2.0 Client ID
+google.client.id=your_google_client_id_here
+```
+
+---
+
+## Kiểm Thử Tự Động (Testing)
+
+Dự án áp dụng kiểm thử tự động với JUnit 5 và Mockito, bao phủ toàn bộ các luồng bảo mật trọng yếu:
+- **Kiểm thử Xác thực (Auth):** Đăng nhập thành công/thất bại, tài khoản bị vô hiệu hóa, cấp phát token Remember-Me, tự động đăng nhập và Token Rotation.
+- **Kiểm thử OTP:** Nhập đúng OTP, sai lần 1, sai lần 2, sai lần 3 dẫn đến khóa OTP, từ chối OTP hết hạn, từ chối OTP đã dùng, chống tiêu thụ trùng lặp.
+- **Kiểm thử Phân quyền (Authorization):** Phóng viên không vào được chức năng admin, phóng viên không sửa/xóa bài của phóng viên khác, admin thường không xóa được Super Admin, chặn tự xóa chính mình.
+- **Kiểm thử CSRF:** GET request tự khởi tạo token, POST thiếu token bị từ chối HTTP 403, token sai bị từ chối, token hợp lệ (form / header) được chấp thuận, callback công khai được miễn trừ.
+
+Chạy toàn bộ test suite:
+```bash
+mvn clean test
+```
+*Kết quả:* **40/40 tests passed (100% SUCCESS)**.
+
+---
+
+## Hướng dẫn Cài đặt & Khởi chạy (How to Run)
+
+### Cách 1: Khởi chạy bằng Docker Compose (Khuyên dùng)
 
 Yêu cầu: Máy tính đã cài sẵn [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
@@ -138,7 +204,7 @@ Yêu cầu: Máy tính đã cài sẵn [Docker Desktop](https://www.docker.com/p
 git clone https://github.com/nkhanhduy/ABCNews.git
 cd ABCNews
 
-# 2. Khởi chạy ứng dụng và cơ sở dữ liệu SQL Server
+# 2. Khởi chạy toàn bộ hệ thống (App + SQL Server)
 docker compose up -d
 
 # 3. Mở trình duyệt truy cập:
@@ -146,8 +212,9 @@ docker compose up -d
 # - Đăng nhập: http://localhost:8088/login
 ```
 
-Để dừng hệ thống:
+Để kiểm tra trạng thái và dừng hệ thống:
 ```bash
+docker compose ps
 docker compose down
 ```
 
@@ -155,13 +222,15 @@ docker compose down
 
 Yêu cầu: JDK 17, Apache Maven 3.8+, SQL Server 2019+ và Apache Tomcat 10.1.
 
-1. Tạo database `ABCNews` trong SQL Server và thực thi kịch bản tại `schema/ABCNews.sql` rồi nạp dữ liệu từ `schema/seed_data.sql`.
-2. Sao chép và cấu hình thông tin kết nối trong file `src/main/resources/app.properties`.
-3. Đóng gói ứng dụng:
+1. Tạo database `ABCNews` trong SQL Server, thực thi kịch bản `schema/ABCNews.sql` rồi nạp dữ liệu mẫu `schema/seed_data.sql`.
+2. Chạy migration bảo mật: `schema/migrations/001_security_refactor.sql`.
+3. Tạo file `src/main/resources/app.properties` và điền thông tin đăng nhập database.
+4. Chạy kiểm thử và đóng gói file WAR:
    ```bash
+   mvn clean test
    mvn clean package -DskipTests
    ```
-4. Triển khai file `.war` sinh ra trong thư mục `target/` lên máy chủ Apache Tomcat 10.1.
+5. Deploy file `target/ABCNews.war` lên Apache Tomcat 10.1.
 
 ---
 

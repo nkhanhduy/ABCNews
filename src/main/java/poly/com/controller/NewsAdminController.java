@@ -25,6 +25,7 @@ import poly.com.service.ActivityLogService;
 import poly.com.util.EmailService;
 import poly.com.util.FileUploadHelper;
 import poly.com.util.ImagePathHelper;
+import poly.com.util.SecurityHelper;
 import poly.com.util.ValidationHelper;
 import poly.com.util.XssSanitizer;
 
@@ -66,9 +67,6 @@ public class NewsAdminController extends BaseController {
         try {
             if (action != null) {
                 switch (action) {
-                    case "delete":
-                        doDelete(request, response);
-                        return;
                     case "edit":
                         showEditForm(request, response);
                         return;
@@ -90,7 +88,7 @@ public class NewsAdminController extends BaseController {
     }
 
     /**
-     * Xử lý request POST: Tạo mới hoặc cập nhật tin tức
+     * Xử lý request POST: Tạo mới, cập nhật hoặc xóa tin tức
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
@@ -111,6 +109,9 @@ public class NewsAdminController extends BaseController {
                     case "update":
                         doUpdate(request, response);
                         break;
+                    case "delete":
+                        doDelete(request, response);
+                        return;
                 }
             }
             // Chỉ redirect nếu không có lỗi validation
@@ -205,6 +206,14 @@ public class NewsAdminController extends BaseController {
         String id = request.getParameter("id");
         News newsItem = newsDAO.findById(id);
         
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (newsItem != null && !SecurityHelper.canEditNews(user, newsItem)) {
+            session.setAttribute("error", "Bạn không có quyền chỉnh sửa bài viết của phóng viên khác.");
+            response.sendRedirect(getContextPath(request) + "/admin/news");
+            return;
+        }
+        
         // Chuẩn hóa đường dẫn ảnh để đảm bảo có contextPath
         if (newsItem != null) {
             String contextPath = getContextPath(request);
@@ -224,21 +233,21 @@ public class NewsAdminController extends BaseController {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             
-            // Lấy thông tin tin tức TRƯỚC KHI xóa (để log)
+            // Lấy thông tin tin tức TRƯỚC KHI xóa (để log và check quyền)
             News news = newsDAO.findById(id);
-            
-            if (user != null && !user.isRole()) {
-                if (news != null && news.getAuthor() != null && !news.getAuthor().equals(user.getId())) {
+            if (news != null) {
+                if (!SecurityHelper.canDeleteNews(user, news)) {
+                    session.setAttribute("error", "Bạn không có quyền xóa bài viết này.");
                     response.sendRedirect(getContextPath(request) + "/admin/news");
                     return;
                 }
-            }
-            
-            newsDAO.delete(id);
-            
-            // Log xóa tin tức
-            if (user != null && news != null) {
-                activityLogService.logNewsDelete(user, news.getId(), news.getTitle(), request);
+                
+                newsDAO.delete(id);
+                
+                // Log xóa tin tức
+                if (user != null) {
+                    activityLogService.logNewsDelete(user, news.getId(), news.getTitle(), request);
+                }
             }
         }
         response.sendRedirect(getContextPath(request) + "/admin/news");
@@ -320,10 +329,9 @@ public class NewsAdminController extends BaseController {
                 }
             } catch (Exception e) {
                 // Không block việc tạo tin nếu gửi email lỗi
-                e.printStackTrace();
-                System.err.println("Lỗi khi gửi email newsletter: " + e.getMessage());
+                System.err.println("[ERROR] Lỗi khi gửi email newsletter: " + e.getMessage());
                 request.getSession().setAttribute("message", 
-                    "Đã tạo tin. Có lỗi khi gửi email newsletter: " + e.getMessage());
+                    "Đã tạo tin thành công nhưng gặp lỗi khi gửi email newsletter. Vui lòng kiểm tra lại cấu hình SMTP.");
             }
         } else {
             request.getSession().setAttribute("message", "Đã tạo tin thành công!");
@@ -352,7 +360,8 @@ public class NewsAdminController extends BaseController {
         
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if (user != null && !user.isRole() && (entity.getAuthor() == null || !entity.getAuthor().equals(user.getId()))) {
+        if (!SecurityHelper.canEditNews(user, entity)) {
+            session.setAttribute("error", "Bạn không có quyền chỉnh sửa bài viết của phóng viên khác.");
             return;
         }
         
@@ -409,8 +418,8 @@ public class NewsAdminController extends BaseController {
             String nextId = UUID.randomUUID().toString();
             response.getWriter().write("{\"success\": true, \"id\": \"" + nextId + "\"}");
         } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().write("{\"success\": false, \"message\": \"Lỗi tạo mã bản tin: " + e.getMessage() + "\"}");
+            System.err.println("[ERROR] Lỗi tạo mã bản tin: " + e.getMessage());
+            response.getWriter().write("{\"success\": false, \"message\": \"Lỗi tạo mã bản tin. Vui lòng thử lại sau.\"}");
         }
     }
     

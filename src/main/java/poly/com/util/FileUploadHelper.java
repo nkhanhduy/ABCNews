@@ -52,7 +52,29 @@ public class FileUploadHelper {
         
         // Kiểm tra file có tồn tại, có kích thước > 0, và có tên file không
         if (filePart != null && filePart.getSize() > 0 
-            && filePart.getSubmittedFileName() != null && !filePart.getSubmittedFileName().isEmpty()) {
+            && filePart.getSubmittedFileName() != null && !filePart.getSubmittedFileName().trim().isEmpty()) {
+            
+            // Lấy extension an toàn
+            String submitted = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+            String ext = "";
+            int dotIndex = submitted.lastIndexOf('.');
+            if (dotIndex >= 0) {
+                ext = submitted.substring(dotIndex + 1).toLowerCase(java.util.Locale.ROOT);
+            }
+            
+            // Kiểm tra phần mở rộng file được phép
+            if (!java.util.Arrays.asList("jpg", "jpeg", "png", "webp", "gif").contains(ext)) {
+                return null;
+            }
+            
+            // Kiểm tra MIME type hợp lệ
+            String contentType = filePart.getContentType();
+            if (contentType == null || !contentType.toLowerCase(java.util.Locale.ROOT).startsWith("image/")) {
+                return null;
+            }
+            
+            // Sinh tên file ngẫu nhiên bằng UUID để chống path traversal và ghi đè
+            String safeFileName = java.util.UUID.randomUUID().toString() + "." + ext;
             
             // Lấy đường dẫn thực tế của thư mục /uploads trên server
             String uploadDir = request.getServletContext().getRealPath("/uploads");
@@ -63,19 +85,15 @@ public class FileUploadHelper {
                 dir.mkdirs();
             }
             
-            // Lấy tên file gốc (chỉ tên file, không có đường dẫn)
-            // Sử dụng Paths.get() để xử lý đúng trên cả Windows và Linux
-            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-            
-            // Đường dẫn đầy đủ để lưu file trên server
-            String filePath = uploadDir + File.separator + fileName;
+            // Đường dẫn đầy đủ để lưu file an toàn trên server
+            String filePath = uploadDir + File.separator + safeFileName;
             
             // Ghi file vào disk
             filePart.write(filePath);
             
             // Trả về đường dẫn URL đã chuẩn hóa (có contextPath) để hiển thị trong HTML
             String contextPath = request.getContextPath();
-            return ImagePathHelper.normalizeImagePath(contextPath + "/uploads/" + fileName, contextPath);
+            return ImagePathHelper.normalizeImagePath(contextPath + "/uploads/" + safeFileName, contextPath);
         }
         return null;
     }

@@ -1,7 +1,6 @@
 package poly.com.controller;
 
 import java.io.IOException;
-import java.util.Date;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,43 +8,28 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import poly.com.dao.OtpTokenDAO;
 import poly.com.dao.UserDAO;
 import poly.com.entity.OtpToken;
 import poly.com.entity.User;
+import poly.com.service.OtpService;
+import poly.com.service.impl.OtpServiceImpl;
 import poly.com.util.EmailService;
-import poly.com.util.OtpUtil;
 
 /**
  * Controller xử lý chức năng "Quên mật khẩu"
- * 
- * Flow:
- * 1. User nhập email
- * 2. Kiểm tra email tồn tại
- * 3. Generate OTP 6 số
- * 4. Lưu OTP vào database (expiry = 5 phút)
- * 5. Gửi OTP qua email
- * 6. Redirect đến trang verify OTP
- * 
- * @author ABCNews Development Team
+ * Sử dụng OtpService để quản lý sinh mã, hạn giờ và chống spam
  */
 @WebServlet("/forgot-password")
 public class ForgotPasswordController extends BaseController {
     private static final long serialVersionUID = 1L;
     
-    private UserDAO userDAO = new UserDAO();
-    private OtpTokenDAO otpTokenDAO = new OtpTokenDAO();
-    private EmailService emailService = new EmailService();
-    
-    // In-memory cache kiểm soát Rate Limiting chống spam gửi mã OTP qua Gmail SMTP
-    private static final java.util.concurrent.ConcurrentHashMap<String, Long> LAST_OTP_SENT_MAP = new java.util.concurrent.ConcurrentHashMap<>();
-    private static final long OTP_COOLDOWN_MS = 60_000L; // Cooldown 60 giây
+    private final UserDAO userDAO = new UserDAO();
+    private final OtpService otpService = new OtpServiceImpl();
+    private final EmailService emailService = new EmailService();
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        
-        // Hiển thị form nhập email (standalone, không qua layout)
         request.getRequestDispatcher("/views/forgot-password.jsp").forward(request, response);
     }
     
@@ -55,7 +39,7 @@ public class ForgotPasswordController extends BaseController {
         
         String email = request.getParameter("email");
         
-        // Validate email
+        // 1. Validate email
         if (email == null || email.trim().isEmpty()) {
             request.setAttribute("error", "Vui lòng nhập email");
             request.getRequestDispatcher("/views/forgot-password.jsp").forward(request, response);
@@ -64,18 +48,16 @@ public class ForgotPasswordController extends BaseController {
         
         email = email.trim().toLowerCase();
         
-        // Kiểm tra Rate Limiting chống spam gửi email
-        long now = System.currentTimeMillis();
-        Long lastSent = LAST_OTP_SENT_MAP.get(email);
-        if (lastSent != null && (now - lastSent) < OTP_COOLDOWN_MS) {
-            long remainingSeconds = (OTP_COOLDOWN_MS - (now - lastSent) + 999) / 1000;
+        // 2. Kiểm tra Rate Limiting chống spam gửi email
+        if (otpService.isCooldownActive(email)) {
+            long remainingSeconds = otpService.getRemainingCooldownSeconds(email);
             request.setAttribute("error", "Yêu cầu gửi mã quá nhanh. Vui lòng đợi " + remainingSeconds + " giây trước khi thử lại.");
             request.setAttribute("cooldownSeconds", remainingSeconds);
             request.getRequestDispatcher("/views/forgot-password.jsp").forward(request, response);
             return;
         }
         
-        // Tìm user theo email
+        // 3. Tìm user theo email
         User user = userDAO.findByEmail(email);
         
         if (user == null) {
@@ -84,49 +66,36 @@ public class ForgotPasswordController extends BaseController {
             return;
         }
         
+        if (!user.isEnabled()) {
+            request.setAttribute("error", "Tài khoản của bạn đang bị khóa. Vui lòng liên hệ quản trị viên.");
+            request.getRequestDispatcher("/views/forgot-password.jsp").forward(request, response);
+            return;
+        }
+        
         try {
-            // Xóa các OTP cũ của user (nếu có)
-            otpTokenDAO.deleteUserOtps(user.getId());
+            // 4. Tạo OTP mới và lưu database qua OtpService
+            OtpToken otpToken = otpService.generateAndSaveOtp(user.getId());
             
-            // Generate OTP 6 số
-            String otpCode = OtpUtil.generateOtp();
+            // 5. Gửi email OTP
+            emailService.sendOtpEmail(email, otpToken.getOtpCode(), user.getFullname());
             
-            // Tính expiry time (5 phút từ bây giờ)
-            Date expiryTime = OtpUtil.calculateExpiryTime(5);
+            // 6. Ghi nhận thời gian gửi OTP để chống spam
+            otpService.recordOtpSent(email);
             
-            // Tạo OTP token
-            OtpToken otpToken = new OtpToken(user.getId(), otpCode, expiryTime);
-            
-            // Lưu vào database
-            boolean saved = otpTokenDAO.createOtp(otpToken);
-            
-            if (!saved) {
-                request.setAttribute("error", "Không thể tạo OTP, vui lòng thử lại");
-                request.getRequestDispatcher("/views/forgot-password.jsp").forward(request, response);
-                return;
-            }
-            
-            // Gửi email OTP
-            emailService.sendOtpEmail(email, otpCode, user.getFullname());
-            
-            // Cập nhật timestamp gửi OTP để kích hoạt Rate Limiting
-            LAST_OTP_SENT_MAP.put(email, now);
-            
-            // Lưu thông tin vào session để dùng ở bước verify
+            // 7. Lưu thông tin vào session
             HttpSession session = request.getSession();
             session.setAttribute("resetUserId", user.getId());
             session.setAttribute("resetUserEmail", email);
-            session.setAttribute("lastOtpSentTime", now);
+            session.setAttribute("lastOtpSentTime", System.currentTimeMillis());
             session.setMaxInactiveInterval(10 * 60); // 10 phút timeout
             
-            // Redirect đến trang verify OTP
+            // 8. Chuyển hướng đến trang verify OTP
             response.sendRedirect(request.getContextPath() + "/verify-otp?success=sent");
             
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Không thể gửi email, vui lòng thử lại sau");
+            System.err.println("[ERROR] ForgotPasswordController.doPost: " + e.getMessage());
+            request.setAttribute("error", "Không thể gửi email OTP, vui lòng thử lại sau");
             request.getRequestDispatcher("/views/forgot-password.jsp").forward(request, response);
         }
     }
 }
-

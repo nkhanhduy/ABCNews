@@ -99,7 +99,7 @@ public abstract class BaseController extends HttpServlet {
      * @throws IOException
      */
     protected void handleException(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException {
-        e.printStackTrace();
+        System.err.println("[ERROR] Exception caught in " + getClass().getSimpleName() + ": " + e.getClass().getName() + ": " + e.getMessage());
         response.sendRedirect(request.getContextPath() + "/error.jsp");
     }
 

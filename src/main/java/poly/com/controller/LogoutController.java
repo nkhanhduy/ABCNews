@@ -12,25 +12,40 @@ import jakarta.servlet.http.HttpSession;
 
 import poly.com.entity.User;
 import poly.com.service.ActivityLogService;
+import poly.com.service.RememberMeService;
+import poly.com.service.impl.RememberMeServiceImpl;
 
 /**
  * Servlet implementation class LogoutController
- * Xử lý đăng xuất
+ * Xử lý đăng xuất: vô hiệu hóa session, thu hồi remember token server-side và xóa cookie
  */
 @WebServlet("/logout")
 public class LogoutController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
     private ActivityLogService activityLogService;
+    private RememberMeService rememberMeService;
     
     @Override
     public void init() throws ServletException {
         activityLogService = new ActivityLogService();
+        rememberMeService = new RememberMeServiceImpl();
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        
+        processLogout(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        processLogout(request, response);
+    }
+
+    private void processLogout(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException {
         // 1. Lấy session hiện tại (không tạo mới nếu không có)
         HttpSession session = request.getSession(false);
         
@@ -43,15 +58,12 @@ public class LogoutController extends HttpServlet {
                 activityLogService.logLogout(user, request);
             }
             
-            // 2. Xóa session (xóa "user")
+            // 2. Hủy session
             session.invalidate();
         }
         
-        // 3. Xóa cookie "remember" nếu có
-        Cookie rememberCookie = new Cookie("remember", "");
-        rememberCookie.setMaxAge(0);
-        rememberCookie.setPath("/");
-        response.addCookie(rememberCookie);
+        // 3. Thu hồi token server-side và xóa cookie Remember Me an toàn
+        rememberMeService.cancelRememberMe(request, response);
         
         // 4. Chuyển hướng về trang chủ
         response.sendRedirect(request.getContextPath() + "/home");

@@ -105,9 +105,12 @@
                             <td>
                                 <a href="${pageContext.request.contextPath}/admin/categories?action=edit&id=${cat.id}" 
                                    class="btn btn-sm btn-update">Sửa</a>
-                                <a href="${pageContext.request.contextPath}/admin/categories?action=delete&id=${cat.id}" 
-                                   class="btn btn-sm btn-delete" 
-                                   onclick="return confirm('Xóa loại tin này?')">Xóa</a>
+                                <form method="post" action="${pageContext.request.contextPath}/admin/categories" style="display:inline; margin:0 3px;" onsubmit="return confirm('Xóa loại tin này?')">
+                                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="${cat.id}">
+                                    <button type="submit" class="btn btn-sm btn-delete" style="border:none; cursor:pointer;">Xóa</button>
+                                </form>
                             </td>
                         </tr>
                     </c:forEach>
