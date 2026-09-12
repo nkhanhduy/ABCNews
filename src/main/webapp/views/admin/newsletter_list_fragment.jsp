@@ -27,13 +27,20 @@
                     </td>
                     <td><fmt:formatDate value="${n.subscribedDate}" pattern="dd/MM/yyyy"/></td>
                     <td>
-                        <a href="${pageContext.request.contextPath}/admin/newsletters?action=delete&email=${n.email}" 
-                           class="btn btn-sm btn-delete" 
-                           onclick="return confirm('Xóa email này?')">Xóa</a>
-                        <a href="${pageContext.request.contextPath}/admin/newsletters?action=toggle&email=${n.email}" 
-                           class="btn btn-sm btn-update">
-                           ${n.enabled ? 'Hủy' : 'Kích hoạt'}
-                        </a>
+                        <form method="post" action="${pageContext.request.contextPath}/admin/newsletters" style="display:inline; margin:0 3px;" onsubmit="return confirm('Xóa email này?')">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="email" value="${n.email}">
+                            <button type="submit" class="btn btn-sm btn-delete" style="border:none; cursor:pointer;">Xóa</button>
+                        </form>
+                        <form method="post" action="${pageContext.request.contextPath}/admin/newsletters" style="display:inline; margin:0 3px;">
+                            <input type="hidden" name="_csrf" value="${csrfToken}">
+                            <input type="hidden" name="action" value="toggle">
+                            <input type="hidden" name="email" value="${n.email}">
+                            <button type="submit" class="btn btn-sm btn-update" style="border:none; cursor:pointer;">
+                                ${n.enabled ? 'Hủy' : 'Kích hoạt'}
+                            </button>
+                        </form>
                     </td>
                 </tr>
             </c:forEach>

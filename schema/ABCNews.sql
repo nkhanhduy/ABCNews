@@ -40,6 +40,7 @@ CREATE TABLE [dbo].[Users](
 	[Mobile] [varchar](20) NULL,
 	[Email] [varchar](255) NULL,
 	[Role] [bit] NOT NULL,
+	[IsSuperAdmin] [bit] NOT NULL CONSTRAINT [DF_Users_IsSuperAdmin] DEFAULT ((0)),
 	[ImagePath] [varchar](255) NULL,
 	[GoogleId] [varchar](255) NULL,
 	[AuthProvider] [varchar](20) NULL,
@@ -49,6 +50,28 @@ PRIMARY KEY CLUSTERED
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RememberTokens] ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RememberTokens](
+	[id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[user_id] [varchar](50) NOT NULL,
+	[token_hash] [varchar](64) NOT NULL,
+	[created_at] [datetime] NOT NULL CONSTRAINT [DF_RememberTokens_created_at] DEFAULT (getdate()),
+	[expires_at] [datetime] NOT NULL,
+	[revoked] [bit] NOT NULL CONSTRAINT [DF_RememberTokens_revoked] DEFAULT ((0)),
+	CONSTRAINT [FK_RememberTokens_Users] FOREIGN KEY([user_id]) 
+		REFERENCES [dbo].[Users] ([Id]) ON DELETE CASCADE
+) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [IX_RememberTokens_token_hash] 
+ON [dbo].[RememberTokens]([token_hash], [revoked], [expires_at])
+GO
+CREATE NONCLUSTERED INDEX [IX_RememberTokens_user_id] 
+ON [dbo].[RememberTokens]([user_id])
 GO
 /****** Object:  View [dbo].[v_OtpTokens_Active]    Script Date: 23/03/26 7:37:51 CH ******/
 SET ANSI_NULLS ON

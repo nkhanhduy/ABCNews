@@ -46,7 +46,7 @@ public class UserDAO {
      */
     public void insert(User entity) {
         String hashedPassword = PasswordUtil.ensureHashed(entity.getPassword());
-        String sql = "INSERT INTO Users (Id, Password, Fullname, Birthday, Gender, Mobile, Email, Role, ImagePath, GoogleId, AuthProvider, Enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (Id, Password, Fullname, Birthday, Gender, Mobile, Email, Role, ImagePath, GoogleId, AuthProvider, Enabled, IsSuperAdmin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         JDBCHelper.executeUpdate(sql, 
                 entity.getId(), 
                 hashedPassword,
@@ -59,7 +59,8 @@ public class UserDAO {
                 entity.getImagePath(),
                 entity.getGoogleId(),
                 entity.getAuthProvider(),
-                entity.isEnabled());
+                entity.isEnabled(),
+                entity.isSuperAdmin());
     }
 
     /**
@@ -75,7 +76,7 @@ public class UserDAO {
      */
     public void update(User entity) {
         String hashedPassword = PasswordUtil.ensureHashed(entity.getPassword());
-        String sql = "UPDATE Users SET Password = ?, Fullname = ?, Birthday = ?, Gender = ?, Mobile = ?, Email = ?, Role = ?, ImagePath = ?, GoogleId = ?, AuthProvider = ?, Enabled = ? WHERE Id = ?";
+        String sql = "UPDATE Users SET Password = ?, Fullname = ?, Birthday = ?, Gender = ?, Mobile = ?, Email = ?, Role = ?, ImagePath = ?, GoogleId = ?, AuthProvider = ?, Enabled = ?, IsSuperAdmin = ? WHERE Id = ?";
         JDBCHelper.executeUpdate(sql, 
                 hashedPassword, 
                 entity.getFullname(), 
@@ -88,6 +89,7 @@ public class UserDAO {
                 entity.getGoogleId(),
                 entity.getAuthProvider(),
                 entity.isEnabled(),
+                entity.isSuperAdmin(),
                 entity.getId());
     }
 
@@ -553,11 +555,10 @@ public class UserDAO {
         if (filterRole != null && !filterRole.trim().isEmpty()) {
             String roleStr = filterRole.trim().toLowerCase();
             if ("super".equals(roleStr)) {
-                // Super Admin: ID bắt đầu bằng "super"
-                sql.append(" AND Id LIKE ?");
-                params.add("super%");
+                // Super Admin: xác định trực tiếp từ cột IsSuperAdmin trong database
+                sql.append(" AND IsSuperAdmin = 1");
             } else if ("true".equals(roleStr)) {
-                // Admin (bao gồm cả Super Admin vì Super Admin cũng có Role = true)
+                // Admin (Role = true)
                 sql.append(" AND Role = ?");
                 params.add(true);
             } else if ("false".equals(roleStr)) {
@@ -647,6 +648,12 @@ public class UserDAO {
                     entity.setEnabled(rs.getBoolean("Enabled"));
                 } catch (SQLException e) {
                     entity.setEnabled(true); // Mặc định enabled nếu cột chưa tồn tại
+                }
+                // IsSuperAdmin: đọc từ database
+                try {
+                    entity.setSuperAdmin(rs.getBoolean("IsSuperAdmin"));
+                } catch (SQLException e) {
+                    entity.setSuperAdmin(false);
                 }
                 list.add(entity);
             }

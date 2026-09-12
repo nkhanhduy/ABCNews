@@ -17,6 +17,7 @@ import com.google.api.client.json.gson.GsonFactory;
 
 import poly.com.dao.UserDAO;
 import poly.com.entity.User;
+import poly.com.util.ConfigHelper;
 
 /**
  * Controller xử lý xác thực Google OAuth
@@ -26,8 +27,6 @@ import poly.com.entity.User;
 public class GoogleVerifyController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
-    // TODO: Thay YOUR_CLIENT_ID bằng Client ID từ Google
-    private static final String CLIENT_ID = "248224711124-mr0usg1vgteil4fbo06hgrmshchtq4ca.apps.googleusercontent.com";
     private static final NetHttpTransport transport = new NetHttpTransport();
     private static final GsonFactory jsonFactory = new GsonFactory();
     
@@ -52,11 +51,19 @@ public class GoogleVerifyController extends HttpServlet {
                 .forward(request, response);
             return;
         }
+
+        String clientId = ConfigHelper.get("google.client.id", "");
+        if (clientId.isEmpty()) {
+            request.setAttribute("error", "Chức năng đăng nhập Google chưa được cấu hình Client ID.");
+            request.getRequestDispatcher("/views/public/login.jsp")
+                .forward(request, response);
+            return;
+        }
         
         try {
             // Verify ID token từ Google
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                .setAudience(Collections.singletonList(CLIENT_ID))
+                .setAudience(Collections.singletonList(clientId))
                 .build();
             
             GoogleIdToken idToken = verifier.verify(credential);
@@ -118,8 +125,8 @@ public class GoogleVerifyController extends HttpServlet {
             response.sendRedirect(contextPath + "/admin/dashboard");
             
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Đã có lỗi xảy ra khi xác thực Google: " + e.getMessage());
+            System.err.println("Lỗi xác thực Google: " + e.getMessage());
+            request.setAttribute("error", "Đã có lỗi xảy ra khi xác thực Google. Vui lòng thử lại sau.");
             request.getRequestDispatcher("/views/public/login.jsp")
                 .forward(request, response);
         }

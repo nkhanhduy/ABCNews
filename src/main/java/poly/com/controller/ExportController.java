@@ -105,8 +105,8 @@ public class ExportController extends BaseController {
         } catch (IllegalArgumentException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Export failed: " + e.getMessage());
+            System.err.println("[ERROR] ExportController: " + e.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Xuất dữ liệu thất bại. Vui lòng thử lại sau.");
         }
     }
     

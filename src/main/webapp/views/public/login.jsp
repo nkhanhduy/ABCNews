@@ -238,7 +238,7 @@
                         
                         <div class="d-flex justify-content-center">
                             <div id="g_id_onload"
-                                 data-client_id="248224711124-mr0usg1vgteil4fbo06hgrmshchtq4ca.apps.googleusercontent.com"
+                                 data-client_id="${not empty googleClientId ? googleClientId : applicationScope.googleClientId}"
                                  data-callback="handleGoogleSignIn"
                                  data-auto_prompt="false">
                             </div>

@@ -24,18 +24,6 @@
             <p>Hệ thống vừa gặp một lỗi không mong muốn. Vui lòng thử lại sau.</p>
             <p><a href="${pageContext.request.contextPath}/home">Quay về trang chủ</a></p>
             
-            <%-- 
-              Phần này để debug, bạn có thể bật lên để xem lỗi
-            <hr>
-            <h3>Chi tiết lỗi (dành cho lập trình viên):</h3>
-            <pre><% 
-                if (exception != null) {
-                    exception.printStackTrace(new java.io.PrintWriter(out));
-                } else {
-                    out.println("Không có thông tin lỗi chi tiết.");
-                }
-            %></pre>
-            --%>
         </main>
     </div>
 

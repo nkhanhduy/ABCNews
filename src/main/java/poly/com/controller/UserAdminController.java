@@ -63,14 +63,8 @@ public class UserAdminController extends BaseController {
         try {
             if (action != null) {
                 switch (action) {
-                    case "delete":
-                        doDelete(request, response);
-                        return;
                     case "edit":
                         showEditForm(request, response);
-                        return;
-                    case "toggle":
-                        toggleStatus(request, response);
                         return;
                     case "generateUserId":
                         generateUserId(request, response);
@@ -78,6 +72,9 @@ public class UserAdminController extends BaseController {
                     case "searchAjax":
                         searchUsersAjax(request, response);
                         return;
+                    default:
+                        // Không cho phép thực hiện thao tác thay đổi dữ liệu qua GET
+                        break;
                 }
             }
             showList(request, response);
@@ -103,6 +100,12 @@ public class UserAdminController extends BaseController {
                     case "update":
                         shouldRedirect = doUpdate(request, response);
                         break;
+                    case "delete":
+                        doDelete(request, response);
+                        return;
+                    case "toggle":
+                        toggleStatus(request, response);
+                        return;
                 }
             }
             // Chỉ redirect nếu không có lỗi validation (đã forward)
@@ -429,6 +432,7 @@ public class UserAdminController extends BaseController {
         }
         
         user.setRole(isSuperAdmin || (roleParam != null && roleParam.equals("true")));
+        user.setSuperAdmin(isSuperAdmin);
         
         // Mặc định enabled = true khi tạo user mới
         user.setEnabled(true);
@@ -546,14 +550,21 @@ public class UserAdminController extends BaseController {
         user.setGender(request.getParameter("gender") != null && request.getParameter("gender").equals("true"));
         
         // Xử lý role: 
-        // - Super Admin không được thay đổi role (luôn là true)
-        // - Admin thường có thể sửa role của phóng viên
+        // - Chỉ Super Admin mới được phong quyền Super Admin
+        // - Admin thường không thể nâng quyền bản thân hay người khác thành Super Admin
         String roleParam = request.getParameter("role");
-        if (user.isSuperAdmin()) {
-            // Super Admin luôn có role = true, không được thay đổi
-            user.setRole(true);
+        boolean isSuperAdmin = "super".equalsIgnoreCase(roleParam);
+        if (isSuperAdmin && !currentUser.isSuperAdmin()) {
+            request.setAttribute("error", "Bạn không có quyền nâng cấp người dùng thành Super Admin.");
+            request.setAttribute("userItem", user);
+            showList(request, response);
+            return false;
+        }
+
+        if (currentUser.isSuperAdmin()) {
+            user.setSuperAdmin(isSuperAdmin);
+            user.setRole(isSuperAdmin || (roleParam != null && roleParam.equals("true")));
         } else {
-            // Với user không phải Super Admin, có thể thay đổi role
             user.setRole(roleParam != null && roleParam.equals("true"));
         }
         
@@ -621,8 +632,8 @@ public class UserAdminController extends BaseController {
                 response.getWriter().write("{\"success\": false, \"message\": \"Không thể tạo mã người dùng\"}");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().write("{\"success\": false, \"message\": \"Lỗi tạo mã người dùng: " + e.getMessage() + "\"}");
+            System.err.println("[ERROR] Lỗi tạo mã người dùng: " + e.getMessage());
+            response.getWriter().write("{\"success\": false, \"message\": \"Lỗi tạo mã người dùng. Vui lòng thử lại sau.\"}");
         }
     }
 }

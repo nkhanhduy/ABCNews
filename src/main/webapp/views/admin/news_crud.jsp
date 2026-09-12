@@ -312,11 +312,16 @@
                             </td>
                             <td>${news.viewCount}</td>
                             <td>
-                                <a href="${pageContext.request.contextPath}/admin/news?action=edit&id=${news.id}" 
-                                   class="btn btn-sm btn-update">Sửa</a>
-                                <a href="${pageContext.request.contextPath}/admin/news?action=delete&id=${news.id}" 
-                                   class="btn btn-sm btn-delete" 
-                                   onclick="return confirm('Xóa tin này?')">Xóa</a>
+                                <c:if test="${sessionScope.user.role or sessionScope.user.id == news.author}">
+                                    <a href="${pageContext.request.contextPath}/admin/news?action=edit&id=${news.id}" 
+                                       class="btn btn-sm btn-update">Sửa</a>
+                                    <form method="post" action="${pageContext.request.contextPath}/admin/news" style="display:inline; margin:0 3px;" onsubmit="return confirm('Xóa tin này?')">
+                                        <input type="hidden" name="_csrf" value="${csrfToken}">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="id" value="${news.id}">
+                                        <button type="submit" class="btn btn-sm btn-delete" style="border:none; cursor:pointer;">Xóa</button>
+                                    </form>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>

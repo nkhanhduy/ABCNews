@@ -23,10 +23,8 @@
 			<c:forEach var="u" items="${userList}">
 				<c:set var="currentUser" value="${sessionScope.user}" />
 				<c:set var="isCurrentUser" value="${u.id == currentUser.id}" />
-				<c:set var="currentUserIdLower" value="${fn:toLowerCase(currentUser.id)}" />
-				<c:set var="isSuperAdmin" value="${fn:startsWith(currentUserIdLower, 'super') || currentUserIdLower == 'superadmin'}" />
-				<c:set var="userIdLower" value="${fn:toLowerCase(u.id)}" />
-				<c:set var="isUserSuperAdmin" value="${fn:startsWith(userIdLower, 'super') || userIdLower == 'superadmin'}" />
+				<c:set var="isSuperAdmin" value="${currentUser.superAdmin}" />
+				<c:set var="isUserSuperAdmin" value="${u.superAdmin}" />
 				<c:set var="newsCount" value="${newsCountMap[u.id] != null ? newsCountMap[u.id] : 0}" />
 				
 				<tr data-user-id="${u.id}" class="user-row" style="cursor: pointer;">
@@ -39,29 +37,16 @@
 						</span>
 					</td>
 					<td style="text-align: center;">
-						<a href="${pageContext.request.contextPath}/admin/news?filterAuthor=${u.id}" 
-						   onclick="event.stopPropagation();" 
-						   style="color: #007bff; text-decoration: none;">
-							${newsCount}
-						</a>
+						<span class="badge ${newsCount > 0 ? 'bg-info' : 'bg-secondary'}">${newsCount}</span>
 					</td>
 					<td style="text-align: center;">
-						<c:choose>
-							<c:when test="${u.enabled}">
-								<span class="badge badge-success" style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.875rem; display: inline-block; min-width: 100px; text-align: center;">
-									<i class="fas fa-check-circle"></i> Hoạt động
-								</span>
-							</c:when>
-							<c:otherwise>
-								<span class="badge badge-danger" style="background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.875rem; display: inline-block; min-width: 100px; text-align: center;">
-									<i class="fas fa-ban"></i> Bị khóa
-								</span>
-							</c:otherwise>
-						</c:choose>
+						<span class="badge ${u.enabled ? 'bg-success' : 'bg-danger'}">
+							${u.enabled ? 'Hoạt động' : 'Bị khóa'}
+						</span>
 					</td>
-					<td onclick="event.stopPropagation();" style="text-align: center;">
+					<td style="text-align: center;">
 						<!-- Nút Sửa -->
-						<c:set var="canEdit" value="${isCurrentUser || isSuperAdmin || !isUserSuperAdmin}" />
+						<c:set var="canEdit" value="${isSuperAdmin || !u.superAdmin}" />
 						<c:choose>
 							<c:when test="${canEdit}">
 								<a href="${pageContext.request.contextPath}/admin/users?action=edit&id=${u.id}" 
@@ -77,10 +62,12 @@
 						<c:set var="canDelete" value="${!isCurrentUser && (isSuperAdmin || !u.role)}" />
 						<c:choose>
 							<c:when test="${canDelete}">
-								<a href="${pageContext.request.contextPath}/admin/users?action=delete&id=${u.id}"
-								   class="btn btn-sm btn-delete" 
-								   onclick="return confirm('Xóa tài khoản này?')"
-								   style="min-width: 70px; margin: 0 3px;">Xóa</a>
+								<form method="post" action="${pageContext.request.contextPath}/admin/users" style="display:inline; margin:0 3px;" onsubmit="return confirm('Xóa tài khoản này?')">
+									<input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
+									<input type="hidden" name="action" value="delete">
+									<input type="hidden" name="id" value="${u.id}">
+									<button type="submit" class="btn btn-sm btn-delete" style="min-width: 70px; border:none; cursor:pointer;">Xóa</button>
+								</form>
 							</c:when>
 							<c:otherwise>
 								<span class="btn btn-sm btn-delete" style="background-color: #6c757d !important; border-color: #6c757d !important; color: #fff !important; opacity: 0.6 !important; cursor: not-allowed !important; pointer-events: none !important; min-width: 70px; margin: 0 3px; display: inline-block;" 
@@ -92,11 +79,14 @@
 						<c:set var="canToggle" value="${!isCurrentUser && (isSuperAdmin || !u.role)}" />
 						<c:choose>
 							<c:when test="${canToggle}">
-								<a href="${pageContext.request.contextPath}/admin/users?action=toggle&id=${u.id}"
-								   class="btn btn-sm btn-update"
-								   style="min-width: 70px; margin: 0 3px;">
-								   ${u.enabled ? 'Khóa' : 'Mở khóa'}
-								</a>
+								<form method="post" action="${pageContext.request.contextPath}/admin/users" style="display:inline; margin:0 3px;">
+									<input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
+									<input type="hidden" name="action" value="toggle">
+									<input type="hidden" name="id" value="${u.id}">
+									<button type="submit" class="btn btn-sm btn-update" style="min-width: 70px; border:none; cursor:pointer;">
+										${u.enabled ? 'Khóa' : 'Mở khóa'}
+									</button>
+								</form>
 							</c:when>
 							<c:otherwise>
 								<span class="btn btn-sm btn-update" style="background-color: #6c757d !important; border-color: #6c757d !important; color: #fff !important; opacity: 0.6 !important; cursor: not-allowed !important; pointer-events: none !important; min-width: 70px; margin: 0 3px; display: inline-block;" 

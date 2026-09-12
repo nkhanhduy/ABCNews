@@ -34,7 +34,7 @@ public class HibernateInitializerListener implements ServletContextListener {
             JpaUtil.shutdown();
             JDBCHelper.closeDataSource();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error releasing resources: " + e.getMessage());
         }
     }
 }

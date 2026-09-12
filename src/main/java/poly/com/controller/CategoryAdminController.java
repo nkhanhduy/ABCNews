@@ -54,9 +54,6 @@ public class CategoryAdminController extends BaseController {
         try {
             if (action != null) {
                 switch (action) {
-                    case "delete":
-                        handleDelete(request, response);
-                        return;
                     case "edit":
                         showEditForm(request, response);
                         return;
@@ -69,7 +66,7 @@ public class CategoryAdminController extends BaseController {
     }
 
     /**
-     * Xử lý request POST: Tạo mới hoặc cập nhật loại tin
+     * Xử lý request POST: Tạo mới, cập nhật hoặc xóa loại tin
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
@@ -89,6 +86,9 @@ public class CategoryAdminController extends BaseController {
                     case "update":
                         handleUpdate(request, response);
                         break;
+                    case "delete":
+                        handleDelete(request, response);
+                        return;
                 }
             }
             // Chỉ redirect nếu không có lỗi validation (đã forward)

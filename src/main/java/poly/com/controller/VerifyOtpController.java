@@ -8,53 +8,41 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import poly.com.dao.OtpTokenDAO;
+import poly.com.dao.RememberTokenDAO;
 import poly.com.dao.UserDAO;
-import poly.com.entity.OtpToken;
-import poly.com.util.OtpUtil;
+import poly.com.service.OtpService;
+import poly.com.service.OtpVerificationResult;
+import poly.com.service.impl.OtpServiceImpl;
 import poly.com.util.PasswordUtil;
 
 /**
  * Controller xử lý xác thực OTP và reset password
- * 
- * Flow:
- * 1. User nhập OTP code + password mới
- * 2. Validate OTP (chưa dùng, chưa hết hạn, attempts < 3)
- * 3. Nếu OTP đúng:
- *    - Hash password mới
- *    - Update password trong Users table
- *    - Mark OTP as used
- *    - Clear session
- *    - Redirect đến login với success message
- * 4. Nếu OTP sai:
- *    - Increment attempts
- *    - Show error với số lần thử còn lại
- * 
- * @author ABCNews Development Team
+ * Tuân thủ chuẩn bảo mật:
+ * - Tra cứu OTP theo userId, kiểm tra attempts/expiry/used trước khi so sánh mã.
+ * - Khóa OTP sau 3 lần sai.
+ * - Consume OTP nguyên tử để chống race condition và replay.
+ * - Thu hồi mọi remember token khi đổi mật khẩu thành công.
  */
 @WebServlet("/verify-otp")
 public class VerifyOtpController extends BaseController {
     private static final long serialVersionUID = 1L;
     
-    private OtpTokenDAO otpTokenDAO = new OtpTokenDAO();
-    private UserDAO userDAO = new UserDAO();
-    
-    private static final int MAX_ATTEMPTS = 3;
+    private final OtpService otpService = new OtpServiceImpl();
+    private final UserDAO userDAO = new UserDAO();
+    private final RememberTokenDAO rememberTokenDAO = new RememberTokenDAO();
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("resetUserId");
+        HttpSession session = request.getSession(false);
+        String userId = session != null ? (String) session.getAttribute("resetUserId") : null;
         
-        // Kiểm tra session có userId không (phải đi từ forgot-password)
         if (userId == null) {
             response.sendRedirect(request.getContextPath() + "/forgot-password");
             return;
         }
         
-        // Hiển thị form nhập OTP (standalone, không qua layout)
         request.getRequestDispatcher("/views/verify-otp.jsp").forward(request, response);
     }
     
@@ -62,10 +50,9 @@ public class VerifyOtpController extends BaseController {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("resetUserId");
+        HttpSession session = request.getSession(false);
+        String userId = session != null ? (String) session.getAttribute("resetUserId") : null;
         
-        // Kiểm tra session
         if (userId == null) {
             response.sendRedirect(request.getContextPath() + "/forgot-password");
             return;
@@ -75,7 +62,7 @@ public class VerifyOtpController extends BaseController {
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
         
-        // Validate input
+        // 1. Validate input form
         if (otpCode == null || otpCode.trim().isEmpty()) {
             request.setAttribute("error", "Vui lòng nhập mã OTP");
             request.getRequestDispatcher("/views/verify-otp.jsp").forward(request, response);
@@ -88,78 +75,34 @@ public class VerifyOtpController extends BaseController {
             return;
         }
         
-        // Validate password strength
         if (!PasswordUtil.isPasswordValid(newPassword)) {
             request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự");
             request.getRequestDispatcher("/views/verify-otp.jsp").forward(request, response);
             return;
         }
         
-        // Validate password match
         if (!newPassword.equals(confirmPassword)) {
             request.setAttribute("error", "Mật khẩu xác nhận không khớp");
             request.getRequestDispatcher("/views/verify-otp.jsp").forward(request, response);
             return;
         }
         
-        otpCode = otpCode.trim();
-        
-        // Tìm OTP token
-        OtpToken otpToken = otpTokenDAO.findOtpByCode(userId, otpCode);
-        
-        if (otpToken == null) {
-            request.setAttribute("error", "Mã OTP không đúng");
-            request.getRequestDispatcher("/views/verify-otp.jsp").forward(request, response);
-            return;
-        }
-        
-        // Kiểm tra OTP đã được sử dụng chưa
-        if (otpToken.isUsed()) {
-            request.setAttribute("error", "Mã OTP đã được sử dụng");
-            request.getRequestDispatcher("/views/verify-otp.jsp").forward(request, response);
-            return;
-        }
-        
-        // Kiểm tra OTP hết hạn chưa
-        if (!OtpUtil.isOtpValid(otpToken.getExpiryTime())) {
-            request.setAttribute("error", "Mã OTP đã hết hạn, vui lòng gửi lại");
-            request.setAttribute("expired", true);
-            request.getRequestDispatcher("/views/verify-otp.jsp").forward(request, response);
-            return;
-        }
-        
-        // Kiểm tra số lần thử
-        if (otpToken.getAttempts() >= MAX_ATTEMPTS) {
-            request.setAttribute("error", "Đã nhập sai quá " + MAX_ATTEMPTS + " lần, vui lòng gửi lại OTP");
-            request.setAttribute("expired", true);
-            request.getRequestDispatcher("/views/verify-otp.jsp").forward(request, response);
-            return;
-        }
-        
-        // Kiểm tra OTP code có đúng không
-        if (!otpToken.getOtpCode().equals(otpCode)) {
-            // Increment attempts
-            otpTokenDAO.incrementAttempts(otpToken.getId());
-            
-            int remainingAttempts = MAX_ATTEMPTS - (otpToken.getAttempts() + 1);
-            
-            if (remainingAttempts > 0) {
-                request.setAttribute("error", "Mã OTP không đúng (còn " + remainingAttempts + " lần thử)");
-            } else {
-                request.setAttribute("error", "Đã nhập sai quá " + MAX_ATTEMPTS + " lần, vui lòng gửi lại OTP");
+        // 2. Xác thực OTP qua Service
+        OtpVerificationResult result = otpService.verifyOtp(userId, otpCode);
+        if (!result.isSuccess()) {
+            request.setAttribute("error", result.getMessage());
+            if (result.getStatus() == OtpVerificationResult.Status.EXPIRED ||
+                result.getStatus() == OtpVerificationResult.Status.MAX_ATTEMPTS_EXCEEDED ||
+                result.getStatus() == OtpVerificationResult.Status.ALREADY_USED) {
                 request.setAttribute("expired", true);
             }
-            
             request.getRequestDispatcher("/views/verify-otp.jsp").forward(request, response);
             return;
         }
         
-        // OTP hợp lệ! Reset password
+        // 3. OTP hợp lệ & đã được consume -> Cập nhật mật khẩu mới
         try {
-            // Hash password mới
             String hashedPassword = PasswordUtil.hashPassword(newPassword);
-            
-            // Update password trong database
             boolean updated = userDAO.updatePassword(userId, hashedPassword);
             
             if (!updated) {
@@ -168,21 +111,20 @@ public class VerifyOtpController extends BaseController {
                 return;
             }
             
-            // Mark OTP as used
-            otpTokenDAO.markOtpAsUsed(otpToken.getId());
+            // 4. Thu hồi tất cả remember token cũ của user
+            rememberTokenDAO.revokeAllByUserId(userId);
             
-            // Clear session
+            // 5. Xóa session reset
             session.removeAttribute("resetUserId");
             session.removeAttribute("resetUserEmail");
             
-            // Redirect đến login với success message
+            // 6. Chuyển hướng đến đăng nhập kèm thông báo thành công
             response.sendRedirect(request.getContextPath() + "/login?resetSuccess=true");
             
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] VerifyOtpController.doPost: " + e.getMessage());
             request.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại");
             request.getRequestDispatcher("/views/verify-otp.jsp").forward(request, response);
         }
     }
 }
-

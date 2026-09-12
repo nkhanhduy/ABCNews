@@ -15,6 +15,7 @@ import poly.com.entity.User;
 import poly.com.service.ActivityLogService;
 import poly.com.service.UserService;
 import poly.com.service.impl.UserServiceImpl;
+import poly.com.util.ConfigHelper;
 
 /**
  * Controller xử lý đăng nhập - hiển thị form và xác thực thông tin đăng nhập
@@ -23,74 +24,38 @@ import poly.com.service.impl.UserServiceImpl;
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-       
+
     private UserService userService;
     private ActivityLogService activityLogService;
-
-    /**
-     * Khởi tạo UserService và ActivityLogService khi servlet được load
-     */
+    private poly.com.service.RememberMeService rememberMeService;
+    
     @Override
     public void init() throws ServletException {
         userService = new UserServiceImpl();
         activityLogService = new ActivityLogService();
+        rememberMeService = new poly.com.service.impl.RememberMeServiceImpl();
+        getServletContext().setAttribute("googleClientId", ConfigHelper.get("google.client.id", ""));
     }
 
     /**
      * Hiển thị trang đăng nhập
-     * Kiểm tra cookie "remember" để tự động đăng nhập
+     * Kiểm tra cookie remember-me an toàn để tự động đăng nhập
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        // Kiểm tra cookie "remember" để auto-login
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("remember".equals(cookie.getName())) {
-                    String rememberValue = cookie.getValue();
-                    if (rememberValue != null && !rememberValue.isEmpty()) {
-                        try {
-                            // Giải mã: chỉ có userId
-                            String userId = new String(Base64.getDecoder().decode(rememberValue));
-                            User user = userService.findById(userId);
-                            if (user != null) {
-                                // Kiểm tra tài khoản có bị khóa không
-                                if (!user.isEnabled()) {
-                                    // Xóa cookie nếu tài khoản bị khóa
-                                    Cookie invalidCookie = new Cookie("remember", "");
-                                    invalidCookie.setMaxAge(0);
-                                    invalidCookie.setPath("/");
-                                    response.addCookie(invalidCookie);
-                                    request.setAttribute("error", "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
-                                    request.getRequestDispatcher("/views/public/login.jsp").forward(request, response);
-                                    return;
-                                }
-                                // Auto-login
-                                HttpSession session = request.getSession();
-                                session.setAttribute("user", user);
-                                
-                                // Log đăng nhập thành công (auto-login từ cookie)
-                                activityLogService.logLogin(user, request);
-                                
-                                // Redirect đến dashboard (AdminController sẽ phân biệt Admin/Reporter)
-                                response.sendRedirect(request.getContextPath() + "/admin/dashboard");
-                                return;
-                            }
-                        } catch (Exception e) {
-                            // Cookie không hợp lệ, xóa nó
-                            Cookie invalidCookie = new Cookie("remember", "");
-                            invalidCookie.setMaxAge(0);
-                            invalidCookie.setPath("/");
-                            response.addCookie(invalidCookie);
-                        }
-                    }
-                    break;
-                }
-            }
+        // Kiểm tra remember-me token an toàn
+        User autoUser = rememberMeService.processAutoLogin(request, response);
+        if (autoUser != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("user", autoUser);
+            activityLogService.logLogin(autoUser, request);
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+            return;
         }
         
+        request.setAttribute("googleClientId", ConfigHelper.get("google.client.id", ""));
         request.getRequestDispatcher("/views/public/login.jsp").forward(request, response);
     }
 
@@ -112,6 +77,7 @@ public class LoginController extends HttpServlet {
             if (user != null) {
                 // Kiểm tra tài khoản có bị khóa không
                 if (!user.isEnabled()) {
+                    rememberMeService.cancelRememberMe(request, response);
                     request.setAttribute("error", "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
                     request.getRequestDispatcher("/views/public/login.jsp").forward(request, response);
                     return;
@@ -123,30 +89,15 @@ public class LoginController extends HttpServlet {
                 // Log đăng nhập thành công
                 activityLogService.logLogin(user, request);
                 
-                // Xử lý "Remember me"
+                // Xử lý "Remember me" bảo mật bằng 256-bit SecureRandom token và SHA-256 hash
                 String remember = request.getParameter("remember");
-                if (remember != null && remember.equals("on")) {
-                    // Tạo remember token: chỉ lưu userId (đơn giản và an toàn)
-                    try {
-                        String encoded = Base64.getEncoder().encodeToString(user.getId().getBytes());
-                        
-                        Cookie rememberCookie = new Cookie("remember", encoded);
-                        rememberCookie.setMaxAge(24 * 60 * 60); // 1 ngày
-                        rememberCookie.setPath("/");
-                        rememberCookie.setHttpOnly(true); // Bảo mật hơn
-                        response.addCookie(rememberCookie);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                if ("on".equals(remember) || "true".equalsIgnoreCase(remember)) {
+                    rememberMeService.issueRememberMe(user.getId(), request, response);
                 } else {
-                    // Xóa cookie nếu không chọn "Remember me"
-                    Cookie rememberCookie = new Cookie("remember", "");
-                    rememberCookie.setMaxAge(0);
-                    rememberCookie.setPath("/");
-                    response.addCookie(rememberCookie);
+                    rememberMeService.cancelRememberMe(request, response);
                 }
                 
-                // Redirect đến dashboard (AdminController sẽ phân biệt Admin/Reporter)
+                // Redirect đến dashboard
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard");
             } else {
                 // Log đăng nhập thất bại
@@ -157,7 +108,7 @@ public class LoginController extends HttpServlet {
             }
             
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] LoginController.doPost: " + e.getMessage());
             request.setAttribute("error", "Đã có lỗi hệ thống xảy ra!");
             request.getRequestDispatcher("/views/public/login.jsp").forward(request, response);
         }

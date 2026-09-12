@@ -945,18 +945,26 @@ table.comments-table tr:hover td {
                         <td style="text-align: center;">
                             <div class="comment-actions">
                                 <c:if test="${c.status != 1}">
-                                    <a href="${pageContext.request.contextPath}/admin/comments?action=approve&id=${c.id}&status=${currentStatus}" 
-                                       class="btn-action-approve" 
-                                       title="Phê duyệt">
-                                        <i class="fa-solid fa-check"></i> Duyệt
-                                    </a>
+                                    <form method="post" action="${pageContext.request.contextPath}/admin/comments" style="display:inline; margin:0; padding:0;">
+                                        <input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
+                                        <input type="hidden" name="action" value="approve">
+                                        <input type="hidden" name="id" value="${c.id}">
+                                        <input type="hidden" name="status" value="${currentStatus}">
+                                        <button type="submit" class="btn-action-approve" style="border:none; cursor:pointer;" title="Phê duyệt">
+                                            <i class="fa-solid fa-check"></i> Duyệt
+                                        </button>
+                                    </form>
                                 </c:if>
                                 <c:if test="${c.status != 2}">
-                                    <a href="${pageContext.request.contextPath}/admin/comments?action=reject&id=${c.id}&status=${currentStatus}" 
-                                       class="btn-action-reject" 
-                                       title="Từ chối">
-                                        <i class="fa-solid fa-xmark"></i> Từ chối
-                                    </a>
+                                    <form method="post" action="${pageContext.request.contextPath}/admin/comments" style="display:inline; margin:0; padding:0;">
+                                        <input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
+                                        <input type="hidden" name="action" value="reject">
+                                        <input type="hidden" name="id" value="${c.id}">
+                                        <input type="hidden" name="status" value="${currentStatus}">
+                                        <button type="submit" class="btn-action-reject" style="border:none; cursor:pointer;" title="Từ chối">
+                                            <i class="fa-solid fa-xmark"></i> Từ chối
+                                        </button>
+                                    </form>
                                 </c:if>
                                 <button type="button" 
                                         class="btn-action-delete" 
@@ -1029,12 +1037,18 @@ table.comments-table tr:hover td {
                     Hành động này sẽ xóa vĩnh viễn bình luận và không thể hoàn tác.
                 </div>
             </div>
-            <div class="modal-footer bg-light py-2.5 px-4 border-top">
-                <button type="button" class="btn btn-sm btn-secondary px-3" data-bs-dismiss="modal">Hủy bỏ</button>
-                <a href="#" id="modalDeleteBtn" class="btn btn-sm btn-danger px-3">
-                    <i class="fa-regular fa-trash-can me-1"></i>Xác nhận xóa
-                </a>
-            </div>
+            <form method="post" action="${pageContext.request.contextPath}/admin/comments" class="m-0">
+                <input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="id" id="modalDeleteId" value="">
+                <input type="hidden" name="status" value="${currentStatus}">
+                <div class="modal-footer bg-light py-2.5 px-4 border-top">
+                    <button type="button" class="btn btn-sm btn-secondary px-3" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-sm btn-danger px-3">
+                        <i class="fa-regular fa-trash-can me-1"></i>Xác nhận xóa
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -1043,12 +1057,10 @@ table.comments-table tr:hover td {
 function confirmDeleteComment(commentId, authorName) {
     var modalEl = document.getElementById('deleteCommentModal');
     var authorEl = document.getElementById('modalAuthorName');
-    var btnEl = document.getElementById('modalDeleteBtn');
+    var inputIdEl = document.getElementById('modalDeleteId');
     
     if (authorEl) authorEl.textContent = "Bình luận của: " + authorName;
-    if (btnEl) {
-        btnEl.href = "${pageContext.request.contextPath}/admin/comments?action=delete&id=" + commentId + "&status=${currentStatus}";
-    }
+    if (inputIdEl) inputIdEl.value = commentId;
     
     var modal = new bootstrap.Modal(modalEl);
     modal.show();

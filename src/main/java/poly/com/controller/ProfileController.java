@@ -127,7 +127,7 @@ public class ProfileController extends HttpServlet {
             request.getRequestDispatcher("/views/admin/admin_layout.jsp").forward(request, response);
             
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] ProfileController.doGet: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/error.jsp");
         }
     }
@@ -203,7 +203,7 @@ public class ProfileController extends HttpServlet {
         } catch (IllegalArgumentException | SecurityException e) {
             session.setAttribute("toastError", e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] ProfileController.doPost: " + e.getMessage());
             session.setAttribute("toastError", "Đã xảy ra lỗi khi lưu ảnh đại diện. Vui lòng thử lại sau.");
         }
 

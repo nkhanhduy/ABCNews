@@ -29,7 +29,7 @@ public class JDBCHelper {
     private static final String DB_USER = ConfigHelper.get("db.user", "sa");
     
     /** Password để đăng nhập vào SQL Server */
-    private static final String DB_PASS = ConfigHelper.get("db.password", "123456");
+    private static final String DB_PASS = ConfigHelper.get("db.password", "");
     
     /** Địa chỉ host của SQL Server */
     private static final String DB_HOST = ConfigHelper.get("db.host", "localhost");
@@ -172,7 +172,7 @@ public class JDBCHelper {
             // Thực thi câu lệnh
             return pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] Lỗi khi thực thi executeUpdate: " + e.getMessage());
             throw new RuntimeException("Lỗi khi thực thi executeUpdate", e);
         } finally {
             // Đảm bảo đóng PreparedStatement và Connection trong mọi trường hợp
@@ -221,7 +221,7 @@ public class JDBCHelper {
             PreparedStatement pstmt = getPreparedStatement(sql, args);
             return pstmt.executeQuery();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("[ERROR] Lỗi khi thực thi executeQuery: " + e.getMessage());
             throw new RuntimeException("Lỗi khi thực thi executeQuery", e);
         }
     }
@@ -248,7 +248,7 @@ public class JDBCHelper {
                 rs.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("[WARN] Lỗi khi đóng ResultSet: " + e.getMessage());
         }
         
         // Đóng PreparedStatement/Statement
@@ -257,7 +257,7 @@ public class JDBCHelper {
                 stmt.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("[WARN] Lỗi khi đóng Statement: " + e.getMessage());
         }
         
         // Đóng Connection
@@ -266,7 +266,7 @@ public class JDBCHelper {
                 conn.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("[WARN] Lỗi khi đóng Connection: " + e.getMessage());
         }
     }
 
