@@ -120,7 +120,7 @@ cd ABCNews
 docker compose up -d
 ```
 
-> Ứng dụng sẽ tự động biên dịch, khởi tạo cơ sở dữ liệu và sẵn sàng phục vụ tại: **`http://localhost:8080/home`**
+> Ứng dụng sẽ tự động biên dịch, khởi tạo cơ sở dữ liệu và sẵn sàng phục vụ tại: **`http://localhost:8088/home`**
 
 ---
 

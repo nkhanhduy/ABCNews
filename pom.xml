@@ -148,6 +148,7 @@
     </dependencies>
 
     <build>
+        <finalName>ABCNews</finalName>
         <plugins>
             <!-- Compiler plugin -->
             <plugin>

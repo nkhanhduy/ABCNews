@@ -23,7 +23,7 @@ LABEL description="ABCNews Enterprise CMS Web Application"
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 # Sao chép file WAR từ stage builder vào thư mục webapps của Tomcat dưới dạng ROOT.war
-COPY --from=builder /build/target/ABCNews.war /usr/local/tomcat/webapps/ROOT.war
+COPY --from=builder /build/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
 # Thiết lập biến môi trường JVM tối ưu
 ENV JAVA_OPTS="-Xms512m -Xmx1024m -XX:+UseG1GC -Dfile.encoding=UTF-8"
