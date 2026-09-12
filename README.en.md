@@ -2,6 +2,16 @@
 
 # ABC News — Online Journalism & Content Management System (CMS)
 
+<p align="left">
+  <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
+  <img src="https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java 17 LTS">
+  <img src="https://img.shields.io/badge/Jakarta%20EE-10-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta EE 10">
+  <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
+  <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2ea44f?style=flat-square" alt="License MIT"></a>
+</p>
+
 A Java Web project built with Jakarta EE (Servlet & JSP) providing an online news reading portal for readers and a Content Management System (CMS) for editorial staff. Originally developed in 2025 and recently updated with responsive UI improvements, Dark Mode support, and secure image storage.
 
 **Author:** Nguyen Khanh Duy  
@@ -106,6 +116,7 @@ The seed database includes ready-to-use accounts for testing:
   - Modern Design System built on CSS Custom Properties featuring a polished Emerald Green identity.
   - High-contrast Dark Mode complying with WCAG AAA readability standards.
   - Interactive **Chart.js** telemetry dashboard and **CKEditor 5** rich-text authoring experience.
+  - **SEO & Open Graph Protocol Integration:** Complete Open Graph metadata (`og:title`, `og:image`, `og:description`, `og:url`) and Twitter Cards (`summary_large_image`) for all articles, rendering rich high-resolution media previews across Facebook, X, Telegram, and mobile chat apps.
 - **Production-Ready Containerization:** Multi-container **Docker Compose** orchestration (Tomcat + SQL Server) with automated health checks, schema generation, and seed data initialization with a single `docker compose up -d` command.
 
 

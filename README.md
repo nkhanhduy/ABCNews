@@ -2,6 +2,16 @@
 
 # ABC News — Website Báo Điện Tử & Hệ Quản Trị Nội Dung (CMS)
 
+<p align="left">
+  <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
+  <img src="https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java 17 LTS">
+  <img src="https://img.shields.io/badge/Jakarta%20EE-10-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta EE 10">
+  <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
+  <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2ea44f?style=flat-square" alt="License MIT"></a>
+</p>
+
 Đồ án thực hành xây dựng website tin tức trực tuyến và hệ thống quản trị nội dung tòa soạn (CMS) bằng nền tảng Java Web (Jakarta Servlet & JSP). Dự án được hoàn thiện năm 2025 và tối ưu hóa giao diện người dùng, hỗ trợ chế độ Sáng / Tối (Dark Mode) và cơ chế lưu trữ ảnh an toàn.
 
 **Tác giả:** Nguyễn Khánh Duy  
@@ -105,6 +115,7 @@ Dữ liệu mẫu nạp sẵn các tài khoản để đăng nhập thử nghi�
   - Hệ thống Design Tokens bằng biến CSS (CSS Custom Properties) đồng bộ tone màu Xanh lá hiện đại.
   - Chế độ Dark Mode hoàn thiện với tỷ lệ tương phản cao, bảo vệ mắt và không gây lóa nền.
   - Tích hợp biểu đồ thống kê trực quan **Chart.js** và trình biên tập nội dung phong phú **CKEditor 5**.
+  - **Tối Ưu Hóa SEO & Open Graph Protocol:** Tích hợp đầy đủ thẻ Open Graph (`og:title`, `og:image`, `og:description`, `og:url`) và Twitter Card (`summary_large_image`) cho toàn bộ bài viết, đảm bảo hiển thị hình ảnh thumbnail khổ lớn bắt mắt khi chia sẻ qua Facebook, X, Telegram hoặc Zalo.
 - **Containerization & Khởi chạy Nhanh:** Đóng gói trọn vẹn toàn bộ hệ thống bằng **Docker Compose** (Tomcat + SQL Server), tích hợp cơ chế Healthcheck và tự động khởi tạo cơ sở dữ liệu cùng bộ dữ liệu mẫu chỉ với duy nhất một câu lệnh `docker compose up -d`.
 
 

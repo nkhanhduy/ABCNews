@@ -2,6 +2,16 @@
 
 # ABC News — Online-Nachrichtenportal & Redaktionssystem (CMS)
 
+<p align="left">
+  <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
+  <img src="https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java 17 LTS">
+  <img src="https://img.shields.io/badge/Jakarta%20EE-10-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta EE 10">
+  <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
+  <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2ea44f?style=flat-square" alt="License MIT"></a>
+</p>
+
 Ein Java-Webprojekt auf Basis von Jakarta EE (Servlet & JSP), das ein Online-Nachrichtenportal für Leser und ein Content-Management-System (CMS) für Redaktionsmitglieder bereitstellt. Das Projekt entstand im Jahr 2025 und wurde mit responsivem Design, Dunkelmodus (Dark Mode) sowie sicherer Dateiverwaltung optimiert.
 
 **Autor:** Nguyen Khanh Duy  
@@ -106,6 +116,7 @@ In der Datenbank sind vorbereitete Testkonten vorhanden:
   - Modernes Design-Token-System auf Basis von CSS Custom Properties im smaragdgrünen Look.
   - Kontrastreicher Dark Mode nach WCAG-AAA-Standard für ermüdungsfreies Lesen.
   - Interaktives **Chart.js** Telemetrie-Dashboard und integrierter **CKEditor 5** WYSIWYG-Editor.
+  - **SEO- & Open-Graph-Protokoll-Integration:** Vollständige Open-Graph-Metadaten (`og:title`, `og:image`, `og:description`, `og:url`) und Twitter Cards (`summary_large_image`) für alle Artikeldetailseiten zur optimierten Vorschau mit Titel und Beitragsbild beim Teilen auf Facebook, X, Telegram und Messenger-Apps.
 - **Produktionsreife Containerisierung:** Vollständige **Docker-Compose**-Orchestrierung (Tomcat + SQL Server) mit automatisierten Healthchecks, Schema-Initialisierung und Testdatenbereitstellung mit nur einem Befehl: `docker compose up -d`.
 
 
