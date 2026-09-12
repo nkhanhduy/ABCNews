@@ -42,7 +42,7 @@
             </c:choose>
 
             <div class="form-group">
-                <label for="id">Mã loại (Id)</label>
+                <label for="id">Mã loại tin</label>
                 <input type="text" name="id" value="${categoryItem.id}" ${isEdit ? 'readonly' : 'required'}>
             </div>
 

@@ -95,4 +95,6 @@ local.env
 
 # Documentation & unused artifacts
 docs/
+.codegraph/
+node_modules/
 

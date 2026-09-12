@@ -79,7 +79,7 @@
 							<c:when test="${canDelete}">
 								<a href="${pageContext.request.contextPath}/admin/users?action=delete&id=${u.id}"
 								   class="btn btn-sm btn-delete" 
-								   onclick="return confirm('Xóa user này?')"
+								   onclick="return confirm('Xóa tài khoản này?')"
 								   style="min-width: 70px; margin: 0 3px;">Xóa</a>
 							</c:when>
 							<c:otherwise>

@@ -178,7 +178,6 @@
                                     </div>
                                     <div class="detail-value">
                                         <span class="text-muted">••••••••</span>
-                                        <small class="text-muted ms-2">(Đã mã hóa chuẩn BCrypt)</small>
                                     </div>
                                 </div>
                             </c:otherwise>
@@ -227,7 +226,6 @@
                                     </div>
                                     <div class="detail-value">
                                         <span class="text-muted">••••••••</span>
-                                        <small class="text-muted ms-2">(Đã mã hóa chuẩn BCrypt)</small>
                                     </div>
                                 </div>
                             </c:when>

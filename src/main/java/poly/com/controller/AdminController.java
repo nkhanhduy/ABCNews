@@ -15,10 +15,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import poly.com.dao.CategoryDAO;
+import poly.com.dao.CommentDAO;
 import poly.com.dao.NewsDAO;
 import poly.com.dao.NewsletterDAO;
 import poly.com.dao.UserDAO;
 import poly.com.entity.Category;
+import poly.com.entity.Comment;
 import poly.com.entity.News;
 import poly.com.entity.User;
 import poly.com.util.ImagePathHelper;
@@ -36,6 +38,7 @@ public class AdminController extends HttpServlet {
     private UserDAO userDAO;
     private CategoryDAO categoryDAO;
     private NewsletterDAO newsletterDAO;
+    private CommentDAO commentDAO;
 
     @Override
     public void init() throws ServletException {
@@ -43,6 +46,7 @@ public class AdminController extends HttpServlet {
         userDAO = new UserDAO();
         categoryDAO = new CategoryDAO();
         newsletterDAO = new NewsletterDAO();
+        commentDAO = new CommentDAO();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -79,6 +83,12 @@ public class AdminController extends HttpServlet {
         int totalUsers = userDAO.countAll();
         int totalCategories = categoryDAO.countAll();
         int totalNewsletters = newsletterDAO.countAll();
+        int pendingComments = commentDAO.countByStatus(Comment.STATUS_PENDING);
+        int totalComments = commentDAO.countByStatus(-1);
+
+        request.getSession().setAttribute("pendingCommentCount", pendingComments);
+        request.setAttribute("pendingComments", pendingComments);
+        request.setAttribute("totalComments", totalComments);
         
         // 2. Thống kê chi tiết
         int totalAdmins = userDAO.countByRole(true);
@@ -168,6 +178,8 @@ public class AdminController extends HttpServlet {
         // 1. Thống kê tổng quan - chỉ tin của phóng viên này
         List<News> myNewsList = newsDAO.findByAuthor(authorId);
         int myTotalNews = myNewsList.size();
+        int pendingComments = commentDAO.countByStatus(Comment.STATUS_PENDING);
+        request.getSession().setAttribute("pendingCommentCount", pendingComments);
         
         // Tính tổng lượt xem
         int totalViews = 0;

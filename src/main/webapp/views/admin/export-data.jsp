@@ -16,8 +16,8 @@
             <form id="exportForm" class="export-form">
                 <!-- Chọn Module -->
                 <div class="form-section">
-                    <h4 class="section-title"><i class="fas fa-database me-2"></i>Chọn Module 
-                        <c:if test="${sessionScope.user.role}"> (có thể chọn nhiều)</c:if>
+                    <h4 class="section-title"><i class="fas fa-folder-open me-2"></i>Chọn dữ liệu xuất 
+                        <c:if test="${sessionScope.user.role}"><span class="badge bg-secondary-subtle text-secondary ms-2" style="font-size: 0.72rem;">Chọn nhiều mục</span></c:if>
                     </h4>
                     <div class="module-grid">
                         <div class="module-option">
@@ -208,10 +208,10 @@
                     <div class="guide-text">
                         <c:choose>
                             <c:when test="${sessionScope.user.role}">
-                                <strong>Bước 1:</strong> Chọn một hoặc nhiều module dữ liệu (có thể tick nhiều ô)
+                                <strong>Bước 1:</strong> Chọn các mục dữ liệu cần kết xuất
                             </c:when>
                             <c:otherwise>
-                                <strong>Bước 1:</strong> Chọn module "Tin tức" (xuất các bài viết của bạn)
+                                <strong>Bước 1:</strong> Chọn mục "Tin tức" để xuất các bài viết của bạn
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -219,13 +219,13 @@
                 <div class="guide-item">
                     <div class="guide-icon"><i class="fas fa-check-circle"></i></div>
                     <div class="guide-text">
-                        <strong>Bước 2:</strong> Chọn định dạng file (CSV cho Excel, Excel cho styling, PDF cho in ấn)
+                        <strong>Bước 2:</strong> Chọn định dạng tệp mong muốn: Excel, CSV hoặc PDF
                     </div>
                 </div>
                 <div class="guide-item">
                     <div class="guide-icon"><i class="fas fa-check-circle"></i></div>
                     <div class="guide-text">
-                        <strong>Bước 3:</strong> Nhấn nút "Xuất Dữ Liệu" và file sẽ được tải về ngay lập tức
+                        <strong>Bước 3:</strong> Nhấn nút "Xuất Dữ Liệu" để tải tệp về máy
                     </div>
                 </div>
                 <div class="guide-item">

@@ -37,6 +37,10 @@ public class ForgotPasswordController extends BaseController {
     private OtpTokenDAO otpTokenDAO = new OtpTokenDAO();
     private EmailService emailService = new EmailService();
     
+    // In-memory cache kiểm soát Rate Limiting chống spam gửi mã OTP qua Gmail SMTP
+    private static final java.util.concurrent.ConcurrentHashMap<String, Long> LAST_OTP_SENT_MAP = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final long OTP_COOLDOWN_MS = 60_000L; // Cooldown 60 giây
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -58,7 +62,18 @@ public class ForgotPasswordController extends BaseController {
             return;
         }
         
-        email = email.trim();
+        email = email.trim().toLowerCase();
+        
+        // Kiểm tra Rate Limiting chống spam gửi email
+        long now = System.currentTimeMillis();
+        Long lastSent = LAST_OTP_SENT_MAP.get(email);
+        if (lastSent != null && (now - lastSent) < OTP_COOLDOWN_MS) {
+            long remainingSeconds = (OTP_COOLDOWN_MS - (now - lastSent) + 999) / 1000;
+            request.setAttribute("error", "Yêu cầu gửi mã quá nhanh. Vui lòng đợi " + remainingSeconds + " giây trước khi thử lại.");
+            request.setAttribute("cooldownSeconds", remainingSeconds);
+            request.getRequestDispatcher("/views/forgot-password.jsp").forward(request, response);
+            return;
+        }
         
         // Tìm user theo email
         User user = userDAO.findByEmail(email);
@@ -94,10 +109,14 @@ public class ForgotPasswordController extends BaseController {
             // Gửi email OTP
             emailService.sendOtpEmail(email, otpCode, user.getFullname());
             
+            // Cập nhật timestamp gửi OTP để kích hoạt Rate Limiting
+            LAST_OTP_SENT_MAP.put(email, now);
+            
             // Lưu thông tin vào session để dùng ở bước verify
             HttpSession session = request.getSession();
             session.setAttribute("resetUserId", user.getId());
             session.setAttribute("resetUserEmail", email);
+            session.setAttribute("lastOtpSentTime", now);
             session.setMaxInactiveInterval(10 * 60); // 10 phút timeout
             
             // Redirect đến trang verify OTP

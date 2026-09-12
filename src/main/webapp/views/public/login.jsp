@@ -252,18 +252,21 @@
                             </div>
                         </div>
 
-                        <%-- Thẻ gợi ý tài khoản mẫu tiện lợi cho Nhà tuyển dụng / Kiểm thử --%>
+                        <%-- Thẻ tài khoản trải nghiệm nhanh --%>
                         <div class="demo-accounts-card">
-                            <div class="demo-title">
-                                <span>Tài khoản trải nghiệm nhanh</span>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-dark small"><i class="fas fa-bolt text-warning me-1"></i>Tài khoản trải nghiệm nhanh</span>
+                                <span class="text-muted small">Mật khẩu: <code class="fw-bold text-dark">123456</code></span>
                             </div>
-                            <div class="demo-account-item">
-                                <span>Tổng Biên Tập (Admin):</span>
-                                <strong role="button" onclick="fillAccount('admin@abcnews.com', '123456')" title="Bấm để tự điền">admin@abcnews.com / 123456</strong>
-                            </div>
-                            <div class="demo-account-item">
-                                <span>Phóng Viên (Reporter):</span>
-                                <strong role="button" onclick="fillAccount('reporter1@abcnews.com', '123456')" title="Bấm để tự điền">reporter1@abcnews.com / 123456</strong>
+                            <div class="d-grid gap-1">
+                                <button type="button" class="btn btn-sm btn-outline-success text-start py-1 px-2 d-flex justify-content-between align-items-center" onclick="fillAccount('admin@abcnews.com', '123456')" title="Bấm để tự động điền tài khoản Tổng Biên Tập">
+                                    <span><i class="fas fa-user-shield me-1"></i><strong>Tổng Biên Tập</strong></span>
+                                    <span class="small font-monospace">admin@abcnews.com</span>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-primary text-start py-1 px-2 d-flex justify-content-between align-items-center" onclick="fillAccount('reporter1@abcnews.com', '123456')" title="Bấm để tự động điền tài khoản Phóng Viên">
+                                    <span><i class="fas fa-feather-alt me-1"></i><strong>Phóng Viên</strong></span>
+                                    <span class="small font-monospace">reporter1@abcnews.com</span>
+                                </button>
                             </div>
                         </div>
                     </div>

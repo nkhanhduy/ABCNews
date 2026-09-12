@@ -153,5 +153,44 @@
 
     <%-- Bootstrap 5 JS Bundle --%>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('forgotForm');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Xử lý Cooldown nếu Backend yêu cầu đợi
+            <c:if test="${not empty cooldownSeconds}">
+            let cooldown = ${cooldownSeconds};
+            if (submitBtn && cooldown > 0) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.cursor = 'not-allowed';
+                submitBtn.innerText = 'Vui lòng đợi (' + cooldown + 's)...';
+                
+                const timer = setInterval(function() {
+                    cooldown--;
+                    if (cooldown > 0) {
+                        submitBtn.innerText = 'Vui lòng đợi (' + cooldown + 's)...';
+                    } else {
+                        clearInterval(timer);
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
+                        submitBtn.style.cursor = 'pointer';
+                        submitBtn.innerText = 'Gửi mã OTP xác thực';
+                    }
+                }, 1000);
+            }
+            </c:if>
+
+            // Chống click đúp khi submit form
+            if (form && submitBtn) {
+                form.addEventListener('submit', function() {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang gửi mã OTP...';
+                });
+            }
+        });
+    </script>
 </body>
 </html>

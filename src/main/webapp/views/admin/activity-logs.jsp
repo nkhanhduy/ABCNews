@@ -102,7 +102,7 @@
                 <i class="fas fa-list me-2"></i>Danh Sách Hoạt Động
             </h5>
             <span class="badge bg-light text-dark fs-6" id="totalRecordsBadge">
-                <i class="fas fa-database me-1"></i>${totalRecords} bản ghi
+                <i class="fas fa-list-check me-1"></i>${totalRecords} hoạt động
             </span>
         </div>
         <div class="card-body p-0" style="background-color: #f8f9fa;">
@@ -448,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (paginationText && totalBadge) {
             const match = paginationText.textContent.match(/(\d+)\s*\)/);
             if (match) {
-                totalBadge.innerHTML = '<i class="fas fa-database me-1"></i>' + match[1] + ' bản ghi';
+                totalBadge.innerHTML = '<i class="fas fa-list-check me-1"></i>' + match[1] + ' hoạt động';
             }
         }
     }

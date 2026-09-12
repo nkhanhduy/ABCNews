@@ -26,6 +26,7 @@ import poly.com.util.EmailService;
 import poly.com.util.FileUploadHelper;
 import poly.com.util.ImagePathHelper;
 import poly.com.util.ValidationHelper;
+import poly.com.util.XssSanitizer;
 
 /**
  * Controller quản lý tin tức (News) - dành cho Admin và Reporter
@@ -253,6 +254,11 @@ public class NewsAdminController extends BaseController {
         
         BeanUtils.populate(entity, request.getParameterMap());
         
+        // Defense-in-depth: XSS Sanitization bảo vệ toàn diện nội dung từ CKEditor
+        entity.setTitle(XssSanitizer.stripHtml(entity.getTitle()));
+        entity.setSummary(XssSanitizer.stripHtml(entity.getSummary()));
+        entity.setContent(XssSanitizer.sanitize(entity.getContent()));
+        
         // Kiểm tra và tự động tạo mã bản tin bằng UUID v4 nếu chưa có hoặc bị trùng
         String newsId = entity.getId();
         if (newsId == null || newsId.trim().isEmpty() || newsDAO.existsById(newsId.trim())) {
@@ -351,6 +357,11 @@ public class NewsAdminController extends BaseController {
         }
         
         BeanUtils.populate(entity, request.getParameterMap());
+        
+        // Defense-in-depth: XSS Sanitization bảo vệ toàn diện nội dung từ CKEditor khi cập nhật
+        entity.setTitle(XssSanitizer.stripHtml(entity.getTitle()));
+        entity.setSummary(XssSanitizer.stripHtml(entity.getSummary()));
+        entity.setContent(XssSanitizer.sanitize(entity.getContent()));
         
         String existingImage = request.getParameter("image");
         String imageUrl = FileUploadHelper.handleImageUpdate(request, existingImage);

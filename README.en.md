@@ -1,6 +1,6 @@
 [🇻🇳 Tiếng Việt](README.md) | [🇬🇧 English](README.en.md) | [🇩🇪 Deutsch](README.de.md)
 
-# ABC News — Online Journalism & Content Management System (CMS)
+# ABC News — Online Journalism & Editorial Management
 
 <p align="left">
   <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
@@ -12,82 +12,88 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-2ea44f?style=flat-square" alt="License MIT"></a>
 </p>
 
-A Java Web project built with Jakarta EE (Servlet & JSP) providing an online news reading portal for readers and a Content Management System (CMS) for editorial staff. Originally developed in 2025 and recently updated with responsive UI improvements, Dark Mode support, and secure image storage.
+A Java Web platform built with Jakarta EE (Servlet & JSP) providing an online news portal for readers and a modern editorial administration system. Developed in 2025 with responsive design, Dark Mode support, and secure image storage.
 
 **Author:** Nguyen Khanh Duy  
 **Major:** Software Development — FPT Polytechnic College Ho Chi Minh City  
-**Year:** 2025 (Optimized Version)
+**Year:** 2025
 
 ---
 
 ## Screenshots
 
-### 1. Reader Interface (Public Portal)
+### 1. Reader Interface
 
-| Light Theme (Emerald Green) | Dark Theme (Eye Comfort) |
+| Light Theme | Dark Theme |
 |:---:|:---:|
 | ![Home Light Mode](.github/images/home_light.png) | ![Home Dark Mode](.github/images/home_dark.png) |
 
-| Category Filter View (Tech & AI) | Article Detail & Social Share |
+| Category Filter View | Article Detail & Social Share |
 |:---:|:---:|
 | ![Category Tech](.github/images/category_tech.png) | ![Article Detail](.github/images/article_detail.png) |
 
+| Reader Comments & Discussion Area |
+|:---:|
+| ![Reader Comments](.github/images/feature_comments_public.png) |
+
 ### 2. Authentication Portal
 
-| Universal Sign-In Page (Admin & Reporter) |
+| Universal Sign-In Page |
 |:---:|
 | ![Login Page](.github/images/login_page.png) |
 
-### 3. Editorial CMS (Admin & Management)
+### 3. Editorial Management System
 
-| Analytics & Editorial Dashboard (Full Overview) |
+| Analytics & Editorial Dashboard |
 |:---:|
 | ![Admin Dashboard](.github/images/admin_dashboard.png) |
 
-| Article Management & Publishing (CKEditor) | User & Role Management |
+| Article Management & Publishing | User & Role Management |
 |:---:|:---:|
 | ![News Management](.github/images/admin_news.png) | ![User Management](.github/images/admin_users.png) |
 
-| Journalist Profile & Smart Avatar Upload |
-|:---:|
-| ![Admin Profile](.github/images/admin_profile.png) |
-
-
+| Journalist Profile & Avatar Upload | Moderated Reader Comments |
+|:---:|:---:|
+| ![Admin Profile](.github/images/admin_profile.png) | ![Admin Comments](.github/images/feature_comments_admin.png) |
 
 ---
 
 ## Key Features
 
-### Reader Portal (Public)
+### Reader Portal
 - **News Reading:** Home page featuring top highlighted stories, latest articles, and most-read news.
-- **Categories:** Organized across 5 topics (Economy & Finance, Tech & AI, Sports, Science & Life, Education).
-- **Article Details:** Full content view, author metadata, publication date, view counter, estimated reading time, and social sharing links (Facebook, X, Telegram).
-- **Theme Switcher:** Easy toggle between Light Mode (Emerald Green) and Dark Mode.
+- **Categories:** Organized across 5 topics: Economy & Finance, Tech & AI, Sports, Science & Life, Education.
+- **Article Details:** Full content view, author metadata, publication date, view counter, estimated reading time, and social sharing links.
+- **Bookmarks & Read Later:** Allows readers to save favorite articles for later reading directly via browser `localStorage` and manage them effortlessly via an Offcanvas drawer without mandatory login.
+- **Reader Comments & Discussions:** Interactive comment submission with real-time feedback, protected by moderation workflow and rate limiting.
+- **Theme Switcher:** Easy toggle between Light Mode and Dark Mode with navbar action.
 - **Newsletter Subscription:** Email signup form for news updates.
 
 ### Authentication & Security
-- **Login / Logout:** Local account authentication with BCrypt password hashing; optional Google Sign-In via OAuth2.
-- **Password Recovery (OTP):** Request a 6-digit OTP code sent via Gmail SMTP (expires in 5 minutes) to securely reset passwords.
+- **Login & Logout:** Local account authentication with BCrypt password hashing; optional Google Sign-In via OAuth2.
+- **Password Recovery & OTP:** Request a 6-digit OTP code sent via Gmail SMTP (expires in 5 minutes) to securely reset passwords.
+- **Anti-Spam Rate Limiting:** Enforces a 60-second cooldown on forgot-password OTP requests via Gmail SMTP and limits comment submission rates.
+- **Defense-in-Depth XSS Sanitization:** Employs Jsoup HTML sanitization with relaxed whitelist on rich-text inputs and comment submissions, actively stripping dangerous scripts and injections.
 - **Access Filter (AuthFilter):** Role-based access control protecting all `/admin/*` routes.
 
-### Editorial CMS (Admin)
-- **Dashboard:** Overview metrics showing total counts of articles, users, categories, and newsletter subscribers; Chart.js charts.
+### Editorial Administration
+- **Dashboard:** Overview metrics showing total counts of articles, users, categories, pending comments, and newsletter subscribers; Chart.js charts.
 - **Article Management:** Add new articles with rich text editing, edit existing posts, delete articles, filter by category/author, and pin featured stories to the homepage.
-- **Category Management:** Manage news categories (Category ID, Name).
-- **User Management:** View user accounts, edit details, assign roles (Admin / Reporter), and toggle account active/locked status.
-- **User Profile:** View personal account details and update profile picture with instant preview and secure folder-partitioned storage (`SafeImageStorage`).
+- **Auto-save Drafts:** Periodically backs up draft articles every 30 seconds to `localStorage`, with draft recovery detection on form load.
+- **Moderated Comments Management:** Dedicated comment moderation hub for approving, rejecting, or deleting public feedback, with audit logging.
+- **Category Management:** Manage news categories and topic slugs.
+- **User Management:** View user accounts, edit details, assign roles, and toggle account active/locked status.
+- **User Profile:** View personal account details and update profile picture with instant preview and secure folder storage.
 - **Data Export:** Export reports to Excel, CSV, and PDF formats.
 
 ---
 
-## Test Accounts
-
-The seed database includes ready-to-use accounts for testing:
-
+## Quick Demo Accounts
+ 
 | Role | Email | Password | Permissions |
 |---|---|:---:|---|
-| **Admin** | `admin@abcnews.com` | `123456` | Full administrative access to articles, categories, users, and profile |
-| **Reporter** | `reporter1@abcnews.com` | `123456` | Article creation, personal news management, and profile update |
+| **Editor-in-Chief** | `admin@abcnews.com` | `123456` | Full administrative control: content, comment moderation, users |
+| **Reporter** | `reporter1@abcnews.com` | `123456` | Article creation, personal news management, comments |
 
 ---
 
@@ -96,8 +102,8 @@ The seed database includes ready-to-use accounts for testing:
 - **Platform:** Java 17 LTS, Jakarta EE 10 (Servlet 6.0, JSP 3.1, JSTL)
 - **Application Server:** Apache Tomcat 10.1
 - **Database:** Microsoft SQL Server 2022 (HikariCP connection pool, Hibernate ORM JPA)
-- **Security:** BCrypt password hashing (OWASP standard), Google Identity Services, Jakarta Mail (SMTP TLS for OTP)
-- **Frontend:** HTML5, CSS3, Bootstrap 5.3, FontAwesome 6, Chart.js, CKEditor
+- **Security & Sanitization:** BCrypt password hashing, Google Identity Services, Jakarta Mail (SMTP TLS for OTP), Jsoup 1.17.2 (HTML Whitelist Sanitization)
+- **Frontend:** HTML5, CSS3, Bootstrap 5.3, FontAwesome 6, Chart.js, CKEditor 5
 - **Deployment:** Docker & Docker Compose
 
 ---
@@ -105,26 +111,25 @@ The seed database includes ready-to-use accounts for testing:
 ## Architecture & Engineering Highlights
 
 - **Standard Model 2 MVC Pattern:** Strict separation of concerns across Controller (Jakarta Servlets), View (modular JSP/JSTL components), and Data Access (DAO & JPA Hibernate).
-- **High-Performance Persistence:** **HikariCP Connection Pooling** eliminates connection acquisition latency; Hibernate ORM enforces clean entity mappings; index optimization on the News table speeds up category filtering and hot article ranking.
+- **High-Performance Persistence:** **HikariCP Connection Pooling** eliminates connection acquisition latency; Hibernate ORM enforces clean entity mappings; index optimization on the News table speeds up queries.
 - **Multi-Layered Security:**
   - One-way **BCrypt** password hashing prevents rainbow table and credential brute-force attacks.
-  - **AuthFilter** enforces role-based access control (RBAC) across all `/admin/*` routes to block privilege escalation.
-  - **UUID v4 Standardization (RFC 4122):** Adopts 128-bit cryptographically secure UUID v4 strings (36 characters) for all news article identifiers across the database and public URLs (`/detail?id=...`). This completely eliminates predictable sequential IDs and protects the system against ID Enumeration and Insecure Direct Object References (IDOR).
-  - **SafeImageStorage** module validates MIME types, enforces upload size limits, guards against Path Traversal (`../`) attacks, and purges obsolete avatar files on updates.
-  - Secure password reset via time-bounded 6-digit **OTP tokens** delivered over Gmail SMTP TLS (5-minute expiration).
+  - **AuthFilter** enforces role-based access control (RBAC) across all `/admin/*` routes.
+  - **Cryptographically Secure Identifiers:** Adopts 128-bit secure UUID v4 strings for all news article identifiers across the database and public URLs, eliminating predictable sequential IDs.
+  - **SafeImageStorage** module validates MIME types, enforces upload size limits, guards against Path Traversal attacks, and purges obsolete avatar files on updates.
+  - Secure password reset via time-bounded 6-digit **OTP tokens** delivered over Gmail SMTP TLS.
 - **Refined UX & Accessibility:**
   - Modern Design System built on CSS Custom Properties featuring a polished Emerald Green identity.
-  - High-contrast Dark Mode complying with WCAG AAA readability standards.
-  - Interactive **Chart.js** telemetry dashboard and **CKEditor 5** rich-text authoring experience.
-  - **SEO & Open Graph Protocol Integration:** Complete Open Graph metadata (`og:title`, `og:image`, `og:description`, `og:url`) and Twitter Cards (`summary_large_image`) for all articles, rendering rich high-resolution media previews across Facebook, X, Telegram, and mobile chat apps.
+  - High-contrast Dark Mode complying with accessibility readability standards.
+  - Interactive **Chart.js** telemetry dashboard and rich-text authoring experience.
+  - **SEO & Open Graph Protocol Integration:** Complete Open Graph metadata (`og:title`, `og:image`, `og:description`, `og:url`) and Twitter Cards (`summary_large_image`) for all articles.
 - **Production-Ready Containerization:** Multi-container **Docker Compose** orchestration (Tomcat + SQL Server) with automated health checks, schema generation, and seed data initialization with a single `docker compose up -d` command.
-
 
 ---
 
 ## Installation & Running
 
-### Option 1: Run with Docker Compose (Recommended)
+### Option 1: Run with Docker Compose
 
 Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
