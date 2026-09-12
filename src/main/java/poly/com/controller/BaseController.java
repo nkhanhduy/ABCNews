@@ -27,10 +27,16 @@ public abstract class BaseController extends HttpServlet {
     protected boolean checkAdminRole(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if (user != null && user.isRole()) {
-            return true;
+        if (user != null) {
+            if (user.isRole()) {
+                return true;
+            }
+            // Người dùng đã đăng nhập nhưng không có quyền Quản trị (ví dụ: Phóng viên)
+            session.setAttribute("toastError", "Bạn không có quyền truy cập vào chức năng Quản lý này.");
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+            return false;
         }
-        // Redirect về login nếu không phải Admin
+        // Chưa đăng nhập -> redirect về login
         response.sendRedirect(request.getContextPath() + "/login");
         return false;
     }

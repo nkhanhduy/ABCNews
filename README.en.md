@@ -52,6 +52,7 @@ ABCNews is a personal learning project I developed while studying Software Devel
 ### Authentication and Security
 - Local authentication with BCrypt password hashing.
 - Google Sign-In with server-side ID token verification.
+- Change Password: Signed-in users can change their password after verifying their current password. Existing Remember Me tokens are revoked after the password is changed.
 - Password reset using a 6-digit OTP sent via Gmail SMTP with a 5-minute validity window and a 3-attempt limit.
 - Persistent Remember-Me login using cryptographically random 256-bit tokens, SHA-256 database hashing, and token rotation on successful auto-login.
 - Account active status verified during authentication and in the access filter.
@@ -63,6 +64,7 @@ ABCNews is a personal learning project I developed while studying Software Devel
 - Reporters can only edit or delete articles where they are the recorded author.
 - Admins manage all articles, categories, and comment moderation.
 - Super Admin status is determined by the IsSuperAdmin field in the database, allowing management of other admin accounts while preventing self-deletion and self-locking.
+- User Management: Admins can update account information, assign roles, change account status, and reset passwords for accounts they are authorized to manage.
 
 ### Editorial Management
 - Dashboard providing metrics for articles, accounts, categories, pending comments, and Chart.js telemetry charts.
@@ -158,6 +160,7 @@ The project follows a Layered MVC architecture with a Service layer for core bus
 
 Protection measures in the project are implemented following basic defensive principles:
 - Password Hashing: User passwords are stored using one-way BCrypt hashing before database persistence.
+- Password Update: The current password is verified before updating; new passwords are stored as BCrypt hashes.
 - Remember-Me Token Security: Random 256-bit tokens are generated using SecureRandom. The database stores only the SHA-256 hash of the token. Browser cookies are configured with HttpOnly and SameSite=Lax flags. Token rotation is applied after successful automatic login to reduce replay risk.
 - Email OTP: Six-digit OTP codes expire after 5 minutes. Verification uses the constant-time comparison algorithm MessageDigest.isEqual to mitigate timing attacks, combined with a maximum threshold of 3 failed attempts.
 - Role-Based Authorization: Super Admin status is determined by the IsSuperAdmin field in the database. Regular administrators cannot modify, lock, or delete other administrator accounts.

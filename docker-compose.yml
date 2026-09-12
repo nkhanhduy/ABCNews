@@ -59,6 +59,8 @@ services:
         condition: service_healthy
       db-init:
         condition: service_completed_successfully
+    volumes:
+      - ./src/main/webapp/uploads:/usr/local/tomcat/webapps/ROOT/uploads
     restart: unless-stopped
 
 volumes:

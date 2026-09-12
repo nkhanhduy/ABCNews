@@ -61,7 +61,8 @@
     <!-- === FORM (Thêm/Sửa) === -->
         <c:set var="isEdit" value="${not empty newsItem}" />
         
-        <form action="${pageContext.request.contextPath}/admin/news" method="post" enctype="multipart/form-data">
+        <form action="${pageContext.request.contextPath}/admin/news?_csrf=${sessionScope.CSRF_TOKEN}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
             
             <c:choose>
                 <c:when test="${isEdit}">
@@ -316,7 +317,7 @@
                                     <a href="${pageContext.request.contextPath}/admin/news?action=edit&id=${news.id}" 
                                        class="btn btn-sm btn-update">Sửa</a>
                                     <form method="post" action="${pageContext.request.contextPath}/admin/news" style="display:inline; margin:0 3px;" onsubmit="return confirm('Xóa tin này?')">
-                                        <input type="hidden" name="_csrf" value="${csrfToken}">
+                                        <input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="${news.id}">
                                         <button type="submit" class="btn btn-sm btn-delete" style="border:none; cursor:pointer;">Xóa</button>

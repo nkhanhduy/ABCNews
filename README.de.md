@@ -52,6 +52,7 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 ### Authentifizierung und Sicherheit
 - Lokale Anmeldung mit Passwort-Hashing über den BCrypt-Algorithmus.
 - Google-Anmeldung mit serverseitiger Überprüfung des ID-Tokens.
+- Passwort ändern: Angemeldete Benutzer können ihr Passwort ändern, nachdem sie ihr aktuelles Passwort bestätigt haben. Bestehende Remember-Me-Tokens werden nach der Passwortänderung widerrufen.
 - Passwort-Rücksetzung über 6-stellige OTP-Codes per Gmail SMTP mit 5 Minuten Gültigkeit und Begrenzung auf maximal 3 Fehlversuche.
 - Dauerhafte Anmeldung über kryptographische 256-Bit-Zufallstoken, SHA-256 Datenbank-Hashing und Token-Rotation bei erfolgreicher automatischer Anmeldung.
 - Prüfung des Kontostatus während der Authentifizierung und im Zugriffsfilter.
@@ -63,6 +64,7 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 - Reporter können ausschließlich Artikel bearbeiten oder löschen, bei denen sie selbst als Autor eingetragen sind.
 - Administratoren verwalten alle Artikel, Kategorien und die Moderation von Kommentaren.
 - Der Super-Admin-Status wird über das Feld IsSuperAdmin in der Datenbank festgelegt, erlaubt die Verwaltung anderer Admin-Konten und verhindert das Selbstlöschen oder Selbstsperren.
+- Benutzerverwaltung: Administratoren können Kontoinformationen aktualisieren, Rollen zuweisen, den Kontostatus ändern und Passwörter für Konten zurücksetzen, die sie verwalten dürfen.
 
 ### Redaktionsverwaltung
 - Administrations-Dashboard mit Kennzahlen zu Artikeln, Benutzerkonten, Kategorien, ausstehenden Kommentaren und Chart.js Diagrammen.
@@ -158,6 +160,7 @@ Das Projekt folgt einer Schichtenarchitektur nach dem MVC-Muster mit einer Servi
 
 Die Schutzmaßnahmen im Projekt orientieren sich an grundlegenden defensiven Prinzipien:
 - Passwort-Hashing: Benutzerpasswörter werden vor der Speicherung in der Datenbank mit dem Einweg-Algorithmus BCrypt gehasht.
+- Passwortänderung: Das aktuelle Passwort wird vor der Aktualisierung überprüft; neue Passwörter werden als BCrypt-Hash gespeichert.
 - Sichere Remember-Me Tokens: Zufällige 256-Bit-Tokens werden über SecureRandom erzeugt. Die Datenbank speichert ausschließlich den SHA-256 Hash. Browser-Cookies nutzen die Flags HttpOnly und SameSite=Lax. Nach jeder erfolgreichen automatischen Anmeldung wird eine Token-Rotation durchgeführt, um das Risiko von Replay-Angriffen zu verringern.
 - E-Mail-OTP: Sechsstellige OTP-Codes sind 5 Minuten lang gültig. Der Vergleich erfolgt über den zeitkonstanten Vergleichsalgorithmus MessageDigest.isEqual zur Vermeidung von Timing-Angriffen, gekoppelt mit einer Begrenzung auf maximal 3 Fehlversuche.
 - Rollenbasierte Autorisierung: Der Super-Admin-Status wird über das Feld IsSuperAdmin in der Datenbank ermittelt. Reguläre Administratoren können andere Administratorkonten weder bearbeiten, sperren noch löschen.

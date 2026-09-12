@@ -64,6 +64,30 @@ public interface UserService {
     boolean updatePassword(String userId, String newPassword);
 
     /**
+     * Đổi mật khẩu cho người dùng đang đăng nhập
+     *
+     * @param userId ID người dùng đang đăng nhập
+     * @param currentPassword Mật khẩu hiện tại (plain text)
+     * @param newPassword Mật khẩu mới (plain text)
+     * @param confirmPassword Xác nhận mật khẩu mới (plain text)
+     * @return true nếu đổi mật khẩu thành công
+     * @throws IllegalArgumentException nếu thông tin không hợp lệ hoặc mật khẩu sai
+     */
+    boolean changePassword(String userId, String currentPassword, String newPassword, String confirmPassword);
+
+    /**
+     * Đặt lại mật khẩu người dùng bởi Quản trị viên (Admin Reset Password)
+     *
+     * @param targetUserId ID người dùng cần đặt lại mật khẩu
+     * @param newRawPassword Mật khẩu mới (plain text). Nếu null/rỗng -> giữ nguyên mật khẩu cũ
+     * @param currentUser Quản trị viên đang thực hiện thao tác (kiểm tra quyền)
+     * @return true nếu thành công
+     * @throws SecurityException nếu vi phạm quyền quản trị
+     * @throws IllegalArgumentException nếu mật khẩu mới không hợp lệ
+     */
+    boolean resetPasswordByAdmin(String targetUserId, String newRawPassword, User currentUser);
+
+    /**
      * Sinh mã định danh người dùng tiếp theo dựa trên vai trò
      */
     String getNextUserId(String roleType);

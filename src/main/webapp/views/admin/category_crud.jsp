@@ -32,6 +32,7 @@
         <c:set var="isEdit" value="${not empty categoryItem}" />
         
         <form action="${pageContext.request.contextPath}/admin/categories" method="post">
+            <input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
             <c:choose>
                 <c:when test="${isEdit}">
                     <input type="hidden" name="action" value="update" />
@@ -122,7 +123,7 @@
                                 <a href="${pageContext.request.contextPath}/admin/categories?action=edit&id=${cat.id}" 
                                    class="btn btn-sm btn-update">Sửa</a>
                                 <form method="post" action="${pageContext.request.contextPath}/admin/categories" style="display:inline; margin:0 3px;" onsubmit="return confirm('Xóa loại tin này?')">
-                                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                                    <input type="hidden" name="_csrf" value="${sessionScope.CSRF_TOKEN}">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="${cat.id}">
                                     <button type="submit" class="btn btn-sm btn-delete" style="border:none; cursor:pointer;">Xóa</button>

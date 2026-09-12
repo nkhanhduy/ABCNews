@@ -42,6 +42,14 @@ public interface RememberMeService {
     void cancelRememberMe(HttpServletRequest request, HttpServletResponse response);
 
     /**
+     * Thu hồi tất cả remember-me tokens của một người dùng trong database
+     * (sử dụng khi người dùng đổi mật khẩu hoặc quản trị viên đặt lại mật khẩu)
+     *
+     * @param userId ID người dùng
+     */
+    void revokeAllTokens(String userId);
+
+    /**
      * Băm raw token thành SHA-256 hex string
      *
      * @param rawToken chuỗi token ngẫu nhiên plaintext

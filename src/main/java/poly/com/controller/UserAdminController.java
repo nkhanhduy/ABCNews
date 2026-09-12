@@ -21,6 +21,8 @@ import poly.com.dao.NewsDAO;
 import poly.com.dao.UserDAO;
 import poly.com.entity.User;
 import poly.com.service.ActivityLogService;
+import poly.com.service.UserService;
+import poly.com.service.impl.UserServiceImpl;
 import poly.com.util.FileUploadHelper;
 import poly.com.util.ImagePathHelper;
 import poly.com.util.PasswordUtil;
@@ -40,11 +42,13 @@ public class UserAdminController extends BaseController {
     private static final long serialVersionUID = 1L;
     
     private UserDAO userDAO;
+    private UserService userService;
     private ActivityLogService activityLogService;
 
     @Override
     public void init() throws ServletException {
         userDAO = new UserDAO();
+        userService = new UserServiceImpl();
         activityLogService = new ActivityLogService();
         
         // Cấu hình BeanUtils để xử lý Date (nếu form gửi chuỗi ngày tháng)
@@ -275,6 +279,8 @@ public class UserAdminController extends BaseController {
         // Chuẩn hóa đường dẫn ảnh cho user đang edit
         ImagePathHelper.normalizeUserImagePath(user, contextPath);
         
+        // Tuyệt đối không gửi BCrypt hash xuống View
+        user.setPassword(null);
         request.setAttribute("userItem", user);
         showList(request, response);
     }
@@ -463,8 +469,18 @@ public class UserAdminController extends BaseController {
             user.setImagePath(imageUrl);
         }
         
+        // Validate mật khẩu khi tạo mới
+        String rawPassword = user.getPassword();
+        if (!PasswordUtil.isPasswordValid(rawPassword)) {
+            request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự.");
+            user.setPassword(null);
+            request.setAttribute("userItem", user);
+            showList(request, response);
+            return false;
+        }
+
         try {
-            userDAO.insert(user);
+            userService.createUser(user, currentUser);
             
             // Log tạo user
             if (currentUser != null) {
@@ -481,7 +497,8 @@ public class UserAdminController extends BaseController {
                     String roleType = isSuperAdmin ? "super" : (user.isRole() ? "true" : "false");
                     userId = userDAO.getNextUserId(roleType);
                     user.setId(userId);
-                    userDAO.insert(user);
+                    user.setPassword(rawPassword);
+                    userService.createUser(user, currentUser);
                     
                     // Log tạo user
                     if (currentUser != null) {
@@ -491,6 +508,7 @@ public class UserAdminController extends BaseController {
                     return true; // Thành công sau khi tạo lại mã
                 } catch (Exception ex) {
                     request.setAttribute("error", "Mã người dùng đã tồn tại. Có thể người khác vừa tạo mã này.");
+                    user.setPassword(null);
                     request.setAttribute("userItem", user);
                     showList(request, response);
                     return false; // Đã forward, không cần redirect
@@ -532,19 +550,26 @@ public class UserAdminController extends BaseController {
             return true;
         }
         
-        String oldPassword = user.getPassword();
         String oldEmail = user.getEmail(); // Lưu email cũ để so sánh
         
         BeanUtils.populate(user, request.getParameterMap());
         
-        // Bảo vệ mật khẩu khi cập nhật: Nếu để trống thì giữ nguyên mật khẩu cũ
+        // Xử lý mật khẩu khi Admin cập nhật:
+        // - Nếu để trống -> truyền null để Service giữ nguyên mật khẩu cũ
+        // - Nếu nhập mới -> validate độ dài >= 8, Service sẽ hash BCrypt và revoke Remember-Me tokens
+        // Tuyệt đối không so sánh inputPassword.equals(oldPassword)
         String inputPassword = request.getParameter("password");
-        if (inputPassword == null || inputPassword.trim().isEmpty()) {
-            user.setPassword(oldPassword);
-        } else if (!inputPassword.equals(oldPassword)) {
-            user.setPassword(PasswordUtil.ensureHashed(inputPassword));
+        if (inputPassword != null && !inputPassword.trim().isEmpty()) {
+            if (!PasswordUtil.isPasswordValid(inputPassword)) {
+                request.setAttribute("error", "Mật khẩu mới phải có ít nhất 8 ký tự.");
+                user.setPassword(null);
+                request.setAttribute("userItem", user);
+                showList(request, response);
+                return false;
+            }
+            user.setPassword(inputPassword);
         } else {
-            user.setPassword(oldPassword);
+            user.setPassword(null); // Để trống để Service giữ nguyên mật khẩu cũ
         }
         
         user.setGender(request.getParameter("gender") != null && request.getParameter("gender").equals("true"));
@@ -556,6 +581,7 @@ public class UserAdminController extends BaseController {
         boolean isSuperAdmin = "super".equalsIgnoreCase(roleParam);
         if (isSuperAdmin && !currentUser.isSuperAdmin()) {
             request.setAttribute("error", "Bạn không có quyền nâng cấp người dùng thành Super Admin.");
+            user.setPassword(null);
             request.setAttribute("userItem", user);
             showList(request, response);
             return false;
@@ -573,6 +599,7 @@ public class UserAdminController extends BaseController {
         if (!ValidationHelper.isNullOrEmpty(newEmail) && !newEmail.trim().equalsIgnoreCase(oldEmail)) {
             if (userDAO.existsByEmail(newEmail.trim())) {
                 request.setAttribute("error", "Email \"" + newEmail + "\" đã tồn tại. Vui lòng sử dụng email khác.");
+                user.setPassword(null);
                 request.setAttribute("userItem", user);
                 showList(request, response);
                 return false; // Đã forward, không cần redirect
@@ -586,7 +613,7 @@ public class UserAdminController extends BaseController {
             user.setImagePath(imageUrl);
         }
 
-        userDAO.update(user);
+        userService.updateUser(user, currentUser);
         
         // Log cập nhật user
         if (currentUser != null) {

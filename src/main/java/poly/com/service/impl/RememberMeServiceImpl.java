@@ -154,6 +154,13 @@ public class RememberMeServiceImpl implements RememberMeService {
     }
 
     @Override
+    public void revokeAllTokens(String userId) {
+        if (userId != null && !userId.trim().isEmpty()) {
+            rememberTokenDAO.revokeAllByUserId(userId.trim());
+        }
+    }
+
+    @Override
     public String hashToken(String rawToken) {
         if (rawToken == null) {
             return "";

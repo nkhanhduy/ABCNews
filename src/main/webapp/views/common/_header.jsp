@@ -44,7 +44,8 @@
                                         <img src="${headerPubUserImg}" 
                                              alt="${sessionScope.user.fullname}" 
                                              class="header-user-avatar" 
-                                             onerror="this.style.display='none';">
+                                             style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; object-position: center 15%; flex-shrink: 0;"
+                                             onerror="this.style.setProperty('display', 'none', 'important');">
                                     </c:when>
                                 </c:choose>
                                 <span>${sessionScope.user.fullname}</span>
@@ -71,15 +72,15 @@
                                         <i class="fa-solid fa-newspaper me-2 text-info"></i>Quản lý Tin tức
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="${pageContext.request.contextPath}/admin/comments">
-                                        <span><i class="fa-solid fa-comments me-2 text-warning"></i>Quản lý Bình luận</span>
-                                        <c:if test="${not empty sessionScope.pendingCommentCount && sessionScope.pendingCommentCount > 0}">
-                                            <span class="badge bg-warning text-dark rounded-pill">${sessionScope.pendingCommentCount}</span>
-                                        </c:if>
-                                    </a>
-                                </li>
                                 <c:if test="${sessionScope.user.role == true}">
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="${pageContext.request.contextPath}/admin/comments">
+                                            <span><i class="fa-solid fa-comments me-2 text-warning"></i>Quản lý Bình luận</span>
+                                            <c:if test="${not empty sessionScope.pendingCommentCount && sessionScope.pendingCommentCount > 0}">
+                                                <span class="badge bg-warning text-dark rounded-pill">${sessionScope.pendingCommentCount}</span>
+                                            </c:if>
+                                        </a>
+                                    </li>
                                     <li>
                                         <a class="dropdown-item" href="${pageContext.request.contextPath}/admin/categories">
                                             <i class="fa-solid fa-tags me-2" style="color: #8b5cf6;"></i>Quản lý Chuyên mục
@@ -100,12 +101,12 @@
                                             <i class="fa-solid fa-clock-rotate-left me-2 text-secondary"></i>Lịch sử Hoạt động
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item" href="${pageContext.request.contextPath}/admin/export-data">
-                                            <i class="fa-solid fa-file-export me-2 text-primary"></i>Xuất Dữ liệu
-                                        </a>
-                                    </li>
                                 </c:if>
+                                <li>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/admin/export-data">
+                                        <i class="fa-solid fa-file-export me-2 text-primary"></i>Xuất Dữ liệu
+                                    </a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/logout">
