@@ -129,27 +129,8 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 
 ## Systemarchitektur
 
-```
-[ Webbrowser Client ]
-           │
-           ▼
-[ Servlet Filter: EncodingFilter, AuthFilter, CsrfFilter ]
-           │
-           ▼
-[ Controller und Servlet Schicht ]
-           │
-           ▼
-[ Service Schicht: Geschäftslogik und Validierung ]
-           │
-           ▼
-[ Data Access Object - DAO ]
-           │
-           ▼
-[ JDBCHelper und Connection-Pool HikariCP ]
-           │
-           ▼
-[ Microsoft SQL Server 2022 ]
-```
+![ABCNews Systemarchitektur](docs/images/system-architecture.jpg)
+*Gesamtsystemarchitektur von ABCNews über Client-Schicht, Servlet-Filter (Tomcat), Controller, Service, DAO, HikariCP, SQL Server und externe Dienste.*
 
 Das Projekt folgt einer Schichtenarchitektur nach dem MVC-Muster mit einer Service-Schicht für zentrale Geschäftsregeln; einige einfache Lese- und Abfrageoperationen greifen noch direkt auf DAO-Komponenten zu:
 - Controller Schicht: Verarbeitet HTTP-Anfragen, prüft Parameter, verwaltet Sitzungszustände und leitet Daten an JSP-Ansichten weiter.

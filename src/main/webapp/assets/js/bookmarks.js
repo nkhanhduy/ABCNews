@@ -123,7 +123,7 @@
             container.innerHTML = `
                 <div class="text-center py-5 text-muted">
                     <div class="mb-3" style="font-size: 3rem; opacity: 0.35;">
-                        <i class="far fa-bookmark"></i>
+                        <i class="fa-regular fa-bookmark"></i>
                     </div>
                     <h6 class="fw-bold text-secondary mb-1">Chưa có bài viết nào được lưu</h6>
                     <p class="small text-muted mb-0">Khi đọc báo, bạn bấm <strong>"Lưu bài viết"</strong> để dễ dàng tìm lại và đọc sau.</p>
@@ -132,25 +132,26 @@
             return;
         }
 
-        let html = '<div class="list-group list-group-flush gap-2">';
+        let html = '<div class="d-flex flex-column gap-2">';
         list.forEach(item => {
             html += `
-                <div class="list-group-item p-2.5 rounded-3 border d-flex gap-2.5 align-items-center position-relative shadow-sm" style="transition: transform 0.15s ease;">
+                <div class="bookmark-item">
                     ${item.image ? `
-                        <div class="flex-shrink-0 rounded-2 overflow-hidden" style="width: 72px; height: 54px; background: #eee;">
-                            <img src="${item.image}" alt="${escapeHtml(item.title)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none';">
+                        <div class="bookmark-item-thumb">
+                            <img src="${item.image}" alt="${escapeHtml(item.title)}" onerror="this.style.display='none';">
                         </div>
                     ` : ''}
-                    <div class="flex-grow-1 min-w-0 pe-2">
-                        <a href="${item.url}" class="text-decoration-none text-dark fw-semibold d-block text-truncate" style="font-size: 0.88rem; line-height: 1.35;" title="${escapeHtml(item.title)}">
+                    <div class="flex-grow-1 min-w-0">
+                        <a href="${item.url}" class="bookmark-item-title" title="${escapeHtml(item.title)}">
                             ${escapeHtml(item.title)}
                         </a>
-                        <div class="d-flex align-items-center gap-2 mt-1 text-muted" style="font-size: 0.75rem;">
-                            <span><i class="far fa-clock me-1"></i>${item.date}</span>
+                        <div class="bookmark-item-meta">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-1.5 py-0.5" style="font-size: 0.68rem; font-weight: 500;">${escapeHtml(item.category || 'Tin tức')}</span>
+                            <span><i class="fa-regular fa-clock me-1"></i>${item.date}</span>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-sm btn-link text-danger p-1 flex-shrink-0" onclick="window.ABCBookmarks.remove('${item.id}')" title="Xóa bài này">
-                        <i class="fas fa-times"></i>
+                    <button type="button" class="bookmark-item-del" onclick="window.ABCBookmarks.remove('${item.id}')" title="Bỏ lưu bài viết">
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
             `;
