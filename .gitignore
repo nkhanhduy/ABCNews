@@ -107,6 +107,7 @@ src/main/webapp/uploads/avatars/*
 
 # Documentation & unused artifacts
 docs/
+!docs/images/
 .codegraph/
 node_modules/
 

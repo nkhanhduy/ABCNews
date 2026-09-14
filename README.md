@@ -93,39 +93,39 @@ ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành
 #### Trang chủ chế độ sáng và tối
 | Giao diện sáng | Giao diện tối |
 |:---:|:---:|
-| ![Trang chủ Light Mode](.github/images/home_light.png) | ![Trang chủ Dark Mode](.github/images/home_dark.png) |
+| ![Trang chủ Light Mode](docs/images/home_light.png) | ![Trang chủ Dark Mode](docs/images/home_dark.png) |
 
 #### Chuyên mục tin tức và chi tiết bài viết
 | Chuyên mục theo slug | Chi tiết bài viết và chia sẻ |
 |:---:|:---:|
-| ![Chuyên mục Công nghệ & AI](.github/images/category_tech.png) | ![Chi tiết bài viết](.github/images/article_detail.png) |
+| ![Chuyên mục Công nghệ & AI](docs/images/category_tech.png) | ![Chi tiết bài viết](docs/images/article_detail.png) |
 
 #### Đánh dấu đọc sau và bình luận độc giả
 | Danh sách đọc sau trên Offcanvas | Khu vực gửi bình luận dưới bài viết |
 |:---:|:---:|
-| ![Danh sách đọc sau](.github/images/feature_bookmarks_drawer.png) | ![Bình luận độc giả](.github/images/feature_comments_public.png) |
+| ![Danh sách đọc sau](docs/images/feature_bookmarks_drawer.png) | ![Bình luận độc giả](docs/images/feature_comments_public.png) |
 
 ### Khu vực quản trị
 
 #### Cổng đăng nhập và bảng điều khiển
 | Trang đăng nhập hệ thống | Bảng điều khiển quản trị |
 |:---:|:---:|
-| ![Trang đăng nhập](.github/images/login_page.png) | ![Admin Dashboard](.github/images/admin_dashboard.png) |
+| ![Trang đăng nhập](docs/images/login_page.png) | ![Admin Dashboard](docs/images/admin_dashboard.png) |
 
 #### Quản lý bài viết và chuyên mục
 | Quản lý bài viết và soạn thảo | Quản lý loại tin và slug |
 |:---:|:---:|
-| ![Quản lý bài viết](.github/images/admin_news.png) | ![Quản lý loại tin](.github/images/admin_categories.png) |
+| ![Quản lý bài viết](docs/images/admin_news.png) | ![Quản lý loại tin](docs/images/admin_categories.png) |
 
 #### Quản lý người dùng và kiểm duyệt bình luận
 | Quản lý người dùng và vai trò | Kiểm duyệt bình luận độc giả |
 |:---:|:---:|
-| ![Quản lý người dùng](.github/images/admin_users.png) | ![Kiểm duyệt bình luận](.github/images/admin_comments.png) |
+| ![Quản lý người dùng](docs/images/admin_users.png) | ![Kiểm duyệt bình luận](docs/images/admin_comments.png) |
 
 #### Hồ sơ quản trị viên
 | Hồ sơ cá nhân và đổi mật khẩu |
 |:---:|
-| ![Hồ sơ quản trị viên](.github/images/admin_profile.png) |
+| ![Hồ sơ quản trị viên](docs/images/admin_profile.png) |
 
 ---
 

@@ -93,39 +93,39 @@ ABCNews is a personal learning project I developed while studying Software Devel
 #### Homepage Light and Dark Themes
 | Light Theme | Dark Theme |
 |:---:|:---:|
-| ![Home Light Mode](.github/images/home_light.png) | ![Home Dark Mode](.github/images/home_dark.png) |
+| ![Home Light Mode](docs/images/home_light.png) | ![Home Dark Mode](docs/images/home_dark.png) |
 
 #### Category View and Article Detail
 | Category by Slug | Article Detail and Social Sharing |
 |:---:|:---:|
-| ![Category Tech](.github/images/category_tech.png) | ![Article Detail](.github/images/article_detail.png) |
+| ![Category Tech](docs/images/category_tech.png) | ![Article Detail](docs/images/article_detail.png) |
 
 #### Bookmarks Drawer and Reader Comments
 | Offcanvas Read Later Drawer | Reader Comments Section |
 |:---:|:---:|
-| ![Bookmarks Drawer](.github/images/feature_bookmarks_drawer.png) | ![Reader Comments](.github/images/feature_comments_public.png) |
+| ![Bookmarks Drawer](docs/images/feature_bookmarks_drawer.png) | ![Reader Comments](docs/images/feature_comments_public.png) |
 
 ### Administration Area
 
 #### Sign-In Portal and Dashboard
 | System Login Page | Editorial Dashboard |
 |:---:|:---:|
-| ![Login Page](.github/images/login_page.png) | ![Admin Dashboard](.github/images/admin_dashboard.png) |
+| ![Login Page](docs/images/login_page.png) | ![Admin Dashboard](docs/images/admin_dashboard.png) |
 
 #### Article and Category Management
 | Article Management and Editor | Category Management and Slugs |
 |:---:|:---:|
-| ![News Management](.github/images/admin_news.png) | ![Category Management](.github/images/admin_categories.png) |
+| ![News Management](docs/images/admin_news.png) | ![Category Management](docs/images/admin_categories.png) |
 
 #### User Management and Comment Moderation
 | User Accounts and Roles | Comment Moderation Hub |
 |:---:|:---:|
-| ![User Management](.github/images/admin_users.png) | ![Comment Moderation](.github/images/admin_comments.png) |
+| ![User Management](docs/images/admin_users.png) | ![Comment Moderation](docs/images/admin_comments.png) |
 
 #### Administrator Profile
 | Profile Settings and Password Change |
 |:---:|
-| ![Admin Profile](.github/images/admin_profile.png) |
+| ![Admin Profile](docs/images/admin_profile.png) |
 
 ---
 

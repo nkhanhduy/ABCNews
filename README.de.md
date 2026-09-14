@@ -93,39 +93,39 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 #### Startseite im hellen und dunklen Design
 | Helles Design | Dunkles Design |
 |:---:|:---:|
-| ![Startseite Light Mode](.github/images/home_light.png) | ![Startseite Dark Mode](.github/images/home_dark.png) |
+| ![Startseite Light Mode](docs/images/home_light.png) | ![Startseite Dark Mode](docs/images/home_dark.png) |
 
 #### Kategorie-Ansicht und Artikel-Details
 | Kategorie über Slug | Artikel-Details und Social Sharing |
 |:---:|:---:|
-| ![Kategorie Tech](.github/images/category_tech.png) | ![Artikel-Details](.github/images/article_detail.png) |
+| ![Kategorie Tech](docs/images/category_tech.png) | ![Artikel-Details](docs/images/article_detail.png) |
 
 #### Lesezeichen und Leserkommentare
 | Offcanvas Seitenleiste Lesezeichen | Kommentarbereich unter Artikeln |
 |:---:|:---:|
-| ![Lesezeichen](.github/images/feature_bookmarks_drawer.png) | ![Leserkommentare](.github/images/feature_comments_public.png) |
+| ![Lesezeichen](docs/images/feature_bookmarks_drawer.png) | ![Leserkommentare](docs/images/feature_comments_public.png) |
 
 ### Administrationsbereich
 
 #### Anmeldeseite und Dashboard
 | Anmeldeseite des Systems | Redaktions-Dashboard |
 |:---:|:---:|
-| ![Anmeldeseite](.github/images/login_page.png) | ![Admin Dashboard](.github/images/admin_dashboard.png) |
+| ![Anmeldeseite](docs/images/login_page.png) | ![Admin Dashboard](docs/images/admin_dashboard.png) |
 
 #### Artikel- und Kategorieverwaltung
 | Artikelverwaltung und Editor | Kategorien und Slugs |
 |:---:|:---:|
-| ![Artikelverwaltung](.github/images/admin_news.png) | ![Kategorieverwaltung](.github/images/admin_categories.png) |
+| ![Artikelverwaltung](docs/images/admin_news.png) | ![Kategorieverwaltung](docs/images/admin_categories.png) |
 
 #### Benutzerverwaltung und Kommentarmoderation
 | Benutzerkonten und Rollen | Kommentarmoderation |
 |:---:|:---:|
-| ![Benutzerverwaltung](.github/images/admin_users.png) | ![Kommentarmoderation](.github/images/admin_comments.png) |
+| ![Benutzerverwaltung](docs/images/admin_users.png) | ![Kommentarmoderation](docs/images/admin_comments.png) |
 
 #### Administratorprofil
 | Profileinstellungen und Passwortänderung |
 |:---:|
-| ![Admin Profile](.github/images/admin_profile.png) |
+| ![Admin Profile](docs/images/admin_profile.png) |
 
 ---
 
