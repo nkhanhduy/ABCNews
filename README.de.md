@@ -5,7 +5,7 @@
 <p align="left">
   <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
   <img src="https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java 17 LTS">
-  <img src="https://img.shields.io/badge/Jakarta%20EE-10-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta EE 10">
+  <img src="https://img.shields.io/badge/Jakarta-Servlet%206.0%20%7C%20JSP%203.1-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta Servlet 6.0 / JSP 3.1">
   <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
   <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
@@ -15,17 +15,17 @@
 
 ## Über das Projekt
 
-ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im Bereich Softwareentwicklung am FPT Polytechnic College entwickelt habe, um Java-Webentwicklung und grundlegende Backend-Kenntnisse praktisch anzuwenden. Das System umfasst ein Online-Nachrichtenportal für Leser und einen redaktionellen Verwaltungsbereich mit rollenbasierter Autorisierung, Benutzer-Authentifizierung und sicheren Datenhaltungsmethoden.
+ABCNews ist ein persönliches Lernprojekt, das ich während meiner Cao-đẳng-Ausbildung im Bereich Softwareentwicklung am FPT Polytechnic entwickelt habe, um Java-Webentwicklung und grundlegende Backend-Kenntnisse praktisch anzuwenden. Das System umfasst ein Online-Nachrichtenportal für Leser und einen redaktionellen Verwaltungsbereich mit rollenbasierter Autorisierung, Benutzer-Authentifizierung und sicheren Datenhaltungsmethoden.
 
 ---
 
 ## Kerntechnologien
 
-`Java 17` · `Jakarta EE 10` · `Servlet` · `JSP` · `SQL Server 2022` · `JDBC` · `HikariCP` · `Maven`
+`Java 17` · `Jakarta Servlet 6.0` · `JSP 3.1` · `JSTL 3.0` · `SQL Server 2022` · `JDBC` · `HikariCP` · `Maven`
 
 | Komponente | Technologie und Bibliothek | Technische Hinweise |
 |---|---|---|
-| Plattform und Sprache | Java 17 LTS, Jakarta EE 10 | Servlet 6.0, JSP 3.1, JSTL 3.0 |
+| Plattform und Sprache | Java 17 LTS, Jakarta Servlet 6.0, JSP 3.1 | JSTL 3.0, Bereitstellung auf Apache Tomcat 10.1 |
 | Primärer Datenzugriff | JDBC mit HikariCP 5.1 | Datenzugriff über PreparedStatement und Connection-Pool |
 | Unterstützendes Entity-Mapping | Hibernate ORM 6.4 | Entitätsdefinitionen und Schema-Validierung |
 | Anwendungsserver | Apache Tomcat 10.1 | Laufzeitumgebung für Servlet und JSP |
@@ -328,9 +328,9 @@ In `schema/seed_data.sql` sind vordefinierte Testkonten für Evaluierungszwecke 
 
 | Rolle | Anmelde-E-Mail | Standardpasswort | Berechtigungsumfang |
 |---|---|:---:|---|
-| Super Admin | `superadmin@abcnews.com` | `123456` | Voller Systemzugriff, Verwaltung anderer Administratoren und Rollenvergabe |
-| Admin | `admin@abcnews.com` | `123456` | Artikelverwaltung, Themenkategorien, Kommentarmoderation und Reporterkonten |
-| Reporter | `reporter1@abcnews.com` | `123456` | Verfassen und Verwalten eigener veröffentlichter Artikel |
+| Super Admin | `superadmin@abcnews.com` | `Demo@123456` | Voller Systemzugriff, Verwaltung anderer Administratoren und Rollenvergabe |
+| Admin | `admin@abcnews.com` | `Demo@123456` | Artikelverwaltung, Themenkategorien, Kommentarmoderation und Reporterkonten |
+| Reporter | `reporter1@abcnews.com` | `Demo@123456` | Verfassen und Verwalten eigener veröffentlichter Artikel |
 
 Hinweis: Standardpasswörter werden beim ersten erfolgreichen Anmeldevorgang automatisch in BCrypt-Hashes konvertiert.
 
@@ -351,8 +351,8 @@ Durch die Entwicklung dieses persönlichen Lernprojekts habe ich folgende Kenntn
 
 ## Autor
 
-- Name: Nguyen Duy Khanh
-- Rolle: Student im Bereich Softwareentwicklung — FPT Polytechnic College
+- Name: Nguyễn Duy Khánh
+- Rolle: Student im Bereich Softwareentwicklung — Cao-đẳng-Ausbildung am FPT Polytechnic
 - GitHub: [github.com/nkhanhduy](https://github.com/nkhanhduy)
 - E-Mail: [khanhndts02168@gmail.com](mailto:khanhndts02168@gmail.com)
 - Zeitraum: 2025 – 2026
