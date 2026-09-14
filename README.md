@@ -21,12 +21,10 @@ ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành
 
 ## Công nghệ chính
 
-`Java 17` · `Jakarta EE 10` · `Servlet` · `JSP` · `SQL Server 2022` · `JDBC` · `HikariCP` · `Maven`
-
 | Thành phần | Công nghệ và thư viện | Ghi chú kỹ thuật |
 |---|---|---|
 | Nền tảng và ngôn ngữ | Java 17 LTS, Jakarta EE 10 | Servlet 6.0, JSP 3.1, JSTL 3.0 |
-| Truy cập dữ liệu chính | JDBC kết hợp HikariCP 5.1 | Thao tác dữ liệu qua PreparedStatement và Connection Pool |
+| Truy cập dữ liệu chính | JDBC kết hợp HikariCP 5.1 | Truy vấn qua PreparedStatement và Connection Pool HikariCP |
 | Ánh xạ thực thể hỗ trợ | Hibernate ORM 6.4 | Định nghĩa cấu trúc Entity và kiểm tra schema |
 | Máy chủ ứng dụng | Apache Tomcat 10.1 | Quản lý vòng đời Servlet và JSP |
 | Cơ sở dữ liệu | Microsoft SQL Server 2022 | Lưu trữ dữ liệu quan hệ và kịch bản cập nhật |
@@ -134,7 +132,7 @@ ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành
 ![Kiến trúc hệ thống ABCNews](docs/images/system-architecture.jpg)
 *Sơ đồ kiến trúc tổng thể của ABCNews từ tầng Client, Bộ lọc Servlet (Tomcat), Controller, Service, DAO, HikariCP đến SQL Server và các dịch vụ bên ngoài.*
 
-Dự án tổ chức theo Layered MVC với Service layer cho các nghiệp vụ cốt lõi; một số thao tác đọc/tra cứu đơn giản vẫn có thể truy cập DAO trực tiếp:
+Dự án tổ chức theo mô hình MVC phân tầng với Service xử lý nghiệp vụ; một số thao tác tra cứu đơn giản có thể truy cập DAO trực tiếp:
 - Controller Layer: Tiếp nhận yêu cầu HTTP, kiểm tra sơ bộ tham số, quản lý phiên làm việc và chuyển tiếp dữ liệu đến view JSP.
 - Service Layer: Xử lý các quy tắc nghiệp vụ cốt lõi như xác thực, kiểm tra OTP, cấp phát và xoay vòng token Remember-Me, sinh slug duy nhất và kiểm tra quyền sở hữu nội dung.
 - DAO Layer: Đóng gói câu truy vấn SQL và thao tác cơ sở dữ liệu qua PreparedStatement để hạn chế rủi ro SQL Injection.
@@ -148,8 +146,8 @@ Các biện pháp bảo vệ trong dự án được xây dựng dựa trên ngu
 - Băm mật khẩu: Mật khẩu người dùng được băm một chiều bằng thuật toán BCrypt trước khi lưu vào cơ sở dữ liệu.
 - Thay đổi mật khẩu: Mật khẩu hiện tại được xác minh trước khi cập nhật mật khẩu mới; mật khẩu mới được lưu dưới dạng BCrypt hash.
 - Token Remember-Me an toàn: Token ngẫu nhiên 256-bit được sinh qua SecureRandom. Cơ sở dữ liệu chỉ lưu bản băm SHA-256. Cookie trình duyệt sử dụng cờ HttpOnly và SameSite=Lax. Token được xoay vòng sau mỗi lần tự động đăng nhập thành công nhằm giảm thiểu rủi ro bị tấn công phát lại.
-- Email OTP: Mã OTP 6 chữ số có hiệu lực trong 5 phút. Việc so khớp sử dụng thuật toán so sánh thời gian hằng số MessageDigest.isEqual để giảm thiểu nguy cơ timing attack, kết hợp giới hạn tối đa 3 lần nhập sai.
-- Phân quyền vai trò và chặn leo thang đặc quyền: Vai trò Quản trị tối cao được xác định bằng trường IsSuperAdmin trong cơ sở dữ liệu. Quản trị viên thông thường không được phép sửa, khóa hoặc xóa tài khoản của Quản trị viên khác.
+- Email OTP: Mã OTP 6 chữ số có hiệu lực trong 5 phút. Việc so khớp an toàn chống dò mã, kết hợp giới hạn tối đa 3 lần nhập sai.
+- Phân quyền vai trò và chặn nâng quyền trái phép: Vai trò Quản trị tối cao được xác định bằng trường IsSuperAdmin trong cơ sở dữ liệu. Quản trị viên thông thường không được phép sửa, khóa hoặc xóa tài khoản của Quản trị viên khác.
 - Kiểm soát yêu cầu POST qua CsrfFilter: Các thao tác làm biến đổi dữ liệu trong khu vực quản trị được bảo vệ bởi bộ lọc CSRF, kiểm tra token từ tham số form `_csrf` hoặc header `X-CSRF-TOKEN`.
 - Làm sạch nội dung chống XSS: Thư viện Jsoup với cấu hình thẻ an toàn được dùng để làm sạch nội dung bài viết và bình luận độc giả trước khi lưu trữ hoặc hiển thị.
 - Kiểm tra tệp tải lên: Lớp SafeImageStorage kiểm tra phần mở rộng tệp, định dạng MIME và đổi tên tệp ngẫu nhiên bằng UUID trước khi lưu vào thư mục phân vùng.
@@ -172,7 +170,7 @@ Dự án triển khai cơ chế đường dẫn chuyên mục thân thiện cho 
 ## Cơ sở dữ liệu
 
 - Hệ quản trị cơ sở dữ liệu: Microsoft SQL Server 2022
-- Cơ chế kết nối: JDBC kết hợp Connection Pool HikariCP
+- Cơ chế kết nối: JDBC kết hợp HikariCP
 - Các bảng chính trong hệ thống:
   - `Users`: Tài khoản người dùng, vai trò, trạng thái hoạt động và trường IsSuperAdmin.
   - `Categories`: Chuyên mục tin tức với mã Id, tên Name và chuỗi Slug duy nhất.
@@ -219,7 +217,7 @@ mail.smtp.password=your_gmail_app_password_here
 # Cấu hình Google Identity Services
 google.client.id=your_google_client_id_here
 
-# Cấu hình Base URL ứng dụng cho Canonical URL
+# Cấu hình URL gốc của ứng dụng
 app.base.url=http://localhost:8088
 ```
 
@@ -291,11 +289,11 @@ Kết quả kiểm thử thực tế trên mã nguồn: **97/97 tests passed** k
 
 ---
 
-## Continuous Integration
+## Tích hợp liên tục
 
-Dự án thiết lập quy trình Continuous Integration tự động qua GitHub Actions tại `.github/workflows/maven.yml`:
+Dự án thiết lập quy trình kiểm tra tự động qua GitHub Actions tại `.github/workflows/maven.yml`:
 - Kích hoạt tự động khi có sự kiện push hoặc pull request vào nhánh chính main.
-- Khởi tạo môi trường Ubuntu với Eclipse Temurin JDK 17 và cache thư viện Maven.
+- Khởi tạo môi trường Ubuntu với Eclipse Temurin JDK 17 và lưu đệm thư viện Maven.
 - Chạy lệnh kiểm thử tự động `mvn -B clean test --file pom.xml` nhằm xác nhận mã nguồn luôn vượt qua bài kiểm thử trước khi tích hợp.
 
 ---
@@ -321,12 +319,12 @@ Mật khẩu được băm bằng BCrypt trước khi lưu vào cơ sở dữ li
 
 Thông qua việc xây dựng dự án cá nhân này, tôi đã thực hành các kiến thức:
 - Thực hành vòng đời xử lý request của Jakarta Servlet và Filter.
-- Tổ chức mã nguồn theo mô hình kiến trúc phân tầng MVC với tầng Service xử lý logic nghiệp vụ.
-- Thao tác dữ liệu với JDBC thuần và tối ưu hóa kết nối qua Connection Pool HikariCP trên Microsoft SQL Server.
-- Thực hành các giải pháp bảo mật web cơ bản như băm mật khẩu BCrypt, xoay vòng token Remember-Me, so khớp constant-time cho OTP, bộ lọc CSRF và làm sạch HTML qua Jsoup.
+- Tổ chức mã nguồn theo mô hình MVC phân tầng với tầng Service xử lý logic nghiệp vụ.
+- Thao tác dữ liệu với JDBC thuần và quản lý kết nối qua HikariCP trên Microsoft SQL Server.
+- Thực hành các giải pháp bảo mật web cơ bản như băm mật khẩu BCrypt, xoay vòng token Remember-Me, so khớp OTP chống dò thời gian, bộ lọc CSRF và làm sạch HTML qua Jsoup.
 - Xây dựng kiểm thử tự động với JUnit 5 và Mockito để kiểm chứng các luồng nghiệp vụ.
 - Đóng gói và chạy ứng dụng bằng Docker và Docker Compose.
-- Thiết lập quy trình Continuous Integration cơ bản với GitHub Actions.
+- Thiết lập quy trình kiểm tra tự động (CI) cơ bản với GitHub Actions.
 
 ---
 

@@ -21,8 +21,6 @@ ABCNews is a personal learning project I developed while studying Software Devel
 
 ## Core Technologies
 
-`Java 17` · `Jakarta EE 10` · `Servlet` · `JSP` · `SQL Server 2022` · `JDBC` · `HikariCP` · `Maven`
-
 | Component | Technology and Library | Technical Notes |
 |---|---|---|
 | Platform and Language | Java 17 LTS, Jakarta EE 10 | Servlet 6.0, JSP 3.1, JSTL 3.0 |
@@ -219,7 +217,7 @@ mail.smtp.password=your_gmail_app_password_here
 # Google Identity Services
 google.client.id=your_google_client_id_here
 
-# Application Base URL for Canonical and Open Graph Links
+# Application Base URL
 app.base.url=http://localhost:8088
 ```
 
@@ -293,7 +291,7 @@ Verified test result from current source: **97/97 tests passed** with 0 failures
 
 ## Continuous Integration
 
-The project has an automated Continuous Integration workflow configured with GitHub Actions at `.github/workflows/maven.yml`:
+The project uses an automated CI workflow via GitHub Actions at `.github/workflows/maven.yml`:
 - Triggers on push or pull request events to the main branch.
 - Sets up an Ubuntu environment with Eclipse Temurin JDK 17 and Maven dependency caching.
 - Executes `mvn -B clean test --file pom.xml` to ensure all tests pass before code integration.
@@ -326,7 +324,7 @@ Through developing this personal project, I practiced several key concepts:
 - Implementing fundamental web security patterns such as BCrypt password hashing, Remember-Me token rotation, constant-time OTP verification, CSRF filtering, and Jsoup HTML sanitization.
 - Writing unit tests with JUnit 5 and Mockito to validate critical business flows.
 - Containerizing application environments with Docker and Docker Compose.
-- Setting up a basic Continuous Integration workflow with GitHub Actions.
+- Setting up a basic CI workflow with GitHub Actions.
 
 ---
 

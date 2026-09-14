@@ -21,8 +21,6 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 
 ## Kerntechnologien
 
-`Java 17` · `Jakarta EE 10` · `Servlet` · `JSP` · `SQL Server 2022` · `JDBC` · `HikariCP` · `Maven`
-
 | Komponente | Technologie und Bibliothek | Technische Hinweise |
 |---|---|---|
 | Plattform und Sprache | Java 17 LTS, Jakarta EE 10 | Servlet 6.0, JSP 3.1, JSTL 3.0 |
@@ -310,7 +308,7 @@ Bestätigtes Testergebnis auf dem aktuellen Quellcode: **97/97 tests passed** mi
 
 ---
 
-## Continuous Integration
+## Kontinuierliche Integration
 
 Das Projekt verfügt über einen automatisierten Continuous-Integration-Workflow mit GitHub Actions unter `.github/workflows/maven.yml`:
 - Wird bei Push oder Pull Request auf dem Hauptzweig main ausgelöst.
