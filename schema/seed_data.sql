@@ -14,13 +14,13 @@ DELETE FROM [dbo].[Newsletters];
 GO
 
 -- 2. TÀI KHOẢN NGƯỜI DÙNG DEMO (USERS)
--- Mật khẩu mặc định: 123456 (Chỉ phục vụ môi trường demo/local, hệ thống tự động nâng cấp mã hóa BCrypt khi đăng nhập)
+-- Mật khẩu mặc định: Demo@123456 (BCrypt hash — chỉ phục vụ môi trường demo/local)
 INSERT INTO [dbo].[Users] ([Id], [Password], [Fullname], [Birthday], [Gender], [Mobile], [Email], [Role], [IsSuperAdmin], [AuthProvider], [Enabled], [ImagePath])
 VALUES 
-('superadmin001', '123456', N'Quản Trị Tối Cao - Nguyễn Duy Khánh', '1995-01-01', 1, '0900000000', 'superadmin@abcnews.com', 1, 1, 'local', 1, '/uploads/avatars/a0abfecd-d31a-41bd-b209-258fee975d1c.png'),
-('admin001', '123456', N'Quản Trị Viên (Demo)', '1996-02-02', 1, '0900000001', 'admin@abcnews.com', 1, 0, 'local', 1, NULL),
-('rep001', '123456', N'Phóng Viên 1 (Demo)', '1998-03-03', 1, '0900000002', 'reporter1@abcnews.com', 0, 0, 'local', 1, NULL),
-('rep002', '123456', N'Biên Tập Viên (Demo)', '1999-04-04', 0, '0900000003', 'reporter2@abcnews.com', 0, 0, 'local', 1, NULL);
+('superadmin001', '$2b$10$mYPPZ6bl3FUXy35a5ynaseHbSaydxpAmUs5am5q1uUaDf8tch8EGW', N'Quản Trị Tối Cao', '1995-01-01', 1, '0900000000', 'superadmin@example.com', 1, 1, 'local', 1, NULL),
+('admin001',      '$2b$10$mYPPZ6bl3FUXy35a5ynaseHbSaydxpAmUs5am5q1uUaDf8tch8EGW', N'Quản Trị Viên (Demo)',  '1996-02-02', 1, '0900000001', 'admin@example.com',      1, 0, 'local', 1, NULL),
+('rep001',        '$2b$10$mYPPZ6bl3FUXy35a5ynaseHbSaydxpAmUs5am5q1uUaDf8tch8EGW', N'Phóng Viên (Demo)',      '1998-03-03', 1, '0900000002', 'reporter@example.com',   0, 0, 'local', 1, NULL),
+('rep002',        '$2b$10$mYPPZ6bl3FUXy35a5ynaseHbSaydxpAmUs5am5q1uUaDf8tch8EGW', N'Biên Tập Viên (Demo)',  '1999-04-04', 0, '0900000003', 'editor@example.com',     0, 0, 'local', 1, NULL);
 GO
 
 -- 3. CHUYÊN MỤC TIN TỨC (CATEGORIES)
