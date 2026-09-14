@@ -131,27 +131,8 @@ ABCNews is a personal learning project I developed while studying Software Devel
 
 ## System Architecture
 
-```
-[ Web Browser Client ]
-           │
-           ▼
-[ Servlet Filters: EncodingFilter, AuthFilter, CsrfFilter ]
-           │
-           ▼
-[ Controller and Servlet Layer ]
-           │
-           ▼
-[ Service Layer: Business Logic and Validation ]
-           │
-           ▼
-[ Data Access Object - DAO ]
-           │
-           ▼
-[ JDBCHelper and Connection Pool HikariCP ]
-           │
-           ▼
-[ Microsoft SQL Server 2022 ]
-```
+![ABCNews System Architecture](docs/images/system-architecture.jpg)
+*System architecture of ABCNews spanning the Client layer, Servlet Filters (Tomcat), Controller, Service, DAO, HikariCP, SQL Server, and external services.*
 
 The project follows a Layered MVC architecture with a Service layer for core business logic; some simple read and look-up operations may still access DAO components directly:
 - Controller Layer: Receives HTTP requests, validates incoming parameters, manages session state, and forwards data to JSP views.
@@ -328,9 +309,9 @@ Pre-configured demo accounts from `schema/seed_data.sql` are available for evalu
 
 | Role | Login Email | Default Password | Access Scope |
 |---|---|:---:|---|
-| Super Admin | `superadmin@abcnews.com` | `123456` | Full system access, administrator management, and role assignment |
-| Admin | `admin@abcnews.com` | `123456` | Article management, categories, comment moderation, and reporter accounts |
-| Reporter | `reporter1@abcnews.com` | `123456` | Authoring and management of own published articles |
+| Super Admin | `superadmin@example.com` | `Demo@123456` | Full system access, administrator management, and role assignment |
+| Admin | `admin@example.com` | `Demo@123456` | Article management, categories, comment moderation, and reporter accounts |
+| Reporter | `reporter@example.com` | `Demo@123456` | Authoring and management of own published articles |
 
 Note: Default passwords are automatically hashed with BCrypt upon the first successful login.
 

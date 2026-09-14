@@ -131,27 +131,8 @@ ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành
 
 ## Kiến trúc hệ thống
 
-```
-[ Trình duyệt Client ]
-           │
-           ▼
-[ Bộ lọc Servlet: EncodingFilter, AuthFilter, CsrfFilter ]
-           │
-           ▼
-[ Controller và Servlet ]
-           │
-           ▼
-[ Service Layer: Business Logic và Validation ]
-           │
-           ▼
-[ Data Access Object - DAO ]
-           │
-           ▼
-[ JDBCHelper và Connection Pool HikariCP ]
-           │
-           ▼
-[ Microsoft SQL Server 2022 ]
-```
+![Kiến trúc hệ thống ABCNews](docs/images/system-architecture.jpg)
+*Sơ đồ kiến trúc tổng thể của ABCNews từ tầng Client, Bộ lọc Servlet (Tomcat), Controller, Service, DAO, HikariCP đến SQL Server và các dịch vụ bên ngoài.*
 
 Dự án tổ chức theo Layered MVC với Service layer cho các nghiệp vụ cốt lõi; một số thao tác đọc/tra cứu đơn giản vẫn có thể truy cập DAO trực tiếp:
 - Controller Layer: Tiếp nhận yêu cầu HTTP, kiểm tra sơ bộ tham số, quản lý phiên làm việc và chuyển tiếp dữ liệu đến view JSP.
@@ -326,13 +307,13 @@ Hệ thống có sẵn các tài khoản mẫu trong kịch bản `schema/seed_d
 > [!NOTE]
 > Các tài khoản này chỉ phục vụ môi trường demo và phát triển local.
 
-| Vai trò | Email đăng nhập | Mật khẩu mặc định | Phạm vi quyền hạn |
+| Vai trò | Email đăng nhập | Mật khẩu | Phạm vi quyền hạn |
 |---|---|:---:|---|
-| Quản trị tối cao (Super Admin) | `superadmin@abcnews.com` | `123456` | Toàn quyền hệ thống, quản trị tài khoản admin và phân bổ vai trò |
-| Quản trị viên | `admin@abcnews.com` | `123456` | Quản trị bài viết, chuyên mục, kiểm duyệt bình luận và quản lý phóng viên |
-| Phóng viên | `reporter1@abcnews.com` | `123456` | Soạn thảo và quản lý bài viết do chính mình xuất bản |
+| Quản trị tối cao | `superadmin@example.com` | `Demo@123456` | Toàn quyền hệ thống, quản trị tài khoản admin và phân bổ vai trò |
+| Quản trị viên | `admin@example.com` | `Demo@123456` | Quản trị bài viết, chuyên mục, kiểm duyệt bình luận và quản lý phóng viên |
+| Phóng viên | `reporter@example.com` | `Demo@123456` | Soạn thảo và quản lý bài viết do chính mình xuất bản |
 
-Ghi chú: Mật khẩu mặc định sẽ được hệ thống tự động băm sang chuẩn BCrypt sau lần đăng nhập đầu tiên.
+Mật khẩu được băm bằng BCrypt trước khi lưu vào cơ sở dữ liệu.
 
 ---
 

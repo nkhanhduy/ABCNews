@@ -328,9 +328,9 @@ In `schema/seed_data.sql` sind vordefinierte Testkonten für Evaluierungszwecke 
 
 | Rolle | Anmelde-E-Mail | Standardpasswort | Berechtigungsumfang |
 |---|---|:---:|---|
-| Super Admin | `superadmin@abcnews.com` | `123456` | Voller Systemzugriff, Verwaltung anderer Administratoren und Rollenvergabe |
-| Admin | `admin@abcnews.com` | `123456` | Artikelverwaltung, Themenkategorien, Kommentarmoderation und Reporterkonten |
-| Reporter | `reporter1@abcnews.com` | `123456` | Verfassen und Verwalten eigener veröffentlichter Artikel |
+| Super Admin | `superadmin@example.com` | `Demo@123456` | Voller Systemzugriff, Verwaltung anderer Administratoren und Rollenvergabe |
+| Admin | `admin@example.com` | `Demo@123456` | Artikelverwaltung, Themenkategorien, Kommentarmoderation und Reporterkonten |
+| Reporter | `reporter@example.com` | `Demo@123456` | Verfassen und Verwalten eigener veröffentlichter Artikel |
 
 Hinweis: Standardpasswörter werden beim ersten erfolgreichen Anmeldevorgang automatisch in BCrypt-Hashes konvertiert.
 
