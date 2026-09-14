@@ -5,7 +5,7 @@
 <p align="left">
   <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
   <img src="https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java 17 LTS">
-  <img src="https://img.shields.io/badge/Jakarta%20EE-10-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta EE 10">
+  <img src="https://img.shields.io/badge/Jakarta%20Servlet-6.0-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta Servlet 6.0">
   <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
   <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
@@ -15,7 +15,7 @@
 
 ## Giới thiệu
 
-ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành Phát triển phần mềm tại Cao đẳng FPT Polytechnic, nhằm thực hành phát triển ứng dụng web Java và các kiến thức backend cơ bản. Hệ thống cung cấp cổng thông tin dành cho độc giả và khu vực quản trị nội dung tòa soạn với các cơ chế phân quyền theo vai trò, xác thực tài khoản và lưu trữ dữ liệu an toàn.
+ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành Phát triển phần mềm, hệ Cao đẳng tại FPT Polytechnic, nhằm thực hành phát triển ứng dụng web Java và các kiến thức backend cơ bản. Hệ thống cung cấp cổng thông tin dành cho độc giả và khu vực quản trị nội dung tòa soạn với các cơ chế phân quyền theo vai trò, xác thực tài khoản và lưu trữ dữ liệu an toàn.
 
 ---
 
@@ -23,7 +23,7 @@ ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành
 
 | Thành phần | Công nghệ và thư viện | Ghi chú kỹ thuật |
 |---|---|---|
-| Nền tảng và ngôn ngữ | Java 17 LTS, Jakarta EE 10 | Servlet 6.0, JSP 3.1, JSTL 3.0 |
+| Nền tảng và ngôn ngữ | Java 17 LTS, Jakarta Servlet 6.0 | JSP 3.1, JSTL 3.0 |
 | Truy cập dữ liệu chính | JDBC kết hợp HikariCP 5.1 | Truy vấn qua PreparedStatement và Connection Pool HikariCP |
 | Ánh xạ thực thể hỗ trợ | Hibernate ORM 6.4 | Định nghĩa cấu trúc Entity và kiểm tra schema |
 | Máy chủ ứng dụng | Apache Tomcat 10.1 | Quản lý vòng đời Servlet và JSP |
@@ -146,7 +146,7 @@ Các biện pháp bảo vệ trong dự án được xây dựng dựa trên ngu
 - Băm mật khẩu: Mật khẩu người dùng được băm một chiều bằng thuật toán BCrypt trước khi lưu vào cơ sở dữ liệu.
 - Thay đổi mật khẩu: Mật khẩu hiện tại được xác minh trước khi cập nhật mật khẩu mới; mật khẩu mới được lưu dưới dạng BCrypt hash.
 - Token Remember-Me an toàn: Token ngẫu nhiên 256-bit được sinh qua SecureRandom. Cơ sở dữ liệu chỉ lưu bản băm SHA-256. Cookie trình duyệt sử dụng cờ HttpOnly và SameSite=Lax. Token được xoay vòng sau mỗi lần tự động đăng nhập thành công nhằm giảm thiểu rủi ro bị tấn công phát lại.
-- Email OTP: Mã OTP 6 chữ số có hiệu lực trong 5 phút. Việc so khớp an toàn chống dò mã, kết hợp giới hạn tối đa 3 lần nhập sai.
+- Email OTP: Mã OTP 6 chữ số có hiệu lực trong 5 phút. Quá trình xác thực sử dụng thuật toán so sánh thời gian không đổi MessageDigest.isEqual nhằm giảm thiểu tấn công định thời (timing attack), kết hợp giới hạn tối đa 3 lần nhập sai.
 - Phân quyền vai trò và chặn nâng quyền trái phép: Vai trò Quản trị tối cao được xác định bằng trường IsSuperAdmin trong cơ sở dữ liệu. Quản trị viên thông thường không được phép sửa, khóa hoặc xóa tài khoản của Quản trị viên khác.
 - Kiểm soát yêu cầu POST qua CsrfFilter: Các thao tác làm biến đổi dữ liệu trong khu vực quản trị được bảo vệ bởi bộ lọc CSRF, kiểm tra token từ tham số form `_csrf` hoặc header `X-CSRF-TOKEN`.
 - Làm sạch nội dung chống XSS: Thư viện Jsoup với cấu hình thẻ an toàn được dùng để làm sạch nội dung bài viết và bình luận độc giả trước khi lưu trữ hoặc hiển thị.
@@ -311,11 +311,11 @@ Hệ thống có sẵn các tài khoản mẫu trong kịch bản `schema/seed_d
 | Quản trị viên | `admin@example.com` | `Demo@123456` | Quản trị bài viết, chuyên mục, kiểm duyệt bình luận và quản lý phóng viên |
 | Phóng viên | `reporter@example.com` | `Demo@123456` | Soạn thảo và quản lý bài viết do chính mình xuất bản |
 
-Mật khẩu được băm bằng BCrypt trước khi lưu vào cơ sở dữ liệu.
+Mật khẩu demo được lưu dưới dạng BCrypt hash trong dữ liệu seed.
 
 ---
 
-## Những gì tôi đã thực hành
+## Kiến thức và kỹ năng đã áp dụng
 
 Thông qua việc xây dựng dự án cá nhân này, tôi đã thực hành các kiến thức:
 - Thực hành vòng đời xử lý request của Jakarta Servlet và Filter.
@@ -331,7 +331,7 @@ Thông qua việc xây dựng dự án cá nhân này, tôi đã thực hành c�
 ## Tác giả
 
 - Họ và tên: Nguyễn Duy Khánh
-- Vai trò: Sinh viên ngành Phát triển phần mềm — Cao đẳng FPT Polytechnic
+- Vai trò: Sinh viên ngành Phát triển phần mềm, hệ Cao đẳng tại FPT Polytechnic
 - GitHub: [github.com/nkhanhduy](https://github.com/nkhanhduy)
 - Email: [khanhndts02168@gmail.com](mailto:khanhndts02168@gmail.com)
 - Năm thực hiện: 2025 - 2026

@@ -5,7 +5,7 @@
 <p align="left">
   <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
   <img src="https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java 17 LTS">
-  <img src="https://img.shields.io/badge/Jakarta%20EE-10-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta EE 10">
+  <img src="https://img.shields.io/badge/Jakarta%20Servlet-6.0-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta Servlet 6.0">
   <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
   <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
@@ -15,7 +15,7 @@
 
 ## Über das Projekt
 
-ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im Bereich Softwareentwicklung am FPT Polytechnic College entwickelt habe, um Java-Webentwicklung und grundlegende Backend-Kenntnisse praktisch anzuwenden. Das System umfasst ein Online-Nachrichtenportal für Leser und einen redaktionellen Verwaltungsbereich mit rollenbasierter Autorisierung, Benutzer-Authentifizierung und sicheren Datenhaltungsmethoden.
+ABCNews ist ein persönliches Lernprojekt, das ich im Rahmen meines vietnamesischen Cao-đẳng-Programms im Bereich Softwareentwicklung am FPT Polytechnic in Vietnam entwickelt habe, um Java-Webentwicklung und grundlegende Backend-Kenntnisse praktisch anzuwenden. Das System umfasst ein Online-Nachrichtenportal für Leser und einen redaktionellen Verwaltungsbereich mit rollenbasierter Autorisierung, Benutzerauthentifizierung und sicheren Datenhaltungsmethoden.
 
 ---
 
@@ -23,13 +23,13 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 
 | Komponente | Technologie und Bibliothek | Technische Hinweise |
 |---|---|---|
-| Plattform und Sprache | Java 17 LTS, Jakarta EE 10 | Servlet 6.0, JSP 3.1, JSTL 3.0 |
-| Primärer Datenzugriff | JDBC mit HikariCP 5.1 | Datenzugriff über PreparedStatement und Connection-Pool |
+| Plattform und Sprache | Java 17 LTS, Jakarta Servlet 6.0 | JSP 3.1, JSTL 3.0 |
+| Primärer Datenzugriff | JDBC mit HikariCP 5.1 | Datenzugriff über PreparedStatement und HikariCP Connection-Pool |
 | Unterstützendes Entity-Mapping | Hibernate ORM 6.4 | Entitätsdefinitionen und Schema-Validierung |
 | Anwendungsserver | Apache Tomcat 10.1 | Laufzeitumgebung für Servlet und JSP |
-| Datenbank | Microsoft SQL Server 2022 | Relationale Datenhaltung mit versionierten Migrationen |
+| Datenbank | Microsoft SQL Server 2022 | Relationale Datenhaltung und Aktualisierungsskripte |
 | Authentifizierung und Hashing | BCrypt, SecureRandom, Google API Client | Passwort-Hashing, 256-Bit Remember-Me Token, Google ID-Token Überprüfung |
-| Web-Sicherheit | CsrfFilter, Jsoup 1.17.2, SafeImageStorage | CSRF-Prüfung für POST, HTML-Bereinigung und Datei-Validierung |
+| Anwendungssicherheit | CsrfFilter, Jsoup 1.17.2, SafeImageStorage | CSRF-Prüfung für POST, HTML-Bereinigung und Datei-Validierung |
 | Automatisierte Tests | JUnit 5, Mockito | 97 automatisierte Tests für zentrale Geschäfts- und Sicherheitsabläufe |
 | Build und CI | Apache Maven, GitHub Actions | WAR-Paketierung und automatisierte Testausführung bei Push oder Pull Request |
 | Betriebsumgebung | Docker, Docker Compose | Standardisierte lokale Container-Umgebung mit Tomcat und SQL Server |
@@ -40,9 +40,9 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 
 ### Leserfunktionen
 - Nachrichten auf der Startseite mit Top-Meldungen, neuesten Beiträgen und meistgelesenen Artikeln.
-- Kategorienaufruf über suchmaschinenfreundliche URLs nach dem Muster `/category/{slug}`.
+- Kategorienaufruf über benutzerfreundliche Pfade nach dem Muster `/category/{slug}`.
 - Artikel-Detailansicht mit Autorenangaben, Veröffentlichungsdatum, Aufrufzähler und geschätzter Lesezeit.
-- Lesezeichenfunktion zum späteren Lesen direkt im Browser über localStorage.
+- Lesezeichen-Funktion zum späteren Lesen direkt im Browser über localStorage.
 - Einsenden von Leserkommentaren mit ausstehendem Moderationsstatus.
 - Umschalten zwischen hellem und dunklem Design direkt in der Navigationsleiste.
 - E-Mail-Abonnement für redaktionelle Benachrichtigungen.
@@ -52,7 +52,7 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 - Google-Anmeldung mit serverseitiger Überprüfung des ID-Tokens.
 - Passwort ändern: Angemeldete Benutzer können ihr Passwort ändern, nachdem sie ihr aktuelles Passwort bestätigt haben. Bestehende Remember-Me-Tokens werden nach der Passwortänderung widerrufen.
 - Passwort-Rücksetzung über 6-stellige OTP-Codes per Gmail SMTP mit 5 Minuten Gültigkeit und Begrenzung auf maximal 3 Fehlversuche.
-- Dauerhafte Anmeldung über kryptographische 256-Bit-Zufallstoken, SHA-256 Datenbank-Hashing und Token-Rotation bei erfolgreicher automatischer Anmeldung.
+- Dauerhafte Anmeldung mit kryptographischen 256-Bit-Zufallstoken, SHA-256 Datenbank-Hashing und Token-Rotation bei erfolgreicher automatischer Anmeldung.
 - Prüfung des Kontostatus während der Authentifizierung und im Zugriffsfilter.
 
 ### Rollenbasierte Autorisierung
@@ -66,7 +66,7 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 
 ### Redaktionsverwaltung
 - Administrations-Dashboard mit Kennzahlen zu Artikeln, Benutzerkonten, Kategorien, ausstehenden Kommentaren und Chart.js Diagrammen.
-- Artikelverwaltung mit Rich-Text-Editor, Kategoriefiltern und Anpinnfunktion für die Startseite.
+- Artikelverwaltung mit Rich-Text-Editor, Kategoriefiltern und Hervorhebung auf der Startseite.
 - Automatisches Speichern von Entwürfen im Browser-localStorage alle 30 Sekunden zur Reduzierung von Datenverlusten.
 - Moderationsbereich für Leserkommentare mit den Zuständen Ausstehend, Genehmigt und Abgelehnt.
 - Profilverwaltung und Hochladen von Profilbildern über das Modul SafeImageStorage.
@@ -80,7 +80,7 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 
 ### Berichte und Datenexport
 - Datenexport in die Formate Excel über Apache POI, CSV und PDF über iText7.
-- Zentrale Verwaltung von E-Mail-Abonnenten des Newsletters.
+- Verwaltung der E-Mail-Adressen von Newsletter-Abonnenten.
 
 ---
 
@@ -134,7 +134,7 @@ ABCNews ist ein persönliches Lernprojekt, das ich während meines Studiums im B
 
 Das Projekt folgt einer Schichtenarchitektur nach dem MVC-Muster mit einer Service-Schicht für zentrale Geschäftsregeln; einige einfache Lese- und Abfrageoperationen greifen noch direkt auf DAO-Komponenten zu:
 - Controller Schicht: Verarbeitet HTTP-Anfragen, prüft Parameter, verwaltet Sitzungszustände und leitet Daten an JSP-Ansichten weiter.
-- Service Schicht: Behandelt Kernlogiken wie Authentifizierung, OTP-Prüfung, Ausstellung und Rotation von Remember-Me-Tokens, Slug-Generierung sowie Prüfung von Inhaberberechtigungen.
+- Service Schicht: Behandelt Kernlogiken wie Authentifizierung, OTP-Prüfung, Ausstellung und Rotation von Remember-Me-Tokens, Slug-Generierung sowie Prüfung, ob der Benutzer Autor des Inhalts ist.
 - DAO Schicht: Kapselt SQL-Abfragen und greift über PreparedStatement auf die Datenbank zu, um SQL-Injection-Risiken zu minimieren.
 - Datenzugriff: JDBC mit HikariCP ist der primäre Datenzugriffsmechanismus. Hibernate ORM dient als unterstützende Komponente für Entitätsdefinitionen und Schema-Prüfungen.
 
@@ -183,8 +183,8 @@ Das System bietet lesefreundliche Kategorie-Pfade für Besucher:
 - Datenbank-Skripte:
   - `schema/ABCNews.sql`: Datenbankerstellung und Tabellendefinitionen.
   - `schema/seed_data.sql`: Initiale Beispieldaten mit nativer UTF-8 Unterstützung.
-  - `schema/migrations/001_security_refactor.sql`: Migration für IsSuperAdmin und RememberTokens Tabelle.
-  - `schema/migrations/002_category_slug.sql`: Migration für die Spalte Slug und eindeutigen Index.
+  - `schema/migrations/001_security_refactor.sql`: Datenbank-Aktualisierungsskript für IsSuperAdmin und RememberTokens Tabelle.
+  - `schema/migrations/002_category_slug.sql`: Datenbank-Aktualisierungsskript für die Spalte Slug und eindeutigen Index.
 
 ---
 
@@ -217,7 +217,7 @@ mail.smtp.password=your_gmail_app_password_here
 # Google Identity Services
 google.client.id=your_google_client_id_here
 
-# Basis-URL der Anwendung für kanonische Links
+# Basis-URL der Anwendung
 app.base.url=http://localhost:8088
 ```
 
@@ -311,18 +311,18 @@ In `schema/seed_data.sql` sind vordefinierte Testkonten für Evaluierungszwecke 
 | Admin | `admin@example.com` | `Demo@123456` | Artikelverwaltung, Themenkategorien, Kommentarmoderation und Reporterkonten |
 | Reporter | `reporter@example.com` | `Demo@123456` | Verfassen und Verwalten eigener veröffentlichter Artikel |
 
-Hinweis: Standardpasswörter werden beim ersten erfolgreichen Anmeldevorgang automatisch in BCrypt-Hashes konvertiert.
+Die Demo-Passwörter werden in den Seed-Daten als BCrypt-Hashes gespeichert.
 
 ---
 
-## Was ich praktisch angewendet habe
+## Angewandte Kenntnisse
 
 Durch die Entwicklung dieses persönlichen Lernprojekts habe ich folgende Kenntnisse vertieft:
-- Praktische Erfahrung mit dem Request-Lifecycle von Jakarta Servlet und Filter.
+- Praktische Anwendung des Request-Lifecycles von Jakarta Servlet und Filter.
 - Strukturierung von Quellcode nach dem Layered-MVC-Muster mit einer dedizierten Service-Schicht für Geschäftslogik.
-- Datenzugriff mit nativem JDBC und Verbindungsoptimierung über HikariCP auf Microsoft SQL Server.
+- Datenzugriff mit nativem JDBC und Verbindungsverwaltung über HikariCP auf Microsoft SQL Server.
 - Umsetzung grundlegender Web-Sicherheitsmuster wie BCrypt Passwort-Hashing, Remember-Me Token-Rotation, zeitkonstanter OTP-Vergleich, CSRF-Filterung und Jsoup HTML-Bereinigung.
-- Erstellung automatisierter Tests mit JUnit 5 und Mockito zur Absicherung zentraler Abläufe.
+- Erstellung automatisierter Tests mit JUnit 5 und Mockito zur Absicherung zentraler Geschäftsabläufe.
 - Containerisierung der Entwicklungsumgebung mit Docker und Docker Compose.
 - Einrichtung eines grundlegenden Continuous-Integration-Ablaufs mit GitHub Actions.
 
@@ -330,8 +330,8 @@ Durch die Entwicklung dieses persönlichen Lernprojekts habe ich folgende Kenntn
 
 ## Autor
 
-- Name: Nguyen Duy Khanh
-- Rolle: Student im Bereich Softwareentwicklung — FPT Polytechnic College
+- Name: Nguyễn Duy Khánh
+- Rolle: Student im Bereich Softwareentwicklung am FPT Polytechnic in Vietnam (vietnamesisches Cao-đẳng-Programm)
 - GitHub: [github.com/nkhanhduy](https://github.com/nkhanhduy)
 - E-Mail: [khanhndts02168@gmail.com](mailto:khanhndts02168@gmail.com)
 - Zeitraum: 2025 – 2026

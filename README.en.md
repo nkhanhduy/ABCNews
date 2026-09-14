@@ -5,7 +5,7 @@
 <p align="left">
   <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
   <img src="https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java 17 LTS">
-  <img src="https://img.shields.io/badge/Jakarta%20EE-10-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta EE 10">
+  <img src="https://img.shields.io/badge/Jakarta%20Servlet-6.0-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta Servlet 6.0">
   <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
   <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
@@ -15,7 +15,7 @@
 
 ## About the Project
 
-ABCNews is a personal learning project I developed while studying Software Development at FPT Polytechnic College, with the goal of practicing Java web development and backend fundamentals. The system provides an online news portal for readers and an editorial administration area with role-based authorization, authentication, and secure data storage mechanisms.
+ABCNews is a personal learning project I developed while studying Software Development at FPT Polytechnic in a college-level program, with the goal of practicing Java web development and backend fundamentals. The system provides an online news portal for readers and an editorial administration area with role-based authorization, authentication, and secure data storage mechanisms.
 
 ---
 
@@ -23,16 +23,16 @@ ABCNews is a personal learning project I developed while studying Software Devel
 
 | Component | Technology and Library | Technical Notes |
 |---|---|---|
-| Platform and Language | Java 17 LTS, Jakarta EE 10 | Servlet 6.0, JSP 3.1, JSTL 3.0 |
-| Primary Data Access | JDBC with HikariCP 5.1 | Data access through PreparedStatement and Connection Pool |
-| Entity Mapping Support | Hibernate ORM 6.4 | Entity definition and schema validation support |
+| Platform and Language | Java 17 LTS, Jakarta Servlet 6.0 | JSP 3.1, JSTL 3.0 |
+| Primary Data Access | JDBC with HikariCP 5.1 | Data access through PreparedStatement and HikariCP connection pool |
+| Supporting Entity Mapping | Hibernate ORM 6.4 | Entity definition and schema validation support |
 | Application Server | Apache Tomcat 10.1 | Servlet and JSP lifecycle container |
-| Database | Microsoft SQL Server 2022 | Relational data storage with versioned migrations |
+| Database | Microsoft SQL Server 2022 | Relational data storage and update scripts |
 | Authentication and Hashing | BCrypt, SecureRandom, Google API Client | Password hashing, 256-bit Remember-Me token, Google ID token verification |
-| Web Security | CsrfFilter, Jsoup 1.17.2, SafeImageStorage | CSRF checks on POST, HTML sanitization, and upload validation |
+| Application Security | CsrfFilter, Jsoup 1.17.2, SafeImageStorage | CSRF checks on POST, HTML sanitization, and upload validation |
 | Automated Testing | JUnit 5, Mockito | 97 automated tests covering core business and security flows |
 | Build and CI | Apache Maven, GitHub Actions | WAR packaging and automated test execution on push or pull request |
-| Runtime Environment | Docker, Docker Compose | Containerized local setup with Tomcat and SQL Server |
+| Runtime Environment | Docker, Docker Compose | Standardized local environment with Tomcat and SQL Server |
 
 ---
 
@@ -40,7 +40,7 @@ ABCNews is a personal learning project I developed while studying Software Devel
 
 ### Reader Features
 - Read news on the homepage featuring spotlight stories, latest articles, and most-read posts.
-- Browse categories via search engine friendly URLs formatted as `/category/{slug}`.
+- Browse categories via friendly URLs formatted as `/category/{slug}`.
 - View article details with author metadata, publish date, view counter, and estimated reading time.
 - Save articles for later reading directly in browser localStorage.
 - Submit comments on articles with pending moderation status.
@@ -65,7 +65,7 @@ ABCNews is a personal learning project I developed while studying Software Devel
 - User Management: Admins can update account information, assign roles, change account status, and reset passwords for accounts they are authorized to manage.
 
 ### Editorial Management
-- Dashboard providing metrics for articles, accounts, categories, pending comments, and Chart.js telemetry charts.
+- Dashboard providing metrics for articles, accounts, categories, pending comments, and Chart.js charts.
 - Article management with rich text editing, category filters, and featured story pinning.
 - Auto-save drafts to browser localStorage every 30 seconds to minimize data loss from accidental tab closure.
 - Comment moderation hub supporting three states: Pending, Approved, and Rejected.
@@ -80,7 +80,7 @@ ABCNews is a personal learning project I developed while studying Software Devel
 
 ### Reporting and Data Export
 - Data export to Excel via Apache POI, CSV, and PDF via iText7.
-- Centralized newsletter subscriber email management.
+- Manage newsletter subscriber email addresses.
 
 ---
 
@@ -183,8 +183,8 @@ The system provides user-friendly category routing for readers:
 - Database Scripts:
   - `schema/ABCNews.sql`: Database creation and core table schemas.
   - `schema/seed_data.sql`: Initial seed data with UTF-8 Vietnamese support.
-  - `schema/migrations/001_security_refactor.sql`: Migration adding IsSuperAdmin and RememberTokens table.
-  - `schema/migrations/002_category_slug.sql`: Migration adding Slug column and unique index for categories.
+  - `schema/migrations/001_security_refactor.sql`: Database update script adding IsSuperAdmin and RememberTokens table.
+  - `schema/migrations/002_category_slug.sql`: Database update script adding Slug column and unique index for categories.
 
 ---
 
@@ -311,11 +311,11 @@ Pre-configured demo accounts from `schema/seed_data.sql` are available for evalu
 | Admin | `admin@example.com` | `Demo@123456` | Article management, categories, comment moderation, and reporter accounts |
 | Reporter | `reporter@example.com` | `Demo@123456` | Authoring and management of own published articles |
 
-Note: Default passwords are automatically hashed with BCrypt upon the first successful login.
+Demo passwords are stored as BCrypt hashes in the seed data.
 
 ---
 
-## What I Practiced
+## Skills Applied
 
 Through developing this personal project, I practiced several key concepts:
 - Handling the request lifecycle of Jakarta Servlets and Filters.
@@ -330,8 +330,8 @@ Through developing this personal project, I practiced several key concepts:
 
 ## Author
 
-- Name: Nguyen Duy Khanh
-- Role: Software Development Student — FPT Polytechnic College
+- Name: Nguyễn Duy Khánh
+- Role: Software Development student at FPT Polytechnic, enrolled in a college-level program
 - GitHub: [github.com/nkhanhduy](https://github.com/nkhanhduy)
 - Email: [khanhndts02168@gmail.com](mailto:khanhndts02168@gmail.com)
 - Year: 2025 - 2026
