@@ -5,7 +5,7 @@
 <p align="left">
   <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
   <img src="https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java 17 LTS">
-  <img src="https://img.shields.io/badge/Jakarta%20EE-10-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta EE 10">
+  <img src="https://img.shields.io/badge/Jakarta-Servlet%206.0%20%7C%20JSP%203.1-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta Servlet 6.0 / JSP 3.1">
   <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
   <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
@@ -15,17 +15,17 @@
 
 ## About the Project
 
-ABCNews is a personal learning project I developed while studying Software Development at FPT Polytechnic College, with the goal of practicing Java web development and backend fundamentals. The system provides an online news portal for readers and an editorial administration area with role-based authorization, authentication, and secure data storage mechanisms.
+ABCNews is a personal learning project I developed while studying Software Development at FPT Polytechnic in a college-level program, with the goal of practicing Java web development and backend fundamentals. The system provides an online news portal for readers and an editorial administration area with role-based authorization, authentication, and secure data storage mechanisms.
 
 ---
 
 ## Core Technologies
 
-`Java 17` · `Jakarta EE 10` · `Servlet` · `JSP` · `SQL Server 2022` · `JDBC` · `HikariCP` · `Maven`
+`Java 17` · `Jakarta Servlet 6.0` · `JSP 3.1` · `JSTL 3.0` · `SQL Server 2022` · `JDBC` · `HikariCP` · `Maven`
 
 | Component | Technology and Library | Technical Notes |
 |---|---|---|
-| Platform and Language | Java 17 LTS, Jakarta EE 10 | Servlet 6.0, JSP 3.1, JSTL 3.0 |
+| Platform and Language | Java 17 LTS, Jakarta Servlet 6.0, JSP 3.1 | JSTL 3.0, deployed on Apache Tomcat 10.1 |
 | Primary Data Access | JDBC with HikariCP 5.1 | Data access through PreparedStatement and Connection Pool |
 | Entity Mapping Support | Hibernate ORM 6.4 | Entity definition and schema validation support |
 | Application Server | Apache Tomcat 10.1 | Servlet and JSP lifecycle container |
@@ -328,9 +328,9 @@ Pre-configured demo accounts from `schema/seed_data.sql` are available for evalu
 
 | Role | Login Email | Default Password | Access Scope |
 |---|---|:---:|---|
-| Super Admin | `superadmin@abcnews.com` | `123456` | Full system access, administrator management, and role assignment |
-| Admin | `admin@abcnews.com` | `123456` | Article management, categories, comment moderation, and reporter accounts |
-| Reporter | `reporter1@abcnews.com` | `123456` | Authoring and management of own published articles |
+| Super Admin | `superadmin@abcnews.com` | `Demo@123456` | Full system access, administrator management, and role assignment |
+| Admin | `admin@abcnews.com` | `Demo@123456` | Article management, categories, comment moderation, and reporter accounts |
+| Reporter | `reporter1@abcnews.com` | `Demo@123456` | Authoring and management of own published articles |
 
 Note: Default passwords are automatically hashed with BCrypt upon the first successful login.
 
@@ -351,8 +351,8 @@ Through developing this personal project, I practiced several key concepts:
 
 ## Author
 
-- Name: Nguyen Duy Khanh
-- Role: Software Development Student — FPT Polytechnic College
+- Name: Nguyễn Duy Khánh
+- Role: Software Development Student — college-level program at FPT Polytechnic
 - GitHub: [github.com/nkhanhduy](https://github.com/nkhanhduy)
 - Email: [khanhndts02168@gmail.com](mailto:khanhndts02168@gmail.com)
 - Year: 2025 - 2026
