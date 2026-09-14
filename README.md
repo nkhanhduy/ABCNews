@@ -5,7 +5,7 @@
 <p align="left">
   <a href="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml"><img src="https://github.com/nkhanhduy/ABCNews/actions/workflows/maven.yml/badge.svg" alt="Java CI Build"></a>
   <img src="https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java 17 LTS">
-  <img src="https://img.shields.io/badge/Jakarta%20EE-10-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta EE 10">
+  <img src="https://img.shields.io/badge/Jakarta-Servlet%206.0%20%7C%20JSP%203.1-F37024?style=flat-square&logo=eclipsevert.x&logoColor=white" alt="Jakarta Servlet 6.0 / JSP 3.1">
   <img src="https://img.shields.io/badge/Apache%20Tomcat-10.1-F8DC75?style=flat-square&logo=apachetomcat&logoColor=black" alt="Tomcat 10.1">
   <img src="https://img.shields.io/badge/SQL%20Server-2022-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white" alt="SQL Server 2022">
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker">
@@ -15,17 +15,17 @@
 
 ## Giới thiệu
 
-ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành Phát triển phần mềm tại Cao đẳng FPT Polytechnic, nhằm thực hành phát triển ứng dụng web Java và các kiến thức backend cơ bản. Hệ thống cung cấp cổng thông tin dành cho độc giả và khu vực quản trị nội dung tòa soạn với các cơ chế phân quyền theo vai trò, xác thực tài khoản và lưu trữ dữ liệu an toàn.
+ABCNews là dự án cá nhân tôi thực hiện trong quá trình học ngành Phát triển phần mềm bậc Cao đẳng tại FPT Polytechnic, nhằm thực hành phát triển ứng dụng web Java và các kiến thức backend cơ bản. Hệ thống cung cấp cổng thông tin dành cho độc giả và khu vực quản trị nội dung tòa soạn với các cơ chế phân quyền theo vai trò, xác thực tài khoản và lưu trữ dữ liệu an toàn.
 
 ---
 
 ## Công nghệ chính
 
-`Java 17` · `Jakarta EE 10` · `Servlet` · `JSP` · `SQL Server 2022` · `JDBC` · `HikariCP` · `Maven`
+`Java 17` · `Jakarta Servlet 6.0` · `JSP 3.1` · `JSTL 3.0` · `SQL Server 2022` · `JDBC` · `HikariCP` · `Maven`
 
 | Thành phần | Công nghệ và thư viện | Ghi chú kỹ thuật |
 |---|---|---|
-| Nền tảng và ngôn ngữ | Java 17 LTS, Jakarta EE 10 | Servlet 6.0, JSP 3.1, JSTL 3.0 |
+| Nền tảng và ngôn ngữ | Java 17 LTS, Jakarta Servlet 6.0, JSP 3.1 | JSTL 3.0, triển khai trên Apache Tomcat 10.1 |
 | Truy cập dữ liệu chính | JDBC kết hợp HikariCP 5.1 | Thao tác dữ liệu qua PreparedStatement và Connection Pool |
 | Ánh xạ thực thể hỗ trợ | Hibernate ORM 6.4 | Định nghĩa cấu trúc Entity và kiểm tra schema |
 | Máy chủ ứng dụng | Apache Tomcat 10.1 | Quản lý vòng đời Servlet và JSP |
@@ -328,9 +328,9 @@ Hệ thống có sẵn các tài khoản mẫu trong kịch bản `schema/seed_d
 
 | Vai trò | Email đăng nhập | Mật khẩu mặc định | Phạm vi quyền hạn |
 |---|---|:---:|---|
-| Quản trị tối cao (Super Admin) | `superadmin@abcnews.com` | `123456` | Toàn quyền hệ thống, quản trị tài khoản admin và phân bổ vai trò |
-| Quản trị viên | `admin@abcnews.com` | `123456` | Quản trị bài viết, chuyên mục, kiểm duyệt bình luận và quản lý phóng viên |
-| Phóng viên | `reporter1@abcnews.com` | `123456` | Soạn thảo và quản lý bài viết do chính mình xuất bản |
+| Quản trị tối cao (Super Admin) | `superadmin@abcnews.com` | `Demo@123456` | Toàn quyền hệ thống, quản trị tài khoản admin và phân bổ vai trò |
+| Quản trị viên | `admin@abcnews.com` | `Demo@123456` | Quản trị bài viết, chuyên mục, kiểm duyệt bình luận và quản lý phóng viên |
+| Phóng viên | `reporter1@abcnews.com` | `Demo@123456` | Soạn thảo và quản lý bài viết do chính mình xuất bản |
 
 Ghi chú: Mật khẩu mặc định sẽ được hệ thống tự động băm sang chuẩn BCrypt sau lần đăng nhập đầu tiên.
 
